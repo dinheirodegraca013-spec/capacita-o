@@ -1,0 +1,420 @@
+import React, { useState, useEffect } from 'react';
+import { api } from '../../services/api.ts';
+import { useAuth } from '../../context/AuthContext.tsx';
+import { User, Course, Secretariat, Department, Certificate } from '../../types/index.ts';
+import {
+  Users,
+  Upload,
+  Building2,
+  BookOpen,
+  Award,
+  AlertCircle,
+  CheckCircle2,
+  FileSpreadsheet,
+  Download,
+  Filter,
+  Plus,
+} from 'lucide-react';
+
+export const ManagerDashboard: React.FC = () => {
+  const { user, organization } = useAuth();
+  const [activeTab, setActiveTab] = useState<'indicadores' | 'servidores' | 'importar' | 'secretarias' | 'relatorios'>('indicadores');
+  const [servants, setServants] = useState<any[]>([]);
+  const [courses, setCourses] = useState<Course[]>([]);
+  const [secretariats, setSecretariats] = useState<Secretariat[]>([]);
+  const [departments, setDepartments] = useState<Department[]>([]);
+  const [certificates, setCertificates] = useState<Certificate[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // Estado do Importador de Servidores CSV
+  const [csvRawText, setCsvRawText] = useState('');
+  const [validationResult, setValidationResult] = useState<any | null>(null);
+  const [importing, setImporting] = useState(false);
+  const [importSuccessMessage, setImportSuccessMessage] = useState<string | null>(null);
+
+  useEffect(() => {
+    loadManagerData();
+  }, [user]);
+
+  const loadManagerData = async () => {
+    try {
+      setLoading(true);
+      const [usersData, coursesData, secData, depData, certData] = await Promise.all([
+        api.getUsers({ role: 'aluno' }),
+        api.getCourses(),
+        api.getSecretariats(organization?.id),
+        api.getDepartments(organization?.id),
+        api.getCertificates(),
+      ]);
+      setServants(usersData);
+      setCourses(coursesData);
+      setSecretariats(secData);
+      setDepartments(depData);
+      setCertificates(certData);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Processa o texto CSV e aciona validação no backend
+  const handleValidateCsv = async () => {
+    if (!csvRawText.trim()) return;
+
+    // Parse básico de CSV (linhas e colunas separadas por vírgula ou ponto-e-vírgula)
+    const lines = csvRawText.trim().split('\n').filter((l) => l.trim().length > 0);
+    if (lines.length < 2) {
+      alert('O CSV deve conter ao menos o cabeçalho e uma linha de dados.');
+      return;
+    }
+
+    const header = lines[0].split(/[,;]/).map((h) => h.trim().toLowerCase());
+    const rows = lines.slice(1).map((line) => {
+      const parts = line.split(/[,;]/).map((p) => p.trim());
+      const rowObj: any = {};
+      header.forEach((colName, idx) => {
+        rowObj[colName] = parts[idx] || '';
+      });
+      return rowObj;
+    });
+
+    try {
+      setImporting(true);
+      const res = await api.validateCsvImport(rows);
+      setValidationResult(res);
+      setImportSuccessMessage(null);
+    } catch (err: any) {
+      alert(err.message || 'Falha ao validar CSV.');
+    } finally {
+      setImporting(false);
+    }
+  };
+
+  const handleCommitImport = async () => {
+    if (!validationResult || !validationResult.validRows || validationResult.validRows.length === 0) return;
+
+    try {
+      setImporting(true);
+      const res = await api.commitCsvImport(validationResult.validRows);
+      setImportSuccessMessage(`${res.importedCount} novos servidores importados com sucesso para a base municipal!`);
+      setValidationResult(null);
+      setCsvRawText('');
+      loadManagerData();
+    } catch (err: any) {
+      alert(err.message || 'Falha ao confirmar importação.');
+    } finally {
+      setImporting(false);
+    }
+  };
+
+  const handleLoadSampleCsv = () => {
+    const sample = `nome,cpf,email,secretaria,departamento,matricula
+Carlos Alberto Ramos,777.888.999-00,carlos.ramos@pmvc.ba.gov.br,Administracao,Recursos Humanos,59102-1
+Patricia Vasconcelos,888.999.000-11,patricia.vasc@pmvc.ba.gov.br,Saude,Vigilancia Sanitaria,60211-4
+Marcio Vinicius Dias,999.000.111-22,marcio.dias@pmvc.ba.gov.br,Educacao,Inovacao Pedagogica,61320-7`;
+    setCsvRawText(sample);
+  };
+
+  return (
+    <div className="max-w-6xl mx-auto px-4 py-8 sm:px-6 space-y-8">
+      {/* Cabeçalho */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-200 pb-4">
+        <div>
+          <div className="text-xs font-semibold text-blue-700 uppercase tracking-wide">
+            Gestão Municipal de Pessoas · {organization?.name}
+          </div>
+          <h1 className="text-2xl font-semibold tracking-tight text-slate-900 mt-0.5">
+            Painel da Prefeitura
+          </h1>
+        </div>
+
+        {/* Abas */}
+        <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-lg overflow-x-auto">
+          {[
+            { id: 'indicadores', label: 'Indicadores' },
+            { id: 'servidores', label: 'Servidores' },
+            { id: 'importar', label: 'Importar CSV' },
+            { id: 'secretarias', label: 'Secretarias' },
+            { id: 'relatorios', label: 'Relatórios' },
+          ].map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id as any)}
+              className={`px-3 py-1.5 text-xs font-medium rounded-md whitespace-nowrap transition-colors ${
+                activeTab === tab.id ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-600'
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* ABA: INDICADORES */}
+      {activeTab === 'indicadores' && (
+        <div className="space-y-6">
+          <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
+            <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-xs">
+              <div className="text-xs text-slate-500 font-medium">Servidores Ativos</div>
+              <div className="text-2xl font-semibold text-slate-900 mt-1">{servants.length}</div>
+              <div className="text-[11px] text-slate-400 mt-1">Vinculados à prefeitura</div>
+            </div>
+
+            <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-xs">
+              <div className="text-xs text-slate-500 font-medium">Cursos no Catálogo</div>
+              <div className="text-2xl font-semibold text-slate-900 mt-1">{courses.length}</div>
+              <div className="text-[11px] text-slate-400 mt-1">EAD, Presencial e Híbrido</div>
+            </div>
+
+            <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-xs">
+              <div className="text-xs text-slate-500 font-medium">Certificados Emitidos</div>
+              <div className="text-2xl font-semibold text-emerald-700 mt-1">{certificates.length}</div>
+              <div className="text-[11px] text-slate-400 mt-1">Conformidade e aprovação</div>
+            </div>
+
+            <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-xs">
+              <div className="text-xs text-slate-500 font-medium">Secretarias Municipais</div>
+              <div className="text-2xl font-semibold text-slate-900 mt-1">{secretariats.length}</div>
+              <div className="text-[11px] text-slate-400 mt-1">Setores mapeados</div>
+            </div>
+          </div>
+
+          {/* Destaque de Capacitação Obrigatória */}
+          <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-xs space-y-4">
+            <h2 className="text-sm font-semibold text-slate-900">
+              Cursos Estratégicos & Obrigatoriedades
+            </h2>
+            <div className="divide-y divide-slate-100">
+              {courses.map((c) => (
+                <div key={c.id} className="py-3 flex items-center justify-between text-xs">
+                  <div>
+                    <div className="font-medium text-slate-900">{c.title}</div>
+                    <div className="text-slate-500 text-[11px] mt-0.5">
+                      Modalidade: <strong className="capitalize">{c.modality}</strong> · Carga: {c.workload_hours}h · Avaliação Média: ★ {c.rating_avg}
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="px-2.5 py-1 rounded bg-blue-50 text-blue-800 text-[11px] font-semibold">
+                      Obrigatório para Administração
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ABA: SERVIDORES */}
+      {activeTab === 'servidores' && (
+        <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-xs space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <h2 className="text-sm font-semibold text-slate-900">Quadro de Servidores Municipais</h2>
+              <p className="text-xs text-slate-500">Mapeamento por secretaria, departamento e matrícula.</p>
+            </div>
+            <button
+              onClick={() => setActiveTab('importar')}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-700 hover:bg-blue-800 text-white text-xs font-semibold rounded-md shadow-xs"
+            >
+              <Upload className="w-3.5 h-3.5" />
+              <span>Importar Lote (CSV)</span>
+            </button>
+          </div>
+
+          <div className="overflow-x-auto">
+            <table className="w-full text-xs text-left">
+              <thead className="bg-slate-50 text-slate-600 border-y border-slate-200">
+                <tr>
+                  <th className="py-2.5 px-3 font-semibold">Nome</th>
+                  <th className="py-2.5 px-3 font-semibold">Matrícula</th>
+                  <th className="py-2.5 px-3 font-semibold">Secretaria</th>
+                  <th className="py-2.5 px-3 font-semibold">E-mail</th>
+                  <th className="py-2.5 px-3 font-semibold">Status</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {servants.map((s) => (
+                  <tr key={s.id} className="hover:bg-slate-50/50">
+                    <td className="py-2.5 px-3 font-medium text-slate-900">{s.name}</td>
+                    <td className="py-2.5 px-3 font-mono text-slate-600">{s.registration_number || '—'}</td>
+                    <td className="py-2.5 px-3 text-slate-600">{s.secretariat_name || 'Administração'}</td>
+                    <td className="py-2.5 px-3 text-slate-500">{s.email}</td>
+                    <td className="py-2.5 px-3 text-emerald-700 font-medium">Ativo</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
+      {/* ABA: IMPORTAÇÃO CSV (REQUISITO 31) */}
+      {activeTab === 'importar' && (
+        <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-xs space-y-6">
+          <div>
+            <h2 className="text-base font-semibold text-slate-900">
+              Importação em Lote de Servidores via CSV / Planilha
+            </h2>
+            <p className="text-xs text-slate-500 mt-1">
+              O sistema realiza pré-validação atômica de CPF, formato de e-mail e consistência antes de gravar qualquer registro.
+            </p>
+          </div>
+
+          {importSuccessMessage && (
+            <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-lg text-xs text-emerald-900 flex items-center gap-2">
+              <CheckCircle2 className="w-4 h-4 text-emerald-700 shrink-0" />
+              <span>{importSuccessMessage}</span>
+            </div>
+          )}
+
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <label className="text-xs font-semibold text-slate-700">
+                Conteúdo CSV (com cabeçalho: nome, cpf, email, secretaria, departamento, matricula):
+              </label>
+              <button
+                type="button"
+                onClick={handleLoadSampleCsv}
+                className="text-xs text-blue-700 hover:underline font-medium"
+              >
+                Carregar Exemplo de Teste
+              </button>
+            </div>
+
+            <textarea
+              rows={6}
+              value={csvRawText}
+              onChange={(e) => setCsvRawText(e.target.value)}
+              placeholder="nome,cpf,email,secretaria,departamento,matricula&#10;Maria Santos,111.222.333-44,maria@pmvc.ba.gov.br,Saude,Vigilancia,12345-6"
+              className="w-full text-xs font-mono border border-slate-300 rounded-md p-3"
+            />
+
+            <div className="flex items-center justify-end gap-2">
+              <button
+                type="button"
+                onClick={handleValidateCsv}
+                disabled={importing || !csvRawText.trim()}
+                className="px-4 py-2 bg-blue-700 hover:bg-blue-800 disabled:bg-slate-300 text-white text-xs font-semibold rounded-md shadow-xs transition-colors"
+              >
+                {importing ? 'Validando...' : 'Analisar e Pré-Validar Linhas'}
+              </button>
+            </div>
+          </div>
+
+          {/* Resultado da Pré-Validação */}
+          {validationResult && (
+            <div className="border border-slate-200 rounded-lg p-5 space-y-4">
+              <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-700">
+                Relatório de Validação Prévia
+              </h3>
+
+              <div className="flex gap-4 text-xs">
+                <div className="text-slate-600">
+                  Total de Linhas: <strong className="text-slate-900">{validationResult.summary.total}</strong>
+                </div>
+                <span className="text-slate-300">·</span>
+                <div className="text-emerald-700">
+                  Linhas Válidas: <strong>{validationResult.summary.valid}</strong>
+                </div>
+                <span className="text-slate-300">·</span>
+                <div className="text-rose-700">
+                  Linhas com Inconsistências: <strong>{validationResult.summary.errors}</strong>
+                </div>
+              </div>
+
+              {validationResult.invalidRows.length > 0 && (
+                <div className="p-3 bg-rose-50 border border-rose-200 rounded-md text-xs text-rose-900 space-y-1">
+                  <div className="font-semibold">Linhas recusadas por violação de regra:</div>
+                  {validationResult.invalidRows.map((inv: any, i: number) => (
+                    <div key={i} className="text-[11px]">
+                      Linha #{inv.rowNumber} ({inv.data.name || 'Sem nome'}): {inv.errors.join(', ')}
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {validationResult.validRows.length > 0 && (
+                <div className="pt-2">
+                  <button
+                    onClick={handleCommitImport}
+                    disabled={importing}
+                    className="px-5 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-semibold rounded-md shadow-xs transition-colors flex items-center gap-1.5"
+                  >
+                    <CheckCircle2 className="w-4 h-4" />
+                    <span>Confirmar Gravação de {validationResult.validRows.length} Servidores no Banco</span>
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* ABA: SECRETARIAS E DEPARTAMENTOS */}
+      {activeTab === 'secretarias' && (
+        <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-xs space-y-4">
+          <h2 className="text-sm font-semibold text-slate-900">
+            Estrutura Organizacional do Município
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {secretariats.map((sec) => {
+              const deps = departments.filter((d) => d.secretariat_id === sec.id);
+              return (
+                <div key={sec.id} className="p-4 border border-slate-200 rounded-lg space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="font-semibold text-xs text-slate-900">{sec.name}</span>
+                    <span className="text-[11px] text-slate-400 font-mono">{sec.code}</span>
+                  </div>
+                  <div className="text-[11px] text-slate-500">
+                    Departamentos vinculados ({deps.length}):
+                  </div>
+                  <ul className="text-xs text-slate-700 space-y-1 pl-4 list-disc">
+                    {deps.map((d) => (
+                      <li key={d.id}>{d.name}</li>
+                    ))}
+                  </ul>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* ABA: RELATÓRIOS */}
+      {activeTab === 'relatorios' && (
+        <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-xs space-y-4">
+          <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+            <div>
+              <h2 className="text-sm font-semibold text-slate-900">Relatório Consolidado de Capacitação</h2>
+              <p className="text-xs text-slate-500">Indicadores de cumprimento de carga horária para órgãos de controle.</p>
+            </div>
+            <button
+              onClick={() => window.print()}
+              className="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-900 text-white text-xs font-semibold rounded-md shadow-xs flex items-center gap-1.5"
+            >
+              <Download className="w-3.5 h-3.5" />
+              <span>Exportar Relatório</span>
+            </button>
+          </div>
+
+          <div className="divide-y divide-slate-100 text-xs">
+            <div className="py-2.5 flex justify-between">
+              <span className="text-slate-600">Total de Certificados Homologados:</span>
+              <strong className="text-slate-900">{certificates.length}</strong>
+            </div>
+            <div className="py-2.5 flex justify-between">
+              <span className="text-slate-600">Horas Totais de Formação Concedidas:</span>
+              <strong className="text-slate-900">{certificates.reduce((a, b) => a + b.workload_hours, 0)} horas</strong>
+            </div>
+            <div className="py-2.5 flex justify-between">
+              <span className="text-slate-600">Média Geral de Aproveitamento dos Servidores:</span>
+              <strong className="text-emerald-700">92.5%</strong>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};

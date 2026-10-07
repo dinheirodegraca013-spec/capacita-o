@@ -1,0 +1,6 @@
+{
+  "name": "CapacitaGov — Plataforma Municipal de Capacitação",
+  "description": "Plataforma SaaS multi-tenant de capacitação contínua para prefeituras e órgãos públicos municipais.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
