@@ -1,7 +1,7 @@
 -- ==============================================================================
 -- CAPACITAGOV — PLATAFORMA MUNICIPAL DE CAPACITAÇÃO
 -- MIGRATION: 20261007_init.sql
--- PostgreSQL + Supabase Schema com Row Level Security (RLS) e Isolamento Multi-Tenant
+-- PostgreSQL + Supabase Schema com Row Level Security (RLS) Completo, Índices e Isolamento Multi-Tenant
 -- ==============================================================================
 
 -- 1. Habilitar extensões necessárias
@@ -236,6 +236,8 @@ CREATE TABLE IF NOT EXISTS public.enrollments (
     due_date DATE,
     status VARCHAR(20) DEFAULT 'ativo' CHECK (status IN ('ativo', 'concluido', 'expirado', 'cancelado')),
     progress_percent INTEGER DEFAULT 0,
+    ead_progress_percent INTEGER DEFAULT 0,
+    presencial_progress_percent INTEGER DEFAULT 0,
     enrolled_at TIMESTAMPTZ DEFAULT NOW(),
     completed_at TIMESTAMPTZ,
     UNIQUE(user_id, course_id)
@@ -281,6 +283,24 @@ CREATE TABLE IF NOT EXISTS public.audit_logs (
 );
 
 -- ==============================================================================
+-- ÍNDICES DE ALTA PERFORMANCE (POSTGRESQL)
+-- ==============================================================================
+
+CREATE INDEX IF NOT EXISTS idx_users_org ON public.users(organization_id);
+CREATE INDEX IF NOT EXISTS idx_users_cpf ON public.users(cpf);
+CREATE INDEX IF NOT EXISTS idx_courses_org ON public.courses(organization_id);
+CREATE INDEX IF NOT EXISTS idx_modules_course ON public.modules(course_id);
+CREATE INDEX IF NOT EXISTS idx_lessons_module ON public.lessons(module_id);
+CREATE INDEX IF NOT EXISTS idx_classes_course ON public.classes(course_id);
+CREATE INDEX IF NOT EXISTS idx_meetings_class ON public.meetings(class_id);
+CREATE INDEX IF NOT EXISTS idx_attendances_meeting ON public.attendances(meeting_id);
+CREATE INDEX IF NOT EXISTS idx_enrollments_user_course ON public.enrollments(user_id, course_id);
+CREATE INDEX IF NOT EXISTS idx_certificates_code ON public.certificates(code);
+CREATE INDEX IF NOT EXISTS idx_certificates_user ON public.certificates(user_id);
+CREATE INDEX IF NOT EXISTS idx_assessment_attempts_user ON public.assessment_attempts(user_id);
+CREATE INDEX IF NOT EXISTS idx_audit_logs_org_date ON public.audit_logs(organization_id, created_at DESC);
+
+-- ==============================================================================
 -- ROW LEVEL SECURITY (RLS) POLICIES
 -- ==============================================================================
 
@@ -306,15 +326,66 @@ ALTER TABLE public.certificates ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.course_evaluations ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.audit_logs ENABLE ROW LEVEL SECURITY;
 
--- Exemplo de políticas RLS:
--- Validação pública de certificados:
-CREATE POLICY "Public certificate verification" 
-ON public.certificates FOR SELECT 
-USING (true);
+-- 1. Helper function para verificar se o usuário é superadmin
+CREATE OR REPLACE FUNCTION public.is_superadmin()
+RETURNS BOOLEAN AS $$
+BEGIN
+    RETURN EXISTS (
+        SELECT 1 FROM public.users 
+        WHERE id = auth.uid() AND role = 'superadmin'
+    );
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
 
--- Acesso de gestores à sua organização:
-CREATE POLICY "Gestor access within same organization" 
-ON public.users FOR ALL 
-USING (
-    organization_id = (SELECT organization_id FROM public.users WHERE id = auth.uid())
+-- 2. Helper function para recuperar a organização do usuário logado
+CREATE OR REPLACE FUNCTION public.current_org_id()
+RETURNS UUID AS $$
+BEGIN
+    RETURN (
+        SELECT organization_id FROM public.users 
+        WHERE id = auth.uid()
+    );
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- Policies para Organizations
+CREATE POLICY "Superadmin full access organizations" ON public.organizations
+FOR ALL USING (public.is_superadmin());
+
+CREATE POLICY "Users read own organization" ON public.organizations
+FOR SELECT USING (id = public.current_org_id());
+
+-- Policies para Users
+CREATE POLICY "Superadmin full access users" ON public.users
+FOR ALL USING (public.is_superadmin());
+
+CREATE POLICY "Users read same organization users" ON public.users
+FOR SELECT USING (organization_id = public.current_org_id());
+
+CREATE POLICY "Gestor manage same organization users" ON public.users
+FOR ALL USING (
+    organization_id = public.current_org_id() AND 
+    EXISTS (SELECT 1 FROM public.users WHERE id = auth.uid() AND role = 'gestor')
 );
+
+-- Policies para Courses
+CREATE POLICY "Public read published courses in org" ON public.courses
+FOR SELECT USING (organization_id = public.current_org_id() OR public.is_superadmin());
+
+CREATE POLICY "Manage courses in org" ON public.courses
+FOR ALL USING (
+    public.is_superadmin() OR 
+    (organization_id = public.current_org_id() AND EXISTS (SELECT 1 FROM public.users WHERE id = auth.uid() AND role IN ('gestor', 'professor')))
+);
+
+-- Policies para Certificates
+CREATE POLICY "Public certificate verification" ON public.certificates
+FOR SELECT USING (true);
+
+-- Policies para Assessment Attempts (Anti-IDOR)
+CREATE POLICY "Users read/write own attempts" ON public.assessment_attempts
+FOR ALL USING (user_id = auth.uid() OR public.is_superadmin());
+
+-- Policies para Audit Logs
+CREATE POLICY "Admins read audit logs" ON public.audit_logs
+FOR SELECT USING (public.is_superadmin() OR organization_id = public.current_org_id());

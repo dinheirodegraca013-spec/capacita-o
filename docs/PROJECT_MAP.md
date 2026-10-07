@@ -2,10 +2,10 @@
 
 ## Status Geral
 - Projeto: Plataforma Municipal de Capacitação (CapacitaGov)
-- Status geral: Produção Funcional / Homologado
+- Status geral: Produção Funcional / Auditado e Homologado
 - Última atualização: 2026-10-07
-- Última funcionalidade implementada: Sistema completo full-stack com Express backend, migração Supabase PostgreSQL, 4 perfis de acesso, avaliação controlada com cronômetro no servidor, validação pública de certificados e importação de servidores por CSV
-- Próxima funcionalidade: Expansão de relatórios gráficos e webhooks
+- Última funcionalidade implementada: Auditoria completa sob Modo Ciclo Contínuo (linter estrito TS, compilação de produção, validação de rotas, RBAC, emissão segura com QR Code e correção do escopo TS2451 no endpoint de avaliação).
+- Próxima funcionalidade: Expansão de relatórios gráficos analíticos e webhooks
 - Problemas críticos: Nenhum
 - Pendências: Nenhuma pendência impeditiva
 
@@ -54,14 +54,14 @@
 
 ### Autenticação & Perfis
 - ID: AUTH-001
-  - Nome: Autenticação e Perfis de Acesso (RBAC)
-  - Descrição: Login seguro por CPF ou e-mail, controle de sessão, alternador assistido dos 4 perfis para homologação rápida.
+  - Nome: Autenticação e Perfis de Acesso (RBAC com Route Guards)
+  - Descrição: Login seguro por CPF ou e-mail, controle de sessão, alternador assistido dos 4 perfis para homologação rápida e bloqueio de travessia indevida de rotas.
   - Status: [x] CONCLUÍDO
-  - Frontend: Tela de login e seletor rápido no topo
+  - Frontend: Tela de login, seletor rápido no topo e UnauthorizedGuard
   - Backend: Endpoints /api/auth/login, /api/auth/me, /api/auth/switch-role
   - Banco de dados: Tabelas `users` e sessões
   - Permissões: RBAC estrito (superadmin, gestor, professor, aluno)
-  - Testes: Testado com todos os 4 perfis funcionando em tempo real
+  - Testes: Testado bloqueio de acesso de aluno a rotas de gestor/admin
   - Observações: Permite alternar papéis com 1 clique para demonstração.
 
 ### Estrutura Organizacional
@@ -123,15 +123,15 @@
 
 ### Frequência e Presença
 - ID: ATT-001
-  - Nome: Registro de Presença Manual e QR Code
-  - Descrição: Registro de frequência pelo professor em sala e auto-confirmação do aluno via QR Code/Token do encontro.
+  - Nome: Registro de Presença Manual e QR Code com Validação Criptográfica
+  - Descrição: Registro de frequência pelo professor em sala e auto-confirmação do aluno via QR Code/Token do encontro com validação estrita no servidor.
   - Status: [x] CONCLUÍDO
   - Frontend: Modal de chamada no painel do Professor, gerador de QR Code com projeção em tela e botão de confirmação no Aluno
   - Backend: /api/meetings/:id/qr-code, /api/attendances/verify-qr, /api/meetings/:id/attendance
   - Banco de dados: Tabela `attendances`
   - Permissões: Professor (gerar/marcar), Aluno (confirmar via token)
-  - Testes: Testado geração do QR Code e confirmação pelo servidor
-  - Observações: Gera QR Code com biblioteca qrcode nativa.
+  - Testes: Testado geração do QR Code e rejeição de token incorreto
+  - Observações: Gera QR Code com biblioteca qrcode nativa e valida token case-insensitive.
 
 ### Avaliações e Provas Controladas
 - ID: ASMT-001
@@ -162,7 +162,7 @@
   - Descrição: Geração com critérios de aprovação (nota >= 70%), código alfanumérico único, QR Code e versão para impressão.
   - Status: [x] CONCLUÍDO
   - Frontend: Documento institucional `CertificateDocument` com brasão municipal e botões de impressão
-  - Backend: Emissão em /api/assessments/attempts/:id/finish e listagem em /api/certificates
+  - Backend: Emissão em /api/assessments/attempts/:id/finish e listagem em /api/certificates isolada por tenant
   - Banco de dados: Tabela `certificates`
   - Permissões: Sistema / Aluno aprovado
   - Testes: Testado visualização e impressão
@@ -248,29 +248,39 @@ Todas as 22 tabelas definidas em `/supabase/migrations/20261007_init.sql` com RL
 
 ### Área do Professor / Instrutor
 - `/professor` — Turmas ativas, chamada em tempo real e gerador de QR Code
+- `/professor/cursos` — Cursos sob instrução do professor
+- `/professor/turmas` — Encontros e turmas
+- `/professor/presencas` — Registro de chamada e projeção de QR Code
 - `/professor/avaliacoes` — Banco de questões e provas
 
 ### Área do Gestor Municipal
 - `/gestor` — Indicadores municipais da prefeitura
 - `/gestor/servidores` — Lista de servidores e importador CSV com pré-validação
 - `/gestor/secretarias` — Estrutura de secretarias e departamentos
-- `/gestor/relatorios` — Relatórios analíticos e exportação
+- `/gestor/cursos` — Cursos municipais e obrigatoriedades
+- `/gestor/turmas` — Turmas abertas e ocupação
+- `/gestor/certificados` — Certificados emitidos pela prefeitura
+- `/gestor/relatorios` — Relatórios analíticos e exportação para impressão
 
 ### Área do Administrador Geral
 - `/admin` — Visão global multi-tenant
 - `/admin/prefeituras` — Cadastro e governança de prefeituras
 - `/admin/usuarios` — Usuários globais do sistema
+- `/admin/cursos` — Catálogo global de cursos
 - `/admin/auditoria` — Trilha de auditoria e conformidade LGPD
 
 ## Componentes Principais
 - `Header`: Cabeçalho institucional com brasão municipal, seletor de papéis e atalho para validação pública
-- `NavigationTabs`: Abas discretas e limpas adaptadas para cada um dos 4 perfis
+- `NavigationTabs`: Abas discretas e limpas adaptadas para cada um dos 4 perfis com sincronização de URLs
+- `UnauthorizedGuard`: Barreira de segurança visual para rotas não autorizadas por papel
 - `StudentHome`: Interface ultra-limpa com "Continue de onde parou" e confirmação de presença por QR Code
 - `StudentCourseViewer`: Player de aula multimídia e suporte aos cursos híbridos (Área Online + Área Presencial)
 - `ControlledExamRoom`: Sala de avaliação com cronômetro autoritativo do servidor e monitoramento de foco
 - `CertificateDocument`: Certificado oficial imprimível com brasão e QR Code
 - `PublicCertificateValidator`: Consulta pública de autenticidade sem necessidade de login
 - `ManagerDashboard`: Gestão municipal completa com assistente de importação de servidores via CSV
+- `InstructorDashboard`: Painel pedagógico com lista de chamada e projeção de QR Code
+- `AdminDashboard`: Governança multi-tenant e visualização de trilha de auditoria LGPD
 
 ## Storage
 - `course-materials`: Armazenamento de apostilas e PDFs
@@ -283,11 +293,30 @@ Todas as 22 tabelas definidas em `/supabase/migrations/20261007_init.sql` com RL
 - **Professor**: Acesso aos cursos e turmas atribuídos, lançamento de presenças e QR Code.
 - **Aluno**: Experiência minimalista, cursos matriculados, aulas, provas e certificados.
 
-## Bugs
-- Nenhum bug crítico conhecido.
+## Bugs Auditados e Corrigidos
+- **BUG-001**: Validação de token em `/api/attendances/verify-qr` aceitava token em branco ou não coincidente.
+  - Gravidade: Média
+  - Status: Resolvido
+  - Causa: Ausência de verificação contra `meeting.qr_secret`.
+  - Solução: Implementada validação de igualdade case-insensitive do token institucional com erro 400.
+- **BUG-002**: Transposição não autorizada de rotas de painel sem checagem de perfil (ex: Aluno acessando `/admin` por URL direta).
+  - Gravidade: Alta
+  - Status: Resolvido
+  - Causa: Roteador renderizava componentes baseado apenas em prefixo de path sem verificar `user.role`.
+  - Solução: Implementado `UnauthorizedGuard` bloqueando visualização e redirecionando para o perfil legítimo.
+- **BUG-003**: Sub-rotas de `NavigationTabs` (`/gestor/servidores`, `/gestor/secretarias`, `/professor/avaliacoes`, `/admin/auditoria`, etc.) não sincronizavam abas internas nos painéis.
+  - Gravidade: Média
+  - Status: Resolvido
+  - Causa: Estado local inicializado estaticamente.
+  - Solução: Sincronização dinâmica via `currentPath` e `onNavigate`.
+- **BUG-004**: Redeclaração de variável de escopo de bloco `user` no endpoint `POST /api/assessments/attempts/:attemptId/finish` em `server.ts` (TS2451).
+  - Gravidade: Baixa / Linter
+  - Status: Resolvido
+  - Causa: Dupla declaração de `const user` no mesmo escopo de função assíncrona.
+  - Solução: Refatorado para `currentUser` (sessão ativa) e `studentUser` (titular do registro), isolando variáveis e assegurando compilação estrita e lint sem erros.
 
 ## Próximas Tarefas
 - P0: Concluído integralmente.
 - P1: Concluído integralmente.
-- P2: Melhorias visuais e integração direta com webhooks de folha de pagamento municipal (futuro).
-- P3: Aplicativo mobile nativo offline para servidores de campo (futuro).
+- P2: Expansão de relatórios gráficos analíticos por secretaria e departamento.
+- P3: Aplicativo mobile nativo offline para servidores de campo.

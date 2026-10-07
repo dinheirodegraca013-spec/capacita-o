@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { api } from '../../services/api.ts';
+import { useAuth } from '../../context/AuthContext.tsx';
 import { ClassGroup, Course, AttendanceRecord, Question } from '../../types/index.ts';
 import {
   Users,
@@ -10,36 +11,77 @@ import {
   FileCheck2,
   Clock,
   MapPin,
-  ExternalLink,
+  BookOpen,
+  Plus,
 } from 'lucide-react';
 
-export const InstructorDashboard: React.FC = () => {
+interface InstructorDashboardProps {
+  currentPath?: string;
+  onNavigate?: (path: string) => void;
+}
+
+export const InstructorDashboard: React.FC<InstructorDashboardProps> = ({
+  currentPath = '/professor',
+  onNavigate,
+}) => {
+  const { user } = useAuth();
+
+  const getTabFromPath = (path: string) => {
+    if (path.includes('/cursos')) return 'cursos';
+    if (path.includes('/turmas')) return 'turmas';
+    if (path.includes('/presencas')) return 'presencas';
+    if (path.includes('/avaliacoes')) return 'avaliacoes';
+    return 'turmas';
+  };
+
+  const [activeTab, setActiveTab] = useState<string>(() => getTabFromPath(currentPath));
   const [classes, setClasses] = useState<ClassGroup[]>([]);
+  const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedMeeting, setSelectedMeeting] = useState<any | null>(null);
   const [attendances, setAttendances] = useState<AttendanceRecord[]>([]);
   const [students, setStudents] = useState<any[]>([]);
   const [qrModalData, setQrModalData] = useState<any | null>(null);
-  const [activeTab, setActiveTab] = useState<'turmas' | 'questoes'>('turmas');
-  const [questions, setQuestions] = useState<Question[]>([]);
+
+  useEffect(() => {
+    setActiveTab(getTabFromPath(currentPath));
+  }, [currentPath]);
 
   useEffect(() => {
     loadInstructorData();
-  }, []);
+  }, [user]);
 
   const loadInstructorData = async () => {
     try {
       setLoading(true);
-      const [classesData, studentsData] = await Promise.all([
+      const [classesData, coursesData, studentsData] = await Promise.all([
         api.getClasses(),
+        api.getCourses(),
         api.getUsers({ role: 'aluno' }),
       ]);
       setClasses(classesData);
+      setCourses(coursesData);
       setStudents(studentsData);
+
+      // Pré-seleciona primeiro encontro se existir para facilitar a chamada
+      if (classesData.length > 0 && classesData[0].meetings && classesData[0].meetings.length > 0) {
+        const firstMtg = classesData[0].meetings[0];
+        setSelectedMeeting(firstMtg);
+        const records = await api.getMeetingAttendances(firstMtg.id);
+        setAttendances(records);
+      }
     } catch (err) {
       console.error(err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleTabChange = (tabId: string) => {
+    setActiveTab(tabId);
+    if (onNavigate) {
+      if (tabId === 'turmas') onNavigate('/professor/turmas');
+      else onNavigate(`/professor/${tabId}`);
     }
   };
 
@@ -85,6 +127,7 @@ export const InstructorDashboard: React.FC = () => {
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8 sm:px-6 space-y-8">
+      {/* Cabeçalho */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-200 pb-4">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight text-slate-900">
@@ -96,28 +139,29 @@ export const InstructorDashboard: React.FC = () => {
         </div>
 
         <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-lg">
-          <button
-            onClick={() => setActiveTab('turmas')}
-            className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
-              activeTab === 'turmas' ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-600'
-            }`}
-          >
-            Turmas & Encontros
-          </button>
-          <button
-            onClick={() => setActiveTab('questoes')}
-            className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
-              activeTab === 'questoes' ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-600'
-            }`}
-          >
-            Banco de Questões
-          </button>
+          {[
+            { id: 'turmas', label: 'Minhas Turmas' },
+            { id: 'cursos', label: 'Meus Cursos' },
+            { id: 'presencas', label: 'Presenças & QR Code' },
+            { id: 'avaliacoes', label: 'Banco de Questões' },
+          ].map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => handleTabChange(tab.id)}
+              className={`px-3 py-1.5 text-xs font-medium rounded-md whitespace-nowrap transition-colors ${
+                activeTab === tab.id ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-600 hover:text-slate-900'
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
         </div>
       </div>
 
-      {activeTab === 'turmas' ? (
+      {/* ABA: MINHAS TURMAS OU PRESENÇAS */}
+      {(activeTab === 'turmas' || activeTab === 'presencas') && (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Lista de Turmas e Encontros */}
+          {/* Coluna 1 & 2: Lista de Turmas e Encontros */}
           <div className="lg:col-span-2 space-y-4">
             <h2 className="text-xs font-semibold uppercase tracking-wider text-slate-500">
               Minhas Turmas Ativas ({classes.length})
@@ -186,7 +230,7 @@ export const InstructorDashboard: React.FC = () => {
             ))}
           </div>
 
-          {/* Painel Lateral: Registro de Chamada do Encontro Selecionado */}
+          {/* Coluna 3: Registro de Chamada em Tempo Real */}
           <div className="space-y-4">
             <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-xs">
               <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">
@@ -198,7 +242,7 @@ export const InstructorDashboard: React.FC = () => {
                   <div className="p-3 bg-blue-50/60 rounded-md border border-blue-200 text-xs text-blue-900">
                     <div className="font-semibold">{selectedMeeting.title}</div>
                     <div className="text-[11px] text-blue-800/80 mt-0.5">
-                      Data: {selectedMeeting.meeting_date} · Sala: {selectedMeeting.room}
+                      Data: {selectedMeeting.meeting_date} · Sala: {selectedMeeting.room || 'Auditório Carmen Miranda'}
                     </div>
                   </div>
 
@@ -255,22 +299,44 @@ export const InstructorDashboard: React.FC = () => {
                 </div>
               ) : (
                 <div className="text-xs text-slate-500 py-8 text-center">
-                  Clique em "Fazer Chamada" em algum encontro para abrir a lista de servidores.
+                  Selecione um encontro para abrir a chamada.
                 </div>
               )}
             </div>
           </div>
         </div>
-      ) : (
-        /* Aba de Banco de Questões */
+      )}
+
+      {/* ABA: MEUS CURSOS */}
+      {activeTab === 'cursos' && (
         <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-xs space-y-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-sm font-semibold text-slate-900">Banco de Questões para Provas</h2>
-              <p className="text-xs text-slate-500">
-                Questões parametrizadas com justificativas legais para avaliações controladas.
-              </p>
-            </div>
+          <h2 className="text-sm font-semibold text-slate-900">Cursos Sob Minha Instrução</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {courses.map((c) => (
+              <div key={c.id} className="p-4 border border-slate-200 rounded-lg space-y-2">
+                <div className="flex items-center gap-2 text-xs text-slate-500">
+                  <span className="capitalize font-semibold text-slate-700">{c.modality}</span>
+                  <span aria-hidden="true">·</span>
+                  <span>{c.workload_hours}h</span>
+                  <span aria-hidden="true">·</span>
+                  <span>★ {c.rating_avg}</span>
+                </div>
+                <h3 className="text-sm font-semibold text-slate-900">{c.title}</h3>
+                <p className="text-xs text-slate-500 line-clamp-2">{c.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ABA: BANCO DE QUESTÕES E AVALIAÇÕES */}
+      {activeTab === 'avaliacoes' && (
+        <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-xs space-y-4">
+          <div>
+            <h2 className="text-sm font-semibold text-slate-900">Banco de Questões e Parâmetros de Avaliação</h2>
+            <p className="text-xs text-slate-500">
+              Questões formativas e de certificação com fundamentação legal explícita.
+            </p>
           </div>
 
           <div className="space-y-4 pt-2">
@@ -281,6 +347,7 @@ export const InstructorDashboard: React.FC = () => {
                 diff: 'Fácil',
                 cat: 'Fase Preparatória',
                 correct: 'Estudo Técnico Preliminar (ETP)',
+                explanation: 'Previsto no art. 18 como basilar para orientar a elaboração do Termo de Referência.',
               },
               {
                 id: '2',
@@ -288,6 +355,7 @@ export const InstructorDashboard: React.FC = () => {
                 diff: 'Médio',
                 cat: 'Modalidades Licitatórias',
                 correct: 'Diálogo Competitivo',
+                explanation: 'Introduzido para contratações de alta complexidade que exigem soluções sob medida.',
               },
               {
                 id: '3',
@@ -295,6 +363,7 @@ export const InstructorDashboard: React.FC = () => {
                 diff: 'Médio',
                 cat: 'Princípios e Governança',
                 correct: 'Que o mesmo servidor atue simultaneamente na fase de planejamento, fiscalização e pagamento sem independência',
+                explanation: 'A vedação mitiga riscos de favorecimento e erros materiais no processo.',
               },
             ].map((q) => (
               <div key={q.id} className="p-4 rounded-lg border border-slate-200 space-y-2">
@@ -309,13 +378,16 @@ export const InstructorDashboard: React.FC = () => {
                 <div className="text-xs text-emerald-800 bg-emerald-50 p-2 rounded">
                   <strong>Resposta Correta: </strong>{q.correct}
                 </div>
+                <div className="text-[11px] text-slate-500 italic">
+                  Fundamento: {q.explanation}
+                </div>
               </div>
             ))}
           </div>
         </div>
       )}
 
-      {/* Modal de Exibição do QR Code de Presença (Para projeção em telão/auditório) */}
+      {/* Modal de Exibição do QR Code de Presença */}
       {qrModalData && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-xs">
           <div className="bg-white rounded-xl shadow-2xl border border-slate-200 max-w-sm w-full p-6 text-center space-y-4">

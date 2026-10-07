@@ -7,16 +7,30 @@ import {
   Users,
   GraduationCap,
   Plus,
-  CheckCircle2,
-  Lock,
-  Search,
+  BookOpen,
 } from 'lucide-react';
 
-export const AdminDashboard: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'prefeituras' | 'auditoria' | 'usuarios'>('prefeituras');
+interface AdminDashboardProps {
+  currentPath?: string;
+  onNavigate?: (path: string) => void;
+}
+
+export const AdminDashboard: React.FC<AdminDashboardProps> = ({
+  currentPath = '/admin',
+  onNavigate,
+}) => {
+  const getTabFromPath = (path: string) => {
+    if (path.includes('/usuarios')) return 'usuarios';
+    if (path.includes('/cursos')) return 'cursos';
+    if (path.includes('/auditoria')) return 'auditoria';
+    return 'prefeituras';
+  };
+
+  const [activeTab, setActiveTab] = useState<string>(() => getTabFromPath(currentPath));
   const [organizations, setOrganizations] = useState<Organization[]>([]);
   const [auditLogs, setAuditLogs] = useState<AuditLog[]>([]);
   const [users, setUsers] = useState<User[]>([]);
+  const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
 
   // Modal nova prefeitura
@@ -27,24 +41,38 @@ export const AdminDashboard: React.FC = () => {
   const [primaryColor, setPrimaryColor] = useState('#0f3a63');
 
   useEffect(() => {
+    setActiveTab(getTabFromPath(currentPath));
+  }, [currentPath]);
+
+  useEffect(() => {
     loadAdminData();
   }, []);
 
   const loadAdminData = async () => {
     try {
       setLoading(true);
-      const [orgs, logs, usrs] = await Promise.all([
+      const [orgs, logs, usrs, crss] = await Promise.all([
         api.getOrganizations(),
         api.getAuditLogs(),
         api.getUsers(),
+        api.getCourses(),
       ]);
       setOrganizations(orgs);
       setAuditLogs(logs);
       setUsers(usrs);
+      setCourses(crss);
     } catch (err) {
       console.error(err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleTabChange = (tabId: string) => {
+    setActiveTab(tabId);
+    if (onNavigate) {
+      if (tabId === 'prefeituras') onNavigate('/admin');
+      else onNavigate(`/admin/${tabId}`);
     }
   };
 
@@ -83,30 +111,22 @@ export const AdminDashboard: React.FC = () => {
         </div>
 
         <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-lg">
-          <button
-            onClick={() => setActiveTab('prefeituras')}
-            className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
-              activeTab === 'prefeituras' ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-600'
-            }`}
-          >
-            Prefeituras ({organizations.length})
-          </button>
-          <button
-            onClick={() => setActiveTab('usuarios')}
-            className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
-              activeTab === 'usuarios' ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-600'
-            }`}
-          >
-            Usuários Globais ({users.length})
-          </button>
-          <button
-            onClick={() => setActiveTab('auditoria')}
-            className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
-              activeTab === 'auditoria' ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-600'
-            }`}
-          >
-            Auditoria LGPD ({auditLogs.length})
-          </button>
+          {[
+            { id: 'prefeituras', label: `Prefeituras (${organizations.length})` },
+            { id: 'usuarios', label: `Usuários (${users.length})` },
+            { id: 'cursos', label: `Cursos (${courses.length})` },
+            { id: 'auditoria', label: `Auditoria (${auditLogs.length})` },
+          ].map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => handleTabChange(tab.id)}
+              className={`px-3 py-1.5 text-xs font-medium rounded-md whitespace-nowrap transition-colors ${
+                activeTab === tab.id ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-600 hover:text-slate-900'
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
         </div>
       </div>
 
@@ -219,6 +239,28 @@ export const AdminDashboard: React.FC = () => {
                 ))}
               </tbody>
             </table>
+          </div>
+        </div>
+      )}
+
+      {/* ABA: CURSOS GLOBAIS */}
+      {activeTab === 'cursos' && (
+        <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-xs space-y-4">
+          <h2 className="text-sm font-semibold text-slate-900">Catálogo Global de Cursos</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {courses.map((c) => (
+              <div key={c.id} className="p-4 border border-slate-200 rounded-lg space-y-2">
+                <div className="flex items-center gap-2 text-xs text-slate-500">
+                  <span className="capitalize font-semibold text-slate-700">{c.modality}</span>
+                  <span aria-hidden="true">·</span>
+                  <span>{c.workload_hours}h</span>
+                  <span aria-hidden="true">·</span>
+                  <span>Instrutor: {c.instructor_name}</span>
+                </div>
+                <h3 className="text-sm font-semibold text-slate-900">{c.title}</h3>
+                <p className="text-xs text-slate-500 line-clamp-2">{c.description}</p>
+              </div>
+            ))}
           </div>
         </div>
       )}

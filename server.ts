@@ -202,15 +202,19 @@ async function startServer() {
   app.post('/api/secretariats', (req: Request, res: Response) => {
     const user = getCurrentUser();
     if (user.role !== 'superadmin' && user.role !== 'gestor') {
-      return res.status(403).json({ message: 'Apenas gestores municipais podem criar secretarias.' });
+      return res.status(403).json({ message: 'Apenas gestores municipais ou administradores podem criar secretarias.' });
     }
     const { name, code, organization_id } = req.body;
-    const orgId = organization_id || user.organization_id;
+    if (!name || typeof name !== 'string' || !name.trim()) {
+      return res.status(400).json({ message: 'Nome da secretaria é obrigatório.' });
+    }
+    // Isolamento de tenant: não-superadmin sempre usa sua própria organização
+    const orgId = user.role === 'superadmin' ? (organization_id || user.organization_id || 'org-vitoria') : (user.organization_id || 'org-vitoria');
     const newSec = {
       id: `sec-${Date.now().toString(36)}`,
       organization_id: orgId,
-      name,
-      code: code || '',
+      name: name.trim(),
+      code: code ? String(code).trim() : '',
     };
     db.secretariats.push(newSec);
     res.status(201).json(newSec);
@@ -227,13 +231,22 @@ async function startServer() {
 
   app.post('/api/departments', (req: Request, res: Response) => {
     const user = getCurrentUser();
+    if (user.role !== 'superadmin' && user.role !== 'gestor') {
+      return res.status(403).json({ message: 'Apenas gestores municipais ou administradores podem criar departamentos.' });
+    }
     const { name, secretariat_id, organization_id } = req.body;
-    const orgId = organization_id || user.organization_id;
+    if (!name || typeof name !== 'string' || !name.trim()) {
+      return res.status(400).json({ message: 'Nome do departamento é obrigatório.' });
+    }
+    if (!secretariat_id) {
+      return res.status(400).json({ message: 'Secretaria vinculada é obrigatória.' });
+    }
+    const orgId = user.role === 'superadmin' ? (organization_id || user.organization_id || 'org-vitoria') : (user.organization_id || 'org-vitoria');
     const newDep = {
       id: `dep-${Date.now().toString(36)}`,
       organization_id: orgId,
       secretariat_id,
-      name,
+      name: name.trim(),
     };
     db.departments.push(newDep);
     res.status(201).json(newDep);
@@ -357,7 +370,11 @@ async function startServer() {
     }
 
     const { title, description, workload_hours, category, modality, instructor_id, organization_id } = req.body;
-    const orgId = organization_id || user.organization_id || 'org-vitoria';
+    if (!title || typeof title !== 'string' || !title.trim()) {
+      return res.status(400).json({ message: 'Título do curso é obrigatório.' });
+    }
+    // Isolamento multi-tenant: não-superadmin sempre vincula à sua própria organização
+    const orgId = user.role === 'superadmin' ? (organization_id || user.organization_id || 'org-vitoria') : (user.organization_id || 'org-vitoria');
     const instructor = instructor_id ? db.users.find((u) => u.id === instructor_id) : null;
 
     const newCourse = {
@@ -444,13 +461,45 @@ async function startServer() {
           return p && p.completed;
         }).length;
 
-        const newPercent = Math.min(100, Math.round((completedCount / totalLessons) * 100));
-        enrollment.progress_percent = newPercent;
+        const newEadPercent = Math.min(100, Math.round((completedCount / totalLessons) * 100));
         enrollment.last_lesson_id = lessonId;
 
-        if (newPercent === 100 && enrollment.status !== 'concluido') {
-          enrollment.status = 'concluido';
-          enrollment.completed_at = new Date().toISOString();
+        const targetCourse = db.courses.find((c) => c.id === course_id);
+        if (targetCourse?.modality === 'hibrido') {
+          // Curso Híbrido: Cálculo composto ponderado (Online 50% + Presencial 50%)
+          enrollment.ead_progress_percent = newEadPercent;
+
+          // Calcula presença nos encontros presenciais vinculados
+          const targetClass = db.classes.find((cl) => cl.course_id === course_id);
+          const classMeetings = targetClass?.meetings || [];
+          const totalMeetings = classMeetings.length;
+
+          let attendedMeetings = 0;
+          if (totalMeetings > 0) {
+            attendedMeetings = classMeetings.filter((m) => {
+              const att = db.attendances.find((a) => a.meeting_id === m.id && a.user_id === user.id);
+              return att && att.status === 'presente';
+            }).length;
+            enrollment.presencial_progress_percent = Math.round((attendedMeetings / totalMeetings) * 100);
+          } else {
+            enrollment.presencial_progress_percent = 50;
+          }
+
+          const compositePercent = Math.min(100, Math.round((enrollment.ead_progress_percent * 0.5) + ((enrollment.presencial_progress_percent || 0) * 0.5)));
+          enrollment.progress_percent = compositePercent;
+
+          // Só conclui se 100% online E pelo menos 75% presencial
+          if (enrollment.ead_progress_percent === 100 && (enrollment.presencial_progress_percent || 0) >= 75 && enrollment.status !== 'concluido') {
+            enrollment.status = 'concluido';
+            enrollment.completed_at = new Date().toISOString();
+          }
+        } else {
+          // Curso EAD Padrão
+          enrollment.progress_percent = newEadPercent;
+          if (newEadPercent === 100 && enrollment.status !== 'concluido') {
+            enrollment.status = 'concluido';
+            enrollment.completed_at = new Date().toISOString();
+          }
         }
       }
     }
@@ -481,7 +530,10 @@ async function startServer() {
   });
 
   app.post('/api/meetings/:id/attendance', (req: Request, res: Response) => {
-    const instructor = getCurrentUser();
+    const actor = getCurrentUser();
+    if (actor.role !== 'professor' && actor.role !== 'gestor' && actor.role !== 'superadmin') {
+      return res.status(403).json({ message: 'Apenas professores ou gestores podem lançar presenças manualmente.' });
+    }
     const meetingId = req.params.id;
     const { user_id, status } = req.body;
 
@@ -512,6 +564,10 @@ async function startServer() {
 
   // Gerador de QR Code de Presença com token assinado
   app.get('/api/meetings/:id/qr-code', async (req: Request, res: Response) => {
+    const actor = getCurrentUser();
+    if (actor.role !== 'professor' && actor.role !== 'gestor' && actor.role !== 'superadmin') {
+      return res.status(403).json({ message: 'Apenas instrutores da turma ou gestores podem gerar ou visualizar o QR Code de chamada.' });
+    }
     const meetingId = req.params.id;
     let meeting: Meeting | undefined;
 
@@ -572,6 +628,13 @@ async function startServer() {
     }
 
     if (!meeting) return res.status(404).json({ message: 'Encontro não localizado.' });
+
+    // Validação estrita do token/QR Secret institucional
+    const expectedToken = (meeting.qr_secret || '').trim().toUpperCase();
+    const providedToken = String(token || '').trim().toUpperCase();
+    if (!providedToken || (expectedToken && providedToken !== expectedToken)) {
+      return res.status(400).json({ message: 'Código de QR Code inválido ou incorreto para este encontro presencial.' });
+    }
 
     // Registra presença do aluno
     const existing = db.attendances.find((a) => a.meeting_id === meeting_id && a.user_id === user.id);
@@ -697,8 +760,14 @@ async function startServer() {
 
   // Salvamento Automático de Resposta em Tempo Real (Requisito 21)
   app.post('/api/assessments/attempts/:attemptId/answer', (req: Request, res: Response) => {
+    const user = getCurrentUser();
     const attempt = db.assessmentAttempts.find((a) => a.id === req.params.attemptId);
     if (!attempt) return res.status(404).json({ message: 'Tentativa não encontrada.' });
+
+    // Anti-IDOR: Impede manipulação de tentativa de outro servidor
+    if (attempt.user_id !== user.id && user.role !== 'superadmin') {
+      return res.status(403).json({ message: 'Acesso negado: tentativa pertence a outro usuário.' });
+    }
 
     if (attempt.status !== 'in_progress') {
       return res.status(400).json({ message: 'Tentativa já encerrada ou expirada.' });
@@ -719,8 +788,14 @@ async function startServer() {
 
   // Registro de Ocorrência (Troca de aba / perda de foco / saída de fullscreen)
   app.post('/api/assessments/attempts/:attemptId/incident', (req: Request, res: Response) => {
+    const user = getCurrentUser();
     const attempt = db.assessmentAttempts.find((a) => a.id === req.params.attemptId);
     if (!attempt) return res.status(404).json({ message: 'Tentativa não encontrada.' });
+
+    // Anti-IDOR: Impede injeção de advertências em tentativas de terceiros
+    if (attempt.user_id !== user.id && user.role !== 'superadmin') {
+      return res.status(403).json({ message: 'Acesso negado: tentativa pertence a outro usuário.' });
+    }
 
     const assessment = db.assessments.find((a) => a.id === attempt.assessment_id);
     const maxExits = assessment ? assessment.max_exit_tolerated : 3;
@@ -758,8 +833,14 @@ async function startServer() {
 
   // Encerramento e Cálculo de Nota da Avaliação
   app.post('/api/assessments/attempts/:attemptId/finish', async (req: Request, res: Response) => {
+    const currentUser = getCurrentUser();
     const attempt = db.assessmentAttempts.find((a) => a.id === req.params.attemptId);
     if (!attempt) return res.status(404).json({ message: 'Tentativa não encontrada.' });
+
+    // Anti-IDOR: Impede finalização não autorizada de tentativas de outros servidores
+    if (attempt.user_id !== currentUser.id && currentUser.role !== 'superadmin') {
+      return res.status(403).json({ message: 'Acesso negado: tentativa pertence a outro usuário.' });
+    }
 
     const assessment = db.assessments.find((a) => a.id === attempt.assessment_id);
     if (!assessment) return res.status(404).json({ message: 'Avaliação não encontrada.' });
@@ -784,13 +865,13 @@ async function startServer() {
     attempt.passed = passed;
     attempt.status = 'submitted';
 
-    const user = db.users.find((u) => u.id === attempt.user_id) || getCurrentUser();
+    const studentUser = db.users.find((u) => u.id === attempt.user_id) || currentUser;
     const course = db.courses.find((c) => c.id === assessment.course_id);
 
     // Se aprovado, atualiza matrícula para concluído e gera certificado automático!
     let certificate = null;
     if (passed && course) {
-      const enrollment = db.enrollments.find((e) => e.user_id === user.id && e.course_id === course.id);
+      const enrollment = db.enrollments.find((e) => e.user_id === studentUser.id && e.course_id === course.id);
       if (enrollment) {
         enrollment.status = 'concluido';
         enrollment.progress_percent = 100;
@@ -798,11 +879,11 @@ async function startServer() {
       }
 
       // Verifica se certificado já existe
-      const existingCert = db.certificates.find((crt) => crt.user_id === user.id && crt.course_id === course.id);
+      const existingCert = db.certificates.find((crt) => crt.user_id === studentUser.id && crt.course_id === course.id);
       if (existingCert) {
         certificate = existingCert;
       } else {
-        const org = db.organizations.find((o) => o.id === user.organization_id) || db.organizations[0];
+        const org = db.organizations.find((o) => o.id === studentUser.organization_id) || db.organizations[0];
         const randomHash = Math.floor(100000 + Math.random() * 900000);
         const certCode = `${org.slug.toUpperCase()}-2026-${randomHash}`;
 
@@ -818,10 +899,10 @@ async function startServer() {
           id: `cert-${Date.now().toString(36)}`,
           code: certCode,
           enrollment_id: enrollment?.id,
-          user_id: user.id,
-          user_name: user.name,
-          user_cpf: user.cpf,
-          user_registration: user.registration_number,
+          user_id: studentUser.id,
+          user_name: studentUser.name,
+          user_cpf: studentUser.cpf,
+          user_registration: studentUser.registration_number,
           course_id: course.id,
           course_title: course.title,
           course_category: course.category,
@@ -839,8 +920,8 @@ async function startServer() {
 
         db.addAuditLog({
           organization_id: org.id,
-          user_id: user.id,
-          user_name: user.name,
+          user_id: studentUser.id,
+          user_name: studentUser.name,
           action: 'CERTIFICADO_EMITIDO',
           entity_name: 'Certificate',
           entity_id: certCode,
@@ -868,7 +949,7 @@ async function startServer() {
     let list = [...db.certificates];
     if (user.role === 'aluno') {
       list = list.filter((c) => c.user_id === user.id);
-    } else if (user.role === 'gestor') {
+    } else if (user.role === 'gestor' || user.role === 'professor') {
       list = list.filter((c) => c.organization_id === user.organization_id);
     }
     res.json(list);
