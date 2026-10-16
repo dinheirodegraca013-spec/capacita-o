@@ -1,16 +1,17 @@
 /**
- * Fail-closed safety gate for the legacy demo backend.
- * The backend has unauthenticated role switching, a shared activeUserId,
- * and in-memory persistence. It must never serve real users.
+ * Fail closed: this demonstration backend uses a process-global user,
+ * insecure identity switching and memory-only records.
+ * It is not a production authentication or persistence implementation.
  */
 export function assertProductionBackendReady(env: NodeJS.ProcessEnv = process.env): void {
-  const allowed = env.NODE_ENV === 'development' || env.NODE_ENV === 'test';
-  if (!allowed) {
+  const isLocalEnvironment = env.NODE_ENV === 'development' || env.NODE_ENV === 'test';
+  const demoExplicitlyAllowed = env.CAPACITAGOV_ALLOW_INSECURE_DEMO === 'true';
+  if (!isLocalEnvironment || !demoExplicitlyAllowed) {
     throw new Error(
-      'SECURITY_BLOCK: legacy CapacitaGov API cannot run outside explicitly ' +
-      'configured development/test environments. Replace mockDb, global ' +
-      'activeUserId and simulated login with verified Supabase Auth, PostgreSQL ' +
-      'persistence, RBAC and tenant isolation first.'
+      'SECURITY_BLOCK: legacy CapacitaGov demo API is disabled. It requires ' +
+      'NODE_ENV=development (or test) and CAPACITAGOV_ALLOW_INSECURE_DEMO=true ' +
+      'for local testing only. Replace mockDb and process-global identity with ' +
+      'Supabase Auth, PostgreSQL and tenant-scoped authorization before deployment.'
     );
   }
 }
