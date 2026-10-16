@@ -4,12 +4,14 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import QRCode from 'qrcode';
 import { db, DEFAULT_COAT_OF_ARMS } from './src/server/mockDb.ts';
+import { assertProductionBackendReady } from './src/server/productionSafety.ts';
 import { UserRole, Meeting } from './src/types/index.ts';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 async function startServer() {
+  assertProductionBackendReady();
   const app = express();
   const PORT = 3000;
 
