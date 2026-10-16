@@ -1,4 +1,4 @@
-import express, { type Express, type RequestHandler } from 'express';
+import express, { type Express, type RequestHandler, type Router } from 'express';
 
 /**
  * Secure API boundary. The legacy mockDb backend is NEVER mounted here.
@@ -7,7 +7,7 @@ import express, { type Express, type RequestHandler } from 'express';
  */
 export interface SecureDeps {
   requireActor?: RequestHandler;
-  registerCourses?: (app: Express, requireActor: RequestHandler) => void;
+  registerCourses?: (router: Router) => void;
 }
 
 export function createSecureApp(deps: SecureDeps = {}): Express {
@@ -21,7 +21,10 @@ export function createSecureApp(deps: SecureDeps = {}): Express {
 
   // Do not register any protected routes without a mandatory identity guard.
   if (deps.requireActor && deps.registerCourses) {
-    deps.registerCourses(app, deps.requireActor);
+    const protectedRouter = express.Router();
+    deps.registerCourses(protectedRouter);
+    // The guard wraps the entire router, even if a future module omits it.
+    app.use('/api', deps.requireActor, protectedRouter);
   }
 
   // Missing features must never fall back to the demo API.
