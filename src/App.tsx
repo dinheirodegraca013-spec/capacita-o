@@ -188,11 +188,11 @@ function Footer() {
           <span>Plataforma Municipal de Capacitação e Formação Continuada</span>
         </div>
         <div className="flex items-center gap-4 text-[11px] text-slate-400">
-          <span>Ambiente Seguro LGPD</span>
+          <span>Ambiente de demonstração — não usar dados reais</span>
           <span aria-hidden="true">·</span>
-          <span>Isolamento Multi-Tenant</span>
+          <span>Dados simulados</span>
           <span aria-hidden="true">·</span>
-          <span>Validação Oficial de Certificados</span>
+          <span>Certificados ilustrativos</span>
         </div>
       </div>
     </footer>
