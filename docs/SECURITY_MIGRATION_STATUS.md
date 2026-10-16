@@ -35,3 +35,11 @@ GitHub changes confirmed. `npm test`, `npm run lint`, `npm run build`, live auth
 
 ## Operational status
 STATUS: CONTINUE — actual authentication, persistence, RLS and complete regressions remain open.
+
+## CI validation on 2026-10-16
+GitHub Actions run [38968026907](https://github.com/dinheirodegraca013-spec/capacita-o/actions/runs/38968026907) completed SUCCESS. Its dependency installation, existing security tests, TypeScript check, and frontend build all succeeded on commit `04623f33e90f08bd476e8b008374666cabdf75db`. This only validates those checks, **not** Supabase integration, E2E flows, multi-tenant isolation or production readiness.
+
+## Proposed certificate access migration (not applied)
+`supabase/migrations/20261016_harden_certificate_visibility.sql` removes unrestricted direct certificate-table reads, revokes `anon` SELECT and allows authenticated owners and superadmins to select. This intentionally blocks direct unauthenticated table-based certificate verification until a secure, narrow public validation endpoint exists. Review dependencies and test on a dedicated Supabase dev project before deployment; the previous `USING (true)` policy must not be restored in production.
+
+Migration execution, grants inspection, owner/superadmin/tenant A/B negative tests, and a new GitHub CI run remain **NOT VERIFIED**.
