@@ -1195,7 +1195,8 @@ async function startServer() {
 
   app.use(vite.middlewares);
 
-  app.listen(PORT, '0.0.0.0', () => {
+  // Legacy mock API must not be exposed to the network, even in development.
+  app.listen(PORT, '127.0.0.1', () => {
     console.log(`[CapacitaGov Server] Executando em http://localhost:${PORT}`);
   });
 }
