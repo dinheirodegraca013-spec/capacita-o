@@ -157,5 +157,7 @@ Build Next de produção pós-correção: PASS (30 rotas).
 
 CI remoto pós-correção: web `40481748235` e SQL/pgTAP `40481748186`, ambos concluídos com `success`; o SQL executou 29 arquivos/217 assertions.
 
+Reclaim de jobs legados verificado no Supabase após migration incremental `20261027082000`: função disponível para `service_role`, negada a `authenticated`, e linhas `processing` sem `processing_at` usam `created_at` como fallback.
+
 - Runbooks revisados; checklist final não pode ser aprovado enquanto backup/restauração, SMTP/worker, E2E autenticado e preview atual estiverem ausentes.
 
