@@ -22,7 +22,7 @@
 - Playwright histórico: `1 passed, 2 skipped` no baseline. A validação vigente está registrada em “Evidência adicional” abaixo e deve prevalecer sobre esse snapshot.
 - Supabase remoto: migrations funcionais/hardening/otimização aplicadas e advisors rechecados; Vercel produção validada no deployment `dpl_7KE9Cje9s6YFSVBbXYEZt8VYsj6w` após as correções de rota e autorização.
 - As migrations `20261026220900_import_commit.sql`, `20261026221000_assessment_authoring_atomic.sql` e `20261026221100_notifications_grant.sql` foram aplicadas remotamente e passaram no conjunto pgTAP; seguem pendentes somente as validações operacionais de SMTP/worker.
-- O workflow `.github/workflows/sql-regression.yml` já executa no GitHub Actions em PostgreSQL 16 + pgTAP: instalação do cliente, bootstrap e aplicação das migrations passaram no run `40451582948`; o passo `pg_prove` ainda falha no ambiente CI, enquanto a suíte local permanece 28/199 PASS. O bloqueio é de harness CI e não foi mascarado.
+- O workflow `.github/workflows/sql-regression.yml` executou verde no GitHub Actions em PostgreSQL 16 + pgTAP no run `40451913650`: instalação, bootstrap, aplicação das migrations e `pg_prove` passaram; a migration legada `20261007_init.sql` é explicitamente excluída da cadeia nova. A suíte local permanece 28/199 PASS.
 
 Não marcar a meta final como PASS enquanto SMTP, recuperação/rollback, preview isolado e revisão independente final não forem executados.
 ## Evidência adicional — 27/10/2026
