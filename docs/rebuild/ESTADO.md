@@ -446,4 +446,7 @@ Novo Playwright `recovery.spec.ts` passou **1/1** no Next local: `/api/v1/auth/r
 ### Deployment do patch de recuperação — 27/10/2026 14:45 BRT
 
 O deployment `dpl_5iptvUbq4mSb9aQn9UDp6CuSKYRJ` concluiu **READY** e assumiu `capacita-o-x5hg.vercel.app`, commit `a9fb565`. A rota pública `/api/v1/auth/recover` respondeu 405 para GET (rota encontrada; método correto é POST). O Playwright contra produção passou **1/1** no fluxo de validação 422.
+### Entrega real de recuperação — 27/10/2026 14:45 BRT
+
+Foi executado um teste controlado para a conta administrativa autorizada. O endpoint retornou 202; o Resend registrou o e-mail `01a17e77-c92e-7386-9ad3-f4ecda780b63` como **delivered**. A inspeção do corpo confirmou link `https://capacita-o-x5hg.vercel.app/redefinir-senha` e ausência de `localhost`; tokens não foram registrados.
 
