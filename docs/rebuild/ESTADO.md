@@ -350,3 +350,5 @@ Nota de segurança: `anon`/`authenticated` mantêm grants de tabela necessários
 
 T27 cobertura de rota — 27/10/2026 07:34: criado `tests/integration/notification-worker.test.ts`, verificando rejeição sem segredo e envio do `idempotency-key` do outbox ao provedor. Teste focado **2/2 PASS**; suíte web completa **29 arquivos/70 testes PASS**, typecheck e lint PASS. Commit `25a927c` sincronizado no `main`.
 
+Rechecagem Vercel — 27/10/2026 07:34: o alias permanece em `dpl_5SpMeb6u658UAADLp1ZmByTDFEkL`; o commit do novo teste recebeu status `Deployment rate limited — retry in 24 hours`. Nenhum deploy adicional foi tentado.
+
