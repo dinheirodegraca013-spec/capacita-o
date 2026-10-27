@@ -454,7 +454,7 @@ Status único: PENDING → RUNNING → REVIEW → DONE; BLOCKED somente para dep
 
 ### T27 — Notificações com outbox e recuperação
 
-**Meta/prioridade:** M8/P1. **Status:** PENDING. **Depende:** T05,T13,T25. **Requisitos:** R01,R08,R09.
+**Meta/prioridade:** M8/P1. **Status:** RUNNING. **Depende:** T05,T13,T25. **Requisitos:** R01,R08,R09.
 
 **Criar/alterar:** `src/modules/notifications/service.ts`, `src/app/api/internal/notifications/route.ts`, `supabase/migrations/<gerado>_notifications.sql`, `docs/rebuild/operations/email.md`.
 
@@ -464,7 +464,8 @@ Status único: PENDING → RUNNING → REVIEW → DONE; BLOCKED somente para dep
 
 **Aceite verificável:** Falha não desfaz matrícula válida; retry não cria outro vínculo; job público negado; mensagem sem PII desnecessária; entrega real testada só em caixa e remetente autorizados.
 
-- [ ] Executar ciclo da task e anexar evidência; revisar antes de marcar DONE.
+- [x] Outbox restringe payload sensível, usa chave idempotente, retry até cinco tentativas e recuperação de itens `processing` abandonados; endpoint interno exige segredo.
+- [ ] Executar envio real em caixa autorizada e anexar evidência; revisar antes de marcar DONE.
 
 ### T28 — Homologação SQL e duas jornadas completas
 
