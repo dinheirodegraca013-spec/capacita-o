@@ -15,10 +15,15 @@ export async function POST(request: NextRequest) {
   const roles = membershipRoles.map((item) => item.role);
   if (!membership || !roles.includes('manager')) return NextResponse.json({ error: 'FORBIDDEN' }, { status: 403 });
   try {
-    const invitation = await inviteMember({ userId: user.id, organizationId: body.organizationId, membershipId: membership.id, roles }, { email: body.email, roles: body.roles }, createSupabaseAdminClient() as never);
-    return NextResponse.json({ invitation }, { status: 201 });
+    const admin = createSupabaseAdminClient();
+    const invitation = await inviteMember({ userId: user.id, organizationId: body.organizationId, membershipId: membership.id, roles }, { email: body.email, roles: body.roles }, admin as never);
+    const activationPath = `/ativar-conta?token=${encodeURIComponent(invitation.rawToken ?? '')}`;
+    const { error: inviteError } = await admin.auth.admin.inviteUserByEmail(invitation.email, { redirectTo: `${request.nextUrl.origin}/auth/callback?next=${encodeURIComponent(activationPath)}` });
+    if (inviteError) return NextResponse.json({ error: 'INVITE_DELIVERY_FAILED' }, { status: 503 });
+    return NextResponse.json({ invitation: { id: invitation.id, email: invitation.email, roles: invitation.roles, status: invitation.status, expiresAt: invitation.expiresAt } }, { status: 201 });
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Invitation failed';
     return NextResponse.json({ error: message.includes('already pending') ? 'CONFLICT' : 'VALIDATION' }, { status: message.includes('already pending') ? 409 : 422 });
   }
 }
+
