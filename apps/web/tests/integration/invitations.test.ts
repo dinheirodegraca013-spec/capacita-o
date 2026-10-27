@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { buildInvitationActivationLink, buildInvitationRedirect, canResendInvitation, normalizeInvitationEmail, resolveInvitationOrigin } from '../../src/modules/invitations/service';
+import { buildRecoveryEmail, buildRecoveryLink } from '../../src/modules/notifications/resend';
 
 describe('recoverable institutional invitations', () => {
   it('normalizes email without revealing another tenant', () => {
@@ -23,6 +24,12 @@ describe('recoverable institutional invitations', () => {
   it('ignores a localhost app URL in production', () => {
     expect(resolveInvitationOrigin('http://localhost:3000', 'https://capacita-o-x5hg.vercel.app', 'production')).toBe('https://capacita-o-x5hg.vercel.app');
     expect(resolveInvitationOrigin('https://custom.example.com/', 'https://capacita-o-x5hg.vercel.app', 'production')).toBe('https://custom.example.com');
+  });
+
+  it('builds a production recovery link and email', () => {
+    const link = buildRecoveryLink('https://capacita-o-x5hg.vercel.app', 'person@example.com', '12345678');
+    expect(link).toBe('https://capacita-o-x5hg.vercel.app/redefinir-senha?email=person%40example.com&otp=12345678');
+    expect(buildRecoveryEmail({ from: 'CapacitaGov <noreply@example.com>', to: 'person@example.com', actionLink: link }).html).toContain('capacita-o-x5hg.vercel.app/redefinir-senha');
   });
 });
 
