@@ -70,3 +70,7 @@ Implementação parcial verificada: autoria de múltiplas questões e publicaç�
 
 CI remoto confirmou web e SQL/pgTAP verdes no head documental `027822949a56e0605f24bb1935cb2fd2d60e8ed2` (runs `40476060359` e `40476060282`).
 
+### T12 — catálogo — 27/10/2026
+
+O serviço passou a impor `organizationId` e estado de publicação no caminho de leitura. O RLS remoto continua sendo a barreira de isolamento; falta somente comprovar a jornada autenticada de concessão central, curso próprio e tenant vizinho.
+
