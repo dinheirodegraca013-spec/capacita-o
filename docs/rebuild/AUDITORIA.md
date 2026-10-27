@@ -181,3 +181,7 @@ Achado P0 reproduzido nas capturas: links nativos de recuperação apontavam par
 
 Os avisos remotos foram triados: `notification_outbox` service-only e `verify_certificate` público são comportamentos intencionais documentados; a proteção contra senhas vazadas está desativada e deve ser habilitada no Auth antes da liberação integral. O alerta não é mascarado como correção de código.
 
+### Parecer de rechecagem — 27/10/2026 13:30 BRT
+
+Evidências atuais: **30 arquivos/76 testes web PASS**, typecheck/lint PASS; RLS remoto **35/35 tabelas**, **71 policies**; migrations local/remoto **56/56**; policies de ofertas/matrículas sem condição cross-tenant na inspeção; endpoint de recuperação coberto por 3/3 testes e sincronizado no GitHub. Resultado permanece **BLOCKED para liberação integral**, pois o alias Vercel ainda executa `c35a1a4` sem `/api/v1/auth/recover`, não há E2E autenticado de dois tenants/entrega Resend real, backup remoto/PITR ensaiado ou proteção de senhas vazadas habilitada.
+
