@@ -187,3 +187,9 @@ Pré-requisito do provedor confirmado: `gestio.dev.br` verificado e envio habili
 
 - Runbooks revisados; checklist final não pode ser aprovado enquanto backup/restauração, SMTP/worker, E2E autenticado e preview atual estiverem ausentes.
 
+### Evidência autoritativa mais recente — 27/10/2026 07:35
+
+- PostgreSQL 18.6 temporário: **29 migrations, 29 arquivos/224 asserções pgTAP, PASS**.
+- Correção incremental `20261027110000_fix_import_idempotency_portability.sql` aplicada no Supabase; `extensions.digest(text,text)` remoto confirmado e chave SHA-256 válida.
+- Build Next local: PASS; Vercel rejeitou somente a publicação posterior por limite diário, sem erro de compilação.
+
