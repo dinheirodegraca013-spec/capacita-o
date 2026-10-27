@@ -46,7 +46,7 @@ Fechar as pendências operacionais: SMTP/Auth de convite, observabilidade, previ
 
 - Repositório: `https://github.com/dinheirodegraca013-spec/capacita-o`.
 - Supabase exclusivo: `zykfvzvydvifuzepujvv`, CAPACITAGOV, ativo; migrations funcionais e hardenings aplicados.
-- Vercel: projeto `capacita-o-x5hg`, domínio `https://capacita-o-x5hg.vercel.app/`, deployment READY atual `dpl_CouoDxCq4WCmGvXkrLGRYBkvgAzo`, commit remoto `5a4c1c7983a81d0290daf0ed9d083a48e294b60b`; `/` e `/login` retornaram 200 com HTML Next novo. O deployment automático `dpl_9XVyAaudxQphFsSRARP39KBJgTgP` foi identificado como Vite antigo e não recebeu o alias principal.
+- Vercel: projeto `capacita-o-x5hg`, domínio `https://capacita-o-x5hg.vercel.app/`; após a cobertura de identidade, o deployment `dpl_5yKfzvh86PXuCnUucpYiy6q9vhxC` (commit `2dde697496d4907e994b1a478eda3aee6a9efb2d`) ficou READY e recebeu o alias principal. Validação direta: `/` e `/login` HTTP 200 com título `CapacitaGov`; `/api/v1/context` HTTP 401 anônimo, sem cache compartilhado. O deployment Vite antigo foi substituído no alias.
 - Raiz desta rodada: `E:/000  arquivos que nao puderam ser enviados/Downloads/SISTEMAS/CAPACITAGOV`.
 - Checkout de implementação: subpasta `capacita-o/`, branch `feat/capacitagov-rebuild`.
 - Código novo: `capacita-o/apps/web/`.
