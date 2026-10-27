@@ -234,3 +234,7 @@ O fluxo mantém a transação `enroll_member`, unicidade por oferta/aluno, limit
 
 O formulário de avaliação foi integrado à área de certificados válidos; a RPC já exige matrícula concluída, tenant correto e unicidade por matrícula. `tests/integration/feedback.test.ts`: **2/2 PASS**; E2E condicionado criado, pendente de conta não produtiva.
 
+## T26 — relatórios e exportação — 27/10/2026
+
+O relatório institucional passou a retornar totais e breakdowns por status/curso, com filtro temporal e tenant-scoped; CSV continua neutralizando fórmulas de planilha. Migration `reports_breakdown` aplicada no Supabase `zykfvzvydvifuzepujvv`; privilégio de execução autenticada confirmado. Typecheck, lint e testes locais de serviço/exportação **3/3 PASS**; dataset autenticado de dois tenants ainda necessário.
+
