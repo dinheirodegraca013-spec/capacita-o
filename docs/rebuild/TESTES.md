@@ -95,4 +95,5 @@ Não marcar a meta final como PASS enquanto SMTP, recuperação/rollback, previe
 
 - Criado `tests/e2e/paths.spec.ts` para a tela de trilhas atribuídas do aluno.
 - O teste requer conta e organização não produtivas; a atribuição real pelo gestor ainda precisa de homologação autenticada.
+- CI remoto no head documental `3eb1d0f4aa30852c794130001c531f66eaabbf4f`: web `40475613669` e SQL/pgTAP `40475613670`, ambos `success`.
 
