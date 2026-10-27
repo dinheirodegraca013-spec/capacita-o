@@ -112,6 +112,8 @@ Achado T04: a página MFA existia, mas a proteção de gestão não exigia AAL2 
 
 Complemento: `/mfa` deixou de ser uma tela sem saída; quando necessário, cria fator TOTP, mostra QR/segredo e verifica o primeiro código. A exigência AAL2 permanece no servidor. Homologação real ainda pendente.
 
+Regressão local completa: Vitest **27/27 arquivos, 64/64 testes PASS**; isso não substitui o E2E autenticado.
+
 Auditoria de dependências: `npm audit --audit-level=high` sem vulnerabilidades high/critical; não há correção de pacote pendente neste ciclo.
 
 Foi criada regressão Playwright de convite (`invitation.spec.ts`) para ativação e bloqueio de destino externo; os dois casos foram omitidos localmente por falta de ambiente público Supabase, portanto a evidência permanece insuficiente até executar com conta/ambiente de homologação.
