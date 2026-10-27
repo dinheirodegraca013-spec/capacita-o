@@ -36,4 +36,5 @@ Não marcar a meta final como PASS enquanto SMTP, recuperação/rollback, previe
 - Playwright contra produção: 1 teste público passou e 2 jornadas autenticadas foram corretamente marcadas como skipped por ausência de credenciais de homologação.
 - Vercel runtime: variáveis públicas do Supabase configuradas nos três ambientes; redeploy `dpl_D8d1S5dZz2L3ztx5ScGEb5SHciPN` READY.
 - UX/UI e produção: `npm run typecheck`, `npm run lint` e `npm run build` PASS após o redesign institucional. Playwright contra `https://capacita-o-x5hg.vercel.app/`: **2 PASS, 2 skipped** (landing e login públicos PASS; jornadas autenticadas exigem conta temporária explícita). Deployment `dpl_54N1x6Pydz8YTPd3BMMYrhwFkq38` READY com `rootDirectory=apps/web`; projeto Vercel corrigido para `framework=nextjs`.
+- Storage multi-tenant: rota de URL assinada agora resolve o tenant pelo asset antes do vínculo ativo; `npm test -- --run` (**24 arquivos/46 testes PASS**), typecheck, lint e build PASS.
 

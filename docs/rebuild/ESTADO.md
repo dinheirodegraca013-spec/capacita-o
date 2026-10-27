@@ -24,6 +24,10 @@ Adotada a abordagem institucional sóbria: landing orientada a valor, autentica�
 
 Verificação local: `npm run typecheck`, `npm run lint` e `npm run build` passaram após a mudança. A publicação dessa rodada ainda precisa ser criada e validada no domínio público.
 
+## Correção de autorização de Storage — 27/10/2026
+
+`GET /api/v1/assets/[id]/access` passou a resolver primeiro a organização do asset e só então selecionar o vínculo ativo do usuário nessa organização. Isso elimina dependência de uma associação arbitrária quando a mesma pessoa pertence a múltiplos tenants; o serviço continua validando tenant, status `ready` e URL assinada de 5 minutos. Testes, typecheck, lint e build passaram.
+
 ## Próxima ação
 
 Fechar as pendências operacionais: SMTP/Auth de convite, observabilidade, preview com dados isolados, CI remoto, recuperação/rollback e auditoria independente final. O plano técnico continua sujeito a evidências, não a aprovação implícita.
