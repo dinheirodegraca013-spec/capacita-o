@@ -240,4 +240,7 @@ Deployment `dpl_5iptvUbq4mSb9aQn9UDp6CuSKYRJ` READY no alias público. `GET /api
 ### Entrega Resend de recuperação — 27/10/2026 14:45 BRT
 
 Teste controlado em conta autorizada: POST público 202, Resend **delivered**, corpo contém domínio público e não contém `localhost`. O token foi omitido da evidência.
+### Regressão pública pós-deploy — 27/10/2026 14:47 BRT
+
+Com `E2E_BASE_URL=https://capacita-o-x5hg.vercel.app`, a execução conjunta de preview, recuperação e navegação obteve **2 PASS / 3 SKIP**; os skips são cenários condicionados a sessão/fixture, não falhas. O E2E de recuperação público permaneceu PASS.
 
