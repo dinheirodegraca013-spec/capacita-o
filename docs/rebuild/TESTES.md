@@ -133,3 +133,8 @@ Não marcar a meta final como PASS enquanto SMTP, recuperação/rollback, previe
 - Migration `notifications_recovery` aplicada; `enqueue_notification` autenticado e `claim_pending_notifications` restrito a `service_role` verificados remotamente.
 - Testes de serviço de outbox/retry existentes; entrega real em caixa autorizada ainda pendente.
 
+### T28 — homologação — 27/10/2026
+
+- E2E público/auth/institucional: **4 passed, 5 skipped**; os skips exigem Supabase público ou conta não produtiva.
+- `supabase/tests/isolation.test.sql` permanece pronto para pgTAP; execução de banco real local/CI e jornadas autenticadas completas pendentes.
+
