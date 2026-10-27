@@ -252,6 +252,8 @@ O projeto `capacita-o-x5hg` foi confirmado com root Next em `apps/web`; a tentat
 
 Rechecagem posterior: o alias de produção continua no deployment READY `dpl_AFpdc7tcRRiqv99Hk4Cd7Q7EMyRH`, commit `92caa2f6698d3a612a7bbd8dfdc00552c5e47573`; ele não contém o HEAD documental atual nem as atualizações T30. Não foi feita nova tentativa enquanto a cota diária permanece bloqueada.
 
+O deployment de produção foi criado em `2026-10-27T09:21:01Z`; a próxima tentativa segura da cota diária fica após aproximadamente `2026-10-28T09:21:01Z`, salvo mudança do limite da conta.
+
 Consulta somente leitura no Supabase autorizado (27/10/2026) retornou `auth.users=1`, `organizations=0` e `active_memberships=0`. Portanto, não há atualmente dataset institucional ou duas contas não produtivas para executar as jornadas autenticadas sem inventar evidência; o acesso de navegador também não pôde ser capturado nesta sessão.
 
 ## T30 — liberação e operação — 27/10/2026
