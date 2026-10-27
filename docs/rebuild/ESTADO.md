@@ -443,4 +443,7 @@ Foi adicionada cobertura de rota para o incidente de links localhost: **3/3 test
 ### E2E de recuperação local — 27/10/2026 14:42 BRT
 
 Novo Playwright `recovery.spec.ts` passou **1/1** no Next local: `/api/v1/auth/recover` responde 422 para e-mail inválido. A prova pública continua pendente porque o deployment atual ainda retorna 404.
+### Deployment do patch de recuperação — 27/10/2026 14:45 BRT
+
+O deployment `dpl_5iptvUbq4mSb9aQn9UDp6CuSKYRJ` concluiu **READY** e assumiu `capacita-o-x5hg.vercel.app`, commit `a9fb565`. A rota pública `/api/v1/auth/recover` respondeu 405 para GET (rota encontrada; método correto é POST). O Playwright contra produção passou **1/1** no fluxo de validação 422.
 
