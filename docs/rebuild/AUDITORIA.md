@@ -68,3 +68,5 @@ CI remoto confirmou web e SQL/pgTAP verdes no head documental `3eb1d0f4aa30852c7
 
 Implementação parcial verificada: autoria de múltiplas questões e publicação de rascunho foram adicionadas sobre RPCs transacionais existentes. O E2E autenticado ainda depende de conta não produtiva; T17 permanece RUNNING.
 
+CI remoto confirmou web e SQL/pgTAP verdes no head documental `027822949a56e0605f24bb1935cb2fd2d60e8ed2` (runs `40476060359` e `40476060282`).
+
