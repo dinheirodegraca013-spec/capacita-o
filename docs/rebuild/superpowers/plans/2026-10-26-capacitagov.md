@@ -103,7 +103,7 @@ Status único: PENDING → RUNNING → REVIEW → DONE; BLOCKED somente para dep
 
 ### T03 — Clientes SSR e sessão validada
 
-**Meta/prioridade:** M1/P0. **Status:** RUNNING. **Depende:** T02. **Requisitos:** R01,R09.
+**Meta/prioridade:** M1/P0. **Status:** REVIEW. **Depende:** T02. **Requisitos:** R01,R09.
 
 **Criar/alterar:** `src/lib/supabase/server.ts`, `src/lib/supabase/browser.ts`, `src/lib/supabase/admin.ts`, `src/modules/identity/session.ts`, `src/app/api/v1/context/route.ts`.
 
