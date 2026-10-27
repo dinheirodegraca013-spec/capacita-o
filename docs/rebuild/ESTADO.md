@@ -184,3 +184,5 @@ CI remoto do head documental `83ae989c390ff7568b3507a6ca041850ab68dc27`: web run
 
 Adicionada atribuição de trilha pelo gestor (`POST /api/v1/paths/[id]/assign`) com múltiplas matrículas e prazo; o aluno agora possui `/aluno/trilhas`, com estado vazio, descrição, status e prazo. Foi criado `tests/e2e/paths.spec.ts`; homologação autenticada continua pendente.
 
+CI remoto do head documental `3eb1d0f4aa30852c794130001c531f66eaabbf4f`: web run `40475613669` e SQL/pgTAP run `40475613670`, ambos `success`.
+
