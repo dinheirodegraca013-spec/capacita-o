@@ -166,3 +166,5 @@ O endpoint de convite deixou de depender do remetente nativo do Supabase Auth, q
 
 O editor agora exibe módulos/aulas já persistidos, permite cadastrar conteúdo textual da aula, apresenta feedback de salvamento/publicação e impede publicação na interface sem módulo. A API rejeita aulas sem título antes de gravar. Foi criado `tests/e2e/course-authoring.spec.ts`, condicionado a uma conta de gestor e organização não produtivas. Typecheck, 53 testes Vitest, build e execução E2E (1 teste skipped por ausência de credenciais) passaram. A jornada autenticada real ainda é necessária para marcar T11 como DONE.
 
+CI remoto do head `dbce0b205a2c3fd218985b7afb99802563e0fbdd`: web run `40474451225` e SQL/pgTAP run `40474451137`, ambos `success`.
+
