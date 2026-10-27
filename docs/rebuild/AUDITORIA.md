@@ -58,3 +58,7 @@ Implementação parcial verificada: conteúdo da aula e posição persistida est
 
 CI remoto confirmou web e SQL/pgTAP verdes no head documental `83ae989c390ff7568b3507a6ca041850ab68dc27` (runs `40475154744` e `40475154694`).
 
+### T16 — trilhas — 27/10/2026
+
+Implementação parcial: atribuição com prazo e tela do aluno foram adicionadas, mantendo RLS e a prevenção SQL de ciclos. O E2E autenticado ainda não pode ser executado sem conta de homologação; T16 permanece RUNNING.
+
