@@ -22,17 +22,27 @@ export async function POST(request: NextRequest) {
     // never point to an unreachable host or an unallowlisted Supabase redirect.
     const publicOrigin = (process.env.NEXT_PUBLIC_APP_URL || request.nextUrl.origin).replace(/\/$/, '');
     const redirectTo = buildInvitationRedirect(publicOrigin, invitation.rawToken ?? '');
-    const { error: inviteError } = await admin.auth.admin.inviteUserByEmail(invitation.email, { redirectTo });
-    if (inviteError) {
-      if (!/already|registered|exists/i.test(inviteError.message)) return NextResponse.json({ error: 'INVITE_DELIVERY_FAILED' }, { status: 503 });
-      const providerUrl = process.env.EMAIL_PROVIDER_URL;
-      const providerKey = process.env.EMAIL_PROVIDER_KEY;
-      const from = process.env.EMAIL_FROM;
-      if (!providerUrl || !providerKey || !from) return NextResponse.json({ error: 'INVITE_DELIVERY_FAILED' }, { status: 503 });
-      const { data: generated, error: linkError } = await admin.auth.admin.generateLink({ type: 'magiclink', email: invitation.email, options: { redirectTo } });
-      if (linkError || !generated?.properties.action_link) return NextResponse.json({ error: 'INVITE_DELIVERY_FAILED' }, { status: 503 });
-      const response = await fetch(providerUrl, { method: 'POST', headers: { authorization: `Bearer ${providerKey}`, 'content-type': 'application/json' }, body: JSON.stringify(buildInvitationEmail({ from, to: invitation.email, actionLink: generated.properties.action_link })) });
-      if (!response.ok) return NextResponse.json({ error: 'INVITE_DELIVERY_FAILED' }, { status: 503 });
+    const providerUrl = process.env.EMAIL_PROVIDER_URL;
+    const providerKey = process.env.EMAIL_PROVIDER_KEY;
+    const from = process.env.EMAIL_FROM;
+    if (!providerUrl || !providerKey || !from) return NextResponse.json({ error: 'INVITE_DELIVERY_FAILED' }, { status: 503 });
+
+    // Generate the Supabase action link but deliver it through the configured
+    // transactional provider. Relying on Supabase's built-in mailer here can
+    // silently leave the invitation without a usable button when Auth SMTP is
+    // not configured or is rate-limited.
+    let generated = await admin.auth.admin.generateLink({ type: 'invite', email: invitation.email, options: { redirectTo } });
+    if (generated.error && /already|registered|exists/i.test(generated.error.message)) {
+      generated = await admin.auth.admin.generateLink({ type: 'magiclink', email: invitation.email, options: { redirectTo } });
+    }
+    if (generated.error || !generated.data?.properties.action_link) {
+      await admin.from('invitations').update({ status: 'failed' }).eq('id', invitation.id);
+      return NextResponse.json({ error: 'INVITE_DELIVERY_FAILED' }, { status: 503 });
+    }
+    const response = await fetch(providerUrl, { method: 'POST', headers: { authorization: `Bearer ${providerKey}`, 'content-type': 'application/json' }, body: JSON.stringify(buildInvitationEmail({ from, to: invitation.email, actionLink: generated.data.properties.action_link })) });
+    if (!response.ok) {
+      await admin.from('invitations').update({ status: 'failed' }).eq('id', invitation.id);
+      return NextResponse.json({ error: 'INVITE_DELIVERY_FAILED' }, { status: 503 });
     }
     const { error: statusError } = await admin.from('invitations').update({ status: 'sent', last_sent_at: new Date().toISOString() }).eq('id', invitation.id);
     if (statusError) return NextResponse.json({ error: 'INVITE_STATUS_FAILED' }, { status: 503 });
