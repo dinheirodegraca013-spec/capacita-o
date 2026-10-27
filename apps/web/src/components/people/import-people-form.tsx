@@ -28,7 +28,24 @@ export function ImportPeopleForm({ organizationId }: { organizationId: string })
     try {
       const response = await fetch('/api/v1/imports/commit', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ organizationId, rows: preview.rows, sizeBytes: new Blob([csv]).size }) });
       const data = await response.json().catch(() => null) as { imported?: number; error?: string } | null;
-      setMessage(response.ok ? `${data?.imported ?? preview.rows.length} pessoa(s) importada(s).` : data?.error ?? 'Importação rejeitada.');
+      if (response.ok) {
+        let invited = 0;
+        let failedInvites = 0;
+        for (let index = 0; index < preview.rows.length; index += 5) {
+          const batch = preview.rows.slice(index, index + 5);
+          const results = await Promise.all(batch.map(async (row) => {
+            try {
+              const invite = await fetch('/api/v1/invitations', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ organizationId, email: row.email, roles: ['student'] }) });
+              return invite.ok;
+            } catch {
+              return false;
+            }
+          }));
+          invited += results.filter(Boolean).length;
+          failedInvites += results.length - results.filter(Boolean).length;
+        }
+        setMessage(`${data?.imported ?? preview.rows.length} pessoa(s) importada(s); ${invited} convite(s) enviado(s)${failedInvites ? `; ${failedInvites} convite(s) precisam de revisão` : ''}.`);
+      } else setMessage(data?.error ?? 'Importação rejeitada.');
       if (response.ok) { setCsv(''); setPreview(null); }
     } catch { setMessage('Não foi possível conectar ao servidor.'); }
     finally { setBusy(false); }
