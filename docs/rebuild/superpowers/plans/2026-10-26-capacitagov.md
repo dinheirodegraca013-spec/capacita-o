@@ -103,7 +103,7 @@ Status único: PENDING → RUNNING → REVIEW → DONE; BLOCKED somente para dep
 
 ### T03 — Clientes SSR e sessão validada
 
-**Meta/prioridade:** M1/P0. **Status:** REVIEW. **Depende:** T02. **Requisitos:** R01,R09.
+**Meta/prioridade:** M1/P0. **Status:** DONE. **Depende:** T02. **Requisitos:** R01,R09.
 
 **Criar/alterar:** `src/lib/supabase/server.ts`, `src/lib/supabase/browser.ts`, `src/lib/supabase/admin.ts`, `src/modules/identity/session.ts`, `src/app/api/v1/context/route.ts`.
 
@@ -113,7 +113,7 @@ Status único: PENDING → RUNNING → REVIEW → DONE; BLOCKED somente para dep
 
 **Aceite verificável:** Sem sessão/inválida/expirada retorna 401; tenant sem vínculo retorna 403; usuário A nunca recebe resposta cacheada de B; bundle sem chave de serviço.
 
-- [ ] Executar ciclo da task e anexar evidência; revisar antes de marcar DONE.
+- [x] Executar ciclo da task e anexar evidência; revisão concluída em 27/10: `tests/integration/session.test.ts` 3/3, endpoint `/api/v1/context` anônimo em produção 401 com `Cache-Control: private, no-store`, e busca de código confirmou que a chave de serviço só é importada pelo cliente administrativo server-only.
 
 ### T04 — Login, recuperação, contexto e MFA
 
@@ -504,4 +504,5 @@ P2 do desenho é backlog posterior e não faz parte da liberação inicial. Não
 ## Autorrevisão
 
 R01→T02–T07; R02→T09/T12/T13; R03→T09/T11/T13/T16/T20; R04→T04/T08/T10/T14/T15/T19/T23; R05→T15/T17–T19/T22; R06→T20/T21; R07→T22/T23; R08→T07/T24–T27/T30; R09→T02/T03/T09/T10/T12/T13/T18/T21/T22/T25/T28; R10→T01/T28–T30. Cada risco do Review Focus aponta para teste específico. Conteúdo real, remetente e política institucional de retenção são dependências operacionais explícitas, não entregas fictícias.
+
 
