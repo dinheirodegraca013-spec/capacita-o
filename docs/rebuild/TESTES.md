@@ -62,4 +62,5 @@ Não marcar a meta final como PASS enquanto SMTP, recuperação/rollback, previe
 - CI remoto do HEAD documental `5edf8bda1df6a1e8a1ac5e0da48fae5d2ed6ea05`: web run `40472719308` e SQL/pgTAP run `40472719118`, ambos `success`.
 - Não contar como PASS final: preview Vercel do HEAD, E2E autenticado de dois tenants, SMTP/worker real e backup/rollback continuam pendentes.
 - Importação: após confirmação, a UI envia convites de aluno em lotes de cinco e reporta sucessos/falhas sem reverter o lote persistido; typecheck, Vitest e build passaram. Não foi executado envio SMTP real.
+- Cursos próprios: a UI agora permite selecionar modo autoinstrucional ou híbrido (`instructor_led`); typecheck, Vitest e build passaram. Homologação autenticada de autoria/publicação continua pendente.
 
