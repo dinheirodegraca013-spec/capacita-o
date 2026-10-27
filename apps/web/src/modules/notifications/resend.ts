@@ -21,6 +21,13 @@ export function buildResendNotification(input: { from: string; to: string; templ
 
 export function buildInvitationEmail(input: { from: string; to: string; actionLink: string }): ResendNotification {
   const text = `Você foi convidado para uma organização no CapacitaGov. Ative sua conta: ${input.actionLink}`;
-  return { from: input.from, to: input.to, subject: 'CapacitaGov — convite para ativar sua conta', text, html: `<p>Você foi convidado para uma organização no CapacitaGov.</p><p><a href="${escapeHtml(input.actionLink)}">Ativar minha conta</a></p>` };
+  const link = escapeHtml(input.actionLink);
+  return {
+    from: input.from,
+    to: input.to,
+    subject: 'CapacitaGov — convite para ativar sua conta',
+    text,
+    html: `<p>Você foi convidado para uma organização no CapacitaGov.</p><p><a href="${link}" style="display:inline-block;padding:12px 18px;border-radius:8px;background:#0f766e;color:#fff;text-decoration:none;font-weight:600">Ativar minha conta</a></p><p>Se o botão não abrir, copie este endereço:</p><p><a href="${link}">${link}</a></p>`,
+  };
 }
 
