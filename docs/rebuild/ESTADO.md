@@ -110,3 +110,5 @@ Domínio Resend `gestio.dev.br` confirmado como verificado e habilitado para env
 
 Corrigida a recuperação: `/redefinir-senha` agora existe, valida confirmação, atualiza a senha após callback e trata falhas sem enumeração. O convite institucional ganhou formulário de gestão, criação de usuário via Supabase Auth Invite e callback interno para `/ativar-conta`, mantendo o token fora da resposta do navegador. Suíte web: **26 arquivos/51 testes PASS**, typecheck e build PASS. E2E real depende de SMTP/Auth configurado e novo deployment; a Vercel ainda reporta limite diário de deploys.
 
+Logs Auth consultados: recuperação e convite chegaram ao Supabase, mas ocorreram `over_email_send_rate_limit` (429) e links antigos com referer `localhost:3000`. Foi adicionada `NEXT_PUBLIC_APP_URL=https://capacita-o-x5hg.vercel.app` ao Vercel e o fluxo de recuperação passou a usar a URL canônica; o novo código ainda aguarda deployment por cota da Vercel.
+

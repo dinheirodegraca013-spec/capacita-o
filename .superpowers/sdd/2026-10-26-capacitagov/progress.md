@@ -86,6 +86,8 @@ Task 4 complemento 27/10: criada a rota `/redefinir-senha`; recuperação agora 
 
 Task 5 complemento 27/10: formulário de convite adicionado à gestão da organização; endpoint agora usa `inviteUserByEmail` com callback interno para `/ativar-conta`, preservando o token somente no servidor. Teste de redirect `3/3`, suíte web `51/51`, typecheck e build PASS. E2E SMTP/Auth permanece pendente por configuração externa.
 
+Operação Auth 27/10: logs confirmam envio de recovery/invite, mas rate limit 429 e redirects antigos com `localhost:3000`. `NEXT_PUBLIC_APP_URL` foi configurada no Vercel e o recovery usa a origem canônica; deployment da correção segue pendente pela cota diária da Vercel.
+
 Retomada 27/10 — revisão independente: foram corrigidos os riscos de integridade cross-tenant em turmas/encontros/instrutores/memberships com a migration `20261027062000_tenant_composite_fks.sql`, aplicada remotamente e confirmada por consulta dos quatro constraints. `confirm_attendance` agora exige matrícula e membership ativos no mesmo tenant. A UI de catálogo de gestão também inclui cursos próprios da organização, além do catálogo central concedido. Ainda não há evidência suficiente para fechar T03/T28–T30: autenticação real de duas organizações, SMTP/worker, backup/rollback e auditoria final continuam pendentes.
 
 Retomada 27/10 — performance/CI: o advisor remoto identificou uma FK composta sem índice em `instructor_assignments`; a migration `20261027063000_instructor_tenant_fk_index.sql` foi aplicada no Supabase e o alerta `unindexed_foreign_keys` desapareceu. CI remoto no commit `d5fed8d08c869e2952106c14b72f71ce76a30cec`: SQL run `40453740988` e web run `40453741060` concluíram com sucesso.
