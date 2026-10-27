@@ -86,3 +86,7 @@ A avaliação está vinculada à matrícula concluída e protegida por unicidade
 
 O relatório mantém autorização por gestor e organização, e a exportação neutraliza valores iniciados por `=`, `+`, `-` ou `@`. A migration de breakdown foi aplicada e a prova restante é um dataset controlado com dois tenants, incluindo matrícula cancelada.
 
+### T27 — notificações — 27/10/2026
+
+O job não é público: claim exige `service_role`, o enqueue rejeita payload com PII sensível e itens em processamento podem ser recuperados após timeout. Falta apenas comprovação de entrega real e retry contra o Resend autorizado.
+
