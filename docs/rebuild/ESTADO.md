@@ -340,3 +340,5 @@ Verificação de build — 27/10/2026 07:27: `npm run build` concluiu com sucess
 
 No PostgreSQL 18.6 temporário e isolado, a cadeia completa de **29 migrations** e **29 arquivos/224 asserções pgTAP** foi executada com resultado **PASS**. A auditoria encontrou e corrigiu a portabilidade da importação idempotente: `extensions.digest` não era resolvido em um cluster local/CI sem schema `extensions`, e `ON CONFLICT (organization_id, idempotency_key)` não inferia o índice parcial. Foi criada a migration incremental `20261027110000_fix_import_idempotency_portability.sql`, aplicada no Supabase `zykfvzvydvifuzepujvv`, e a função remota foi verificada com `ON CONFLICT DO NOTHING` e wrapper com `search_path public, extensions`. O banco temporário foi removido após o teste.
 
+Verificação remota adicional: `extensions.digest(text,text)` existe no projeto autorizado, `public.digest` não é exigido e a operação SHA-256 retornou chave hexadecimal válida de 64 caracteres.
+
