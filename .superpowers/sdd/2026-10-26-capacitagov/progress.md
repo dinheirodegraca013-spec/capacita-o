@@ -6,7 +6,7 @@ Task 1: complete (tests: `npm test` → 1/1; `npm run typecheck` → 0; `npm run
 
 Task 2: complete (migration `20261026212248_identity.sql`; PostgreSQL 18 WSL + pgTAP `14/14`; `npm test` 1/1; `npm run typecheck` 0; `npm run lint` 0 erros). O wrapper `supabase test db` permanece indisponível sem Docker, então a suíte foi executada diretamente no PostgreSQL local real.
 
-Task 3: running — clientes Supabase SSR/browser/admin server-only, `requireActor`, endpoint `/api/v1/context` sem cache compartilhado e testes de 401/403; unit suite 4/4, typecheck/lint verdes. Falta validação contra Auth/API Supabase real antes de DONE.
+Task 3: review — clientes Supabase SSR/browser/admin server-only, `requireActor`, endpoint `/api/v1/context` sem cache compartilhado e testes de 401/403; `identity.test.ts` cobre múltiplos papéis e rejeição cross-tenant; testes focados 5/5, typecheck/lint verdes. Produção confirmou `/api/v1/context` anônimo com HTTP 401 e `Cache-Control: no-store`. Falta somente jornada autenticada contra Auth/API Supabase real antes de DONE.
 
 Task 25: complete (migration `20261026213618_audit.sql`; PostgreSQL 18 WSL + pgTAP `9/9`; audit service tests `2/2`; typecheck/lint verdes). Eventos só podem ser gravados pela fronteira interna e ficam tenant-scoped para leitura.
 
@@ -88,8 +88,11 @@ Regressão SQL: os 24 arquivos em `supabase/tests/` passaram em sequência no Po
 
 Retomada 27/10: a primeira execução revelou que `20261007_init.sql` era legado incompatível com a reconstrução; ele foi preservado em `supabase/legacy/` e removido da cadeia executável conforme o desenho. Instância PostgreSQL 18.6 temporária e isolada foi criada no WSL; migrations novas aplicaram sem erro e `pg_prove` passou `25` arquivos/`183` testes. Um fixture de importação foi corrigido para preparar dados sob a role proprietária antes de voltar à role `authenticated`. Suíte web revalidada: `npm test -- --run` 46/46, typecheck, lint e build concluídos com sucesso; build gerou 28 rotas.
 
+Retomada 27/10 — T03: o repositório de identidade ganhou testes focados para retorno de papéis válidos e isolamento da organização selecionada. Resultado: 2 arquivos/5 testes PASS, typecheck e lint PASS. O endpoint público `/api/v1/context` do deployment atual retornou HTTP 401 com `Cache-Control: no-store`; a prova autenticada continua pendente por limite de envio de e-mail do Supabase.
+
 Homologação Supabase autorizada em 27/10: as 28 migrations novas foram aplicadas ao projeto `zykfvzvydvifuzepujvv` em sequência, sem tocar dados de usuários. A auditoria posterior encontrou execução anônima indevida de funções `SECURITY DEFINER`; as migrations `20261027010000_harden_security_definer.sql`, `20261027010001_attendance_tokens_policy.sql` e `20261027010002_harden_function_search_path.sql` corrigiram privilégios, política explícita de tokens e search_path mutável. Regressão local final: `27` arquivos/`188` testes pgTAP PASS. Advisors Supabase agora mostram somente `verify_certificate` como SECURITY DEFINER público intencional e avisos de funções autenticadas/performance para revisão posterior.
 
 Push autorizado para disparar CI: falhou antes de enviar porque o credential Git local usa `Cabanas01` sem permissão no repositório `dinheirodegraca013-spec/capacita-o` (HTTP 403). Não houve push parcial nem alteração remota no GitHub.
 
 Validação do deployment informado pelo usuário (`https://capacita-o-x5hg.vercel.app`): raiz HTTP 200 com título CapacitaGov, porém a jornada pública `/login` retorna `404: NOT_FOUND`; Playwright remoto resultou `1 failed, 2 skipped`. Evidência indica que a URL atual aponta para outro build/configuração, não para a reconstrução Next em `apps/web`.
+
