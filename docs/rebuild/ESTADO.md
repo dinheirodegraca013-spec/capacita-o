@@ -342,3 +342,5 @@ No PostgreSQL 18.6 temporário e isolado, a cadeia completa de **29 migrations**
 
 Verificação remota adicional: `extensions.digest(text,text)` existe no projeto autorizado, `public.digest` não é exigido e a operação SHA-256 retornou chave hexadecimal válida de 64 caracteres.
 
+Homologação remota transacional da importação: sob `authenticated` com gestor temporário, duas chamadas idênticas retornaram o mesmo lote; o resultado foi `people_count=1` e `batch_count=1`. A transação terminou com `ROLLBACK`, sem dados persistentes.
+
