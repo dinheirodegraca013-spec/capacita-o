@@ -65,3 +65,10 @@ Não marcar a meta final como PASS enquanto SMTP, recuperação/rollback, previe
 - Cursos próprios: a UI agora permite selecionar modo autoinstrucional ou híbrido (`instructor_led`); typecheck, Vitest e build passaram. Homologação autenticada de autoria/publicação continua pendente.
 - Storage: `POST /api/v1/assets/[id]/complete` confirma a existência do objeto no bucket privado antes de promover `pending` para `ready`; typecheck, Vitest e build passaram. Não foi executado upload real com conta de homologação.
 
+### Correção do convite — 27/10/2026
+
+- `npm run typecheck`: PASS.
+- `npm test`: **26 arquivos/53 testes PASS**.
+- `npm run build`: PASS; a rota `/api/v1/invitations` foi compilada.
+- Não foi executado envio real para Gmail; requer conta de homologação e deployment atualizado.
+
