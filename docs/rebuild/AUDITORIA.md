@@ -90,3 +90,7 @@ O relatório mantém autorização por gestor e organização, e a exportação 
 
 O job não é público: claim exige `service_role`, o enqueue rejeita payload com PII sensível e itens em processamento podem ser recuperados após timeout. Falta apenas comprovação de entrega real e retry contra o Resend autorizado.
 
+### T28 — homologação — 27/10/2026
+
+As fronteiras públicas passaram sem sessão; não há evidência suficiente para declarar as jornadas completas porque Supabase público e credenciais de homologação não estão disponíveis neste ambiente. O status permanece RUNNING.
+
