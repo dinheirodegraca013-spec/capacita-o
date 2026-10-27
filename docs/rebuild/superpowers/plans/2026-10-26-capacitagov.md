@@ -145,6 +145,8 @@ Status único: PENDING → RUNNING → REVIEW → DONE; BLOCKED somente para dep
 
 - [ ] Executar ciclo da task e anexar evidência; revisar antes de marcar DONE.
 
+- [x] Regressão E2E adicionada em `tests/e2e/invitation.spec.ts` para ativação e callback seguro; execução local: **2 skipped** por ausência das variáveis públicas Supabase. Entrega real por Resend/Auth continua pendente.
+
 ### T06 — Gestão de organização e unidades
 
 **Meta/prioridade:** M2/P0. **Status:** RUNNING. **Depende:** T03. **Requisitos:** R01,R08.
