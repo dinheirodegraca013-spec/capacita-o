@@ -44,3 +44,5 @@ Diagnóstico: novos convites usavam `inviteUserByEmail`, deixando a entrega depe
 
 Implementação parcial verificada: conteúdo persistido é carregado no editor, novas aulas aceitam texto, a API valida títulos e a publicação fica bloqueada no cliente quando não há conteúdo. Typecheck, Vitest e build passaram; o E2E autenticado foi criado, mas ficou skipped sem credenciais de homologação. T11 permanece RUNNING e não pode ser considerada concluída.
 
+CI remoto confirmou web e SQL/pgTAP verdes no head `dbce0b205a2c3fd218985b7afb99802563e0fbdd` (runs `40474451225` e `40474451137`). Isso não substitui a homologação autenticada.
+
