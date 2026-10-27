@@ -1,5 +1,5 @@
-import { redirect } from 'next/navigation';
-import { createSupabaseServerClient } from '@/lib/supabase/server';
-import { OfferingManagementForm } from '@/components/catalog/offering-management-form';
-export const dynamic = 'force-dynamic';
-export default async function CatalogManagementPage({ params }: { params: Promise<{ orgId: string }> }) { const { orgId } = await params; const supabase = await createSupabaseServerClient(); const { data: { user } } = await supabase.auth.getUser(); if (!user) redirect('/login'); const { data: versions } = await supabase.from('course_versions').select('id, title, course_grants!inner(organization_id)').eq('course_grants.organization_id', orgId).eq('status', 'published').order('created_at', { ascending: false }); const { data: offerings } = await supabase.from('offerings').select('id, title, status').eq('organization_id', orgId).order('created_at', { ascending: false }); return <section className="stack"><h1>Catálogo institucional</h1>{versions?.[0] ? <OfferingManagementForm organizationId={orgId} courseVersionId={versions[0].id} /> : <p className="empty-state">Nenhum curso publicado/concedido disponível.</p>}<ul>{(offerings ?? []).map((offering) => <li key={offering.id}>{offering.title} — {offering.status}</li>)}</ul></section>; }
+Get-Content: 
+Line |
+   2 |  Get-Content -Raw 'apps/web/src/app/(portal)/o/[orgId]/gestao/catalogo …
+     |  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | An object at the specified path apps/web/src/app/(portal)/o/[orgId]/gestao/catalogo/page.tsx does not exist, or has been filtered by the -Include or -Exclude parameter.
