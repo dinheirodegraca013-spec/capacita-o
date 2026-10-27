@@ -46,3 +46,7 @@ Implementação parcial verificada: conteúdo persistido é carregado no editor,
 
 CI remoto confirmou web e SQL/pgTAP verdes no head `dbce0b205a2c3fd218985b7afb99802563e0fbdd` (runs `40474451225` e `40474451137`). Isso não substitui a homologação autenticada.
 
+### T14 — catálogo e biblioteca — 27/10/2026
+
+Implementação parcial verificada: o cartão de oferta exibe janela/capacidade e falha de matrícula com alerta; o E2E de catálogo/biblioteca foi criado. Sem conta não produtiva, a jornada autenticada ainda não pode ser considerada evidência de aceite.
+
