@@ -142,6 +142,8 @@ Não marcar a meta final como PASS enquanto SMTP, recuperação/rollback, previe
 
 Produção permanece no deployment `dpl_AFpdc7tcRRiqv99Hk4Cd7Q7EMyRH`/commit `92caa2f`; preview do HEAD atual segue pendente por `api-deployments-free-per-day`.
 
+Janela de retry registrada: após `2026-10-28T09:21:01Z`; não repetir antes disso.
+
 Consulta remota somente leitura: `auth.users=1`, `organizations=0`, `active_memberships=0`; jornadas autenticadas de dois tenants não são executáveis sem dataset/contas de homologação autorizados.
 
 - `tests/e2e/preview.spec.ts` foi ajustado para exigir ambiente público Supabase antes de validar rotas profundas.
