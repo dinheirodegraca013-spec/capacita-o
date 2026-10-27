@@ -122,3 +122,5 @@ CI/PR 27/10: PR draft #2 aberto contra `main` para revisão. No commit `54505b23
 
 Revalidação CI 27/10: o head `b871f7c98b3e7a2d8dec8558f4823b48390a71b4` também passou web run `40470617197` e SQL/pgTAP run `40470617027`, ambos `success`, incluindo build e aplicação completa das migrations.
 
+T06 complemento 27/10: gestão institucional ganhou formulário de edição de nome/fuso e cadastro de unidades; `PATCH`/`POST /api/v1/organizations/[orgId]` agora exigem membership ativo com papel `manager` antes da operação, além do RLS. Suíte web `26/53` testes PASS, typecheck, lint e build PASS. E2E cross-tenant continua pendente.
+
