@@ -82,6 +82,8 @@ Task 29: running — runbook de release, recuperação e gates remotos documenta
 
 Task 30: running — inventário LGPD, operação de conteúdo e critérios de liberação documentados. Falta revisão jurídica/independente, backup remoto ensaiado, homologação real e aprovação de release.
 
+Retomada 27/10 — revisão independente: foram corrigidos os riscos de integridade cross-tenant em turmas/encontros/instrutores/memberships com a migration `20261027062000_tenant_composite_fks.sql`, aplicada remotamente e confirmada por consulta dos quatro constraints. `confirm_attendance` agora exige matrícula e membership ativos no mesmo tenant. A UI de catálogo de gestão também inclui cursos próprios da organização, além do catálogo central concedido. Ainda não há evidência suficiente para fechar T03/T28–T30: autenticação real de duas organizações, SMTP/worker, backup/rollback e auditoria final continuam pendentes.
+
 Segurança de dependências: `npm audit --audit-level=high` está limpo após Playwright `1.55.1` e Vite `7.3.7`; testes web `46/46`, typecheck, lint e build continuam verdes.
 
 Regressão SQL: os 24 arquivos em `supabase/tests/` passaram em sequência no PostgreSQL 18 local, incluindo novas fronteiras de oferta e matrícula em turma.
