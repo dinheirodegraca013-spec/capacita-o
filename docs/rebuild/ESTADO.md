@@ -190,3 +190,5 @@ CI remoto do head documental `3eb1d0f4aa30852c794130001c531f66eaabbf4f`: web run
 
 O editor de avaliações passou a aceitar múltiplas questões, opções com alternativa correta selecionável, nota mínima, tempo limite e tentativas máximas. A tela de gestão agora oferece publicação explícita de rascunhos. Criado `tests/e2e/assessment-authoring.spec.ts`; homologação autenticada permanece pendente.
 
+CI remoto do head documental `027822949a56e0605f24bb1935cb2fd2d60e8ed2`: web run `40476060359` e SQL/pgTAP run `40476060282`, ambos `success`.
+
