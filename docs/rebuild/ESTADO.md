@@ -174,3 +174,7 @@ O cartão de oferta agora informa início, prazo e capacidade quando definidos, 
 
 CI remoto do head documental `c4b7bfdfd2c3aa4eebc82d3c6b3880915e2610d9`: web run `40474826961` e SQL/pgTAP run `40474826848`, ambos `success`.
 
+## T15 — player e progresso persistente — 27/10/2026
+
+O player passou a carregar e exibir o conteúdo textual da aula, permitir salvar posição em segundos e marcar a aula como concluída sem perder a retomada. O RPC existente mantém monotonicidade/idempotência e rejeita posições impossíveis. Foi criado `tests/e2e/learning.spec.ts`, condicionado a matrícula de homologação. A jornada autenticada real continua pendente.
+
