@@ -410,7 +410,7 @@ Status único: PENDING → RUNNING → REVIEW → DONE; BLOCKED somente para dep
 
 ### T24 — Satisfação após conclusão
 
-**Meta/prioridade:** M7/P1. **Status:** PENDING. **Depende:** T22. **Requisitos:** R08.
+**Meta/prioridade:** M7/P1. **Status:** RUNNING. **Depende:** T22. **Requisitos:** R08.
 
 **Criar/alterar:** `src/modules/feedback/service.ts`, `src/components/feedback/course-feedback.tsx`, `supabase/migrations/<gerado>_feedback.sql`.
 
@@ -420,7 +420,8 @@ Status único: PENDING → RUNNING → REVIEW → DONE; BLOCKED somente para dep
 
 **Aceite verificável:** Não concluinte e tenant alheio bloqueados; repetição não soma avaliação; comentário tratado como texto; média e contagem são reais e tenant-scoped.
 
-- [ ] Executar ciclo da task e anexar evidência; revisar antes de marcar DONE.
+- [x] Feedback validado por RPC com rating 1–5, uma avaliação por matrícula concluída; formulário integrado à área de certificados e E2E condicionado criado.
+- [ ] Executar jornada autenticada e anexar evidência; revisar antes de marcar DONE.
 
 ### T25 — Auditoria consistente das mutações
 
