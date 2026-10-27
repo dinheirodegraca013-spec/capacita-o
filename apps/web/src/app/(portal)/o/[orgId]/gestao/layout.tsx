@@ -1,5 +1,6 @@
 import { notFound, redirect } from 'next/navigation';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { requiresMfaForAssurance } from '@/modules/auth/redirect';
 
 export const dynamic = 'force-dynamic';
 
@@ -17,5 +18,10 @@ export default async function ManagementLayout({ children, params }: { children:
     .maybeSingle();
   const roles = ((membership?.membership_roles ?? []) as Array<{ role: string }>).map((item) => item.role);
   if (!membership || !roles.includes('manager')) notFound();
+  const { data: assurance } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+  if (requiresMfaForAssurance(roles as Array<'manager' | 'instructor' | 'student'>, assurance?.currentLevel)) {
+    redirect(`/mfa?next=${encodeURIComponent(`/o/${orgId}/gestao`)}`);
+  }
   return children;
 }
+
