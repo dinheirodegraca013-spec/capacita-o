@@ -152,3 +152,5 @@ Corrigida a tela de catálogo institucional: o gestor agora recebe uma forma de 
 
 Parecer **BLOCKED para liberação integral**, sem marcar a meta como concluída. O código e o CI permanecem verdes, mas continuam pendentes E2E autenticado de dois tenants, SMTP/worker real, backup/restauração/rollback e preview Vercel do HEAD. A cota `api-deployments-free-per-day` segue retornando HTTP 402; produção não foi alterada.
 
+T07 complemento — o pós-commit da importação agora dispara convites de aluno pelo endpoint institucional em lotes de cinco, contabilizando falhas sem desfazer a importação já confirmada. Typecheck, Vitest (**26 arquivos/53 testes**) e build passaram; o teste operacional de e-mail continua pendente.
+
