@@ -28,7 +28,7 @@ jobs:
       - name: Install PostgreSQL client and pgTAP
         run: |
           sudo apt-get update
-          sudo apt-get install -y postgresql-client-16
+          sudo apt-get install -y postgresql-client
           container=$(docker ps --filter 'ancestor=quay.io/abn/pgtap:1.3.1-pg16' --format '{{.ID}}' | head -n 1)
           test -n "$container"
       - name: Apply migrations
