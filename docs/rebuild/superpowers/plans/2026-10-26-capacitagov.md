@@ -363,7 +363,7 @@ Status único: PENDING → RUNNING → REVIEW → DONE; BLOCKED somente para dep
 
 ### T21 — Chamada e QR com prazo
 
-**Meta/prioridade:** M6/P0. **Status:** PENDING. **Depende:** T20. **Requisitos:** R06,R09.
+**Meta/prioridade:** M6/P0. **Status:** RUNNING. **Depende:** T20. **Requisitos:** R06,R09.
 
 **Criar/alterar:** `src/modules/attendance/service.ts`, `src/app/api/v1/meetings/[id]/qr/route.ts`, `src/app/api/v1/attendance/route.ts`, `src/components/attendance/roll-call.tsx`, `supabase/migrations/<gerado>_attendance.sql`.
 
@@ -373,7 +373,8 @@ Status único: PENDING → RUNNING → REVIEW → DONE; BLOCKED somente para dep
 
 **Aceite verificável:** Token vazio/aleatório/expirado e de outro encontro negados; matrícula ausente negada; repetição não duplica; gestor/professor atribuído pode corrigir com auditoria; instituição B nunca aceita token de A.
 
-- [ ] Executar ciclo da task e anexar evidência; revisar antes de marcar DONE.
+- [x] QR de 5 minutos, confirmação idempotente e correção de presença por gestor/instrutor foram expostos por RPC/API; correções geram evento de auditoria; E2E condicionado criado.
+- [ ] Executar jornada autenticada com token válido, inválido e expirado; revisar antes de marcar DONE.
 
 ### T22 — Conclusão e certificação únicas
 
