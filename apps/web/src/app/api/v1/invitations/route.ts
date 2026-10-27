@@ -18,7 +18,10 @@ export async function POST(request: NextRequest) {
   try {
     const admin = createSupabaseAdminClient();
     const invitation = await inviteMember({ userId: user.id, organizationId: body.organizationId, membershipId: membership.id, roles }, { email: body.email, roles: body.roles }, admin as never);
-    const redirectTo = buildInvitationRedirect(request.nextUrl.origin, invitation.rawToken ?? '');
+    // Use the canonical public origin so links generated behind a preview/proxy
+    // never point to an unreachable host or an unallowlisted Supabase redirect.
+    const publicOrigin = (process.env.NEXT_PUBLIC_APP_URL || request.nextUrl.origin).replace(/\/$/, '');
+    const redirectTo = buildInvitationRedirect(publicOrigin, invitation.rawToken ?? '');
     const { error: inviteError } = await admin.auth.admin.inviteUserByEmail(invitation.email, { redirectTo });
     if (inviteError) {
       if (!/already|registered|exists/i.test(inviteError.message)) return NextResponse.json({ error: 'INVITE_DELIVERY_FAILED' }, { status: 503 });
