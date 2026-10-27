@@ -469,7 +469,7 @@ Status único: PENDING → RUNNING → REVIEW → DONE; BLOCKED somente para dep
 
 ### T28 — Homologação SQL e duas jornadas completas
 
-**Meta/prioridade:** M9/P0. **Status:** PENDING. **Depende:** T01–T27. **Requisitos:** R01–R10.
+**Meta/prioridade:** M9/P0. **Status:** RUNNING. **Depende:** T01–T27. **Requisitos:** R01–R10.
 
 **Criar/alterar:** `tests/e2e/institution-self-paced.spec.ts`, `tests/e2e/institution-hybrid.spec.ts`, `supabase/tests/isolation.test.sql`, `docs/rebuild/TESTES.md`, `docs/rebuild/AUDITORIA.md`.
 
@@ -479,7 +479,8 @@ Status único: PENDING → RUNNING → REVIEW → DONE; BLOCKED somente para dep
 
 **Aceite verificável:** Banco real local, sem mock de RLS; nenhuma jornada usa mockDb; duas sessões simultâneas isoladas; todas as regressões P0 passadas; evidências de navegador e resultados registrados.
 
-- [ ] Executar ciclo da task e anexar evidência; revisar antes de marcar DONE.
+- [x] Fronteiras públicas e Storage sem sessão foram exercitadas; E2E local ficou **4 pass / 5 skipped** sem Supabase/conta de homologação. Teste SQL de isolamento permanece preparado.
+- [ ] Executar as duas jornadas autenticadas completas e anexar evidência; revisar antes de marcar DONE.
 
 ### T29 — Ambiente remoto e preview Vercel
 
