@@ -16,7 +16,8 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(await enroll({ userId: user.id, organizationId: body.organizationId, membershipId: membership.id, roles }, { offeringId: body.offeringId, membershipId: body.membershipId }, supabase as never), { status: 201 });
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Enrollment failed';
-    const status = message.includes('FORBIDDEN') ? 403 : message.includes('FULL') ? 409 : 422;
+    const status = message.includes('FORBIDDEN') ? 403 : message.includes('FULL') || message.includes('UNAVAILABLE') || message.includes('NOT_STARTED') || message.includes('EXPIRED') ? 409 : 422;
     return NextResponse.json({ error: message }, { status });
   }
 }
+
