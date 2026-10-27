@@ -5,6 +5,20 @@ import { buildInvitationRedirect, inviteMember, resolveInvitationOrigin } from '
 import { buildInvitationEmail } from '@/modules/notifications/resend';
 import type { OrganizationRole } from '@/modules/identity/model';
 
+export async function GET(request: NextRequest) {
+  const organizationId = request.nextUrl.searchParams.get('organizationId');
+  if (!organizationId) return NextResponse.json({ error: 'VALIDATION' }, { status: 422 });
+  const supabase = await createSupabaseServerClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return NextResponse.json({ error: 'UNAUTHENTICATED' }, { status: 401 });
+  const { data: membership } = await supabase.from('memberships').select('membership_roles(role)').eq('user_id', user.id).eq('organization_id', organizationId).eq('status', 'active').maybeSingle();
+  const roles = ((membership?.membership_roles ?? []) as Array<{ role: OrganizationRole }>).map((item) => item.role);
+  if (!membership || !roles.includes('manager')) return NextResponse.json({ error: 'FORBIDDEN' }, { status: 403 });
+  const { data, error } = await supabase.from('invitations').select('id, email, roles, status, expires_at, last_sent_at').eq('organization_id', organizationId).in('status', ['pending', 'sent', 'failed']).order('created_at', { ascending: false }).limit(50);
+  if (error) return NextResponse.json({ error: 'UNAVAILABLE' }, { status: 503 });
+  return NextResponse.json({ invitations: data ?? [] });
+}
+
 export async function POST(request: NextRequest) {
   const supabase = await createSupabaseServerClient();
   const { data: { user } } = await supabase.auth.getUser();
