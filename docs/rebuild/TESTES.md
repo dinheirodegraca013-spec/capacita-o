@@ -54,3 +54,11 @@ Não marcar a meta final como PASS enquanto SMTP, recuperação/rollback, previe
 - **Fechamento — 27/10/2026:** deployment READY; `https://capacita-o-x5hg.vercel.app/` HTTP 200 e título `CapacitaGov`; segredo do scheduler configurado. Envio real permanece bloqueado sem `SUPABASE_SERVICE_ROLE_KEY`.
 - **Imagens — 27/10/2026:** `npm run typecheck`, `npm run lint` e `npm run build` **PASS** após adicionar o hero visual. Publicação aguardando limite diário da Vercel.
 
+## Auditoria intermediária atual — 27/10/2026
+
+- Convite: callback aceita `code` e `token_hash`; E2E público cobre callback inválido e o cenário com `token_hash` fica condicionado às variáveis públicas do Supabase.
+- Navegação: `tests/e2e/navigation.spec.ts` passou no viewport de 360px com foco por teclado; rota autenticada direta foi omitida localmente sem configuração pública do Supabase.
+- Catálogo: a tela de gestão agora renderiza uma oferta para cada versão publicada central/própria; typecheck, 53 testes Vitest e build passaram.
+- CI remoto do HEAD documental `5edf8bda1df6a1e8a1ac5e0da48fae5d2ed6ea05`: web run `40472719308` e SQL/pgTAP run `40472719118`, ambos `success`.
+- Não contar como PASS final: preview Vercel do HEAD, E2E autenticado de dois tenants, SMTP/worker real e backup/rollback continuam pendentes.
+
