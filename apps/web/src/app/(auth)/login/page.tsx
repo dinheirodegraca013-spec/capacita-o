@@ -2,6 +2,7 @@
 
 import { FormEvent, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { createSupabaseBrowserClient } from '@/lib/supabase/browser';
 import { safeRedirectPath } from '@/modules/auth/redirect';
 
@@ -18,5 +19,6 @@ export default function LoginPage() {
     else router.push(safeRedirectPath('/selecionar-organizacao'));
     setBusy(false);
   }
-  return <main><h1>Entrar no CapacitaGov</h1><form onSubmit={submit}><label>E-mail<input name="email" type="email" autoComplete="email" required /></label><label>Senha<input name="password" type="password" autoComplete="current-password" required /></label>{error && <p role="alert">{error}</p>}<button disabled={busy}>{busy ? 'Entrando…' : 'Entrar'}</button></form><a href="/recuperar-senha">Esqueci minha senha</a></main>;
+  return <main className="auth-page"><div className="auth-brand"><Link className="brand brand-dark" href="/">CapacitaGov</Link></div><section className="auth-card" aria-labelledby="login-title"><p className="eyebrow accent">Área segura</p><h1 id="login-title">Entrar no CapacitaGov</h1><p className="muted">Use seu e-mail institucional para continuar.</p><form onSubmit={submit}><label>E-mail<input name="email" type="email" autoComplete="email" placeholder="voce@organizacao.gov.br" required /></label><label>Senha<input name="password" type="password" autoComplete="current-password" placeholder="Sua senha" required /></label>{error && <p role="alert" className="form-error">{error}</p>}<button className="primary-button" disabled={busy}>{busy ? 'Entrando…' : 'Entrar'}</button></form><Link className="text-link" href="/recuperar-senha">Esqueci minha senha</Link></section></main>;
 }
+

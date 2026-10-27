@@ -1,5 +1,6 @@
 'use client';
 
+import { usePathname } from 'next/navigation';
 import type { OrganizationRole } from '@/modules/identity/model';
 
 export type MenuItem = { label: string; href: string; roles: OrganizationRole[] };
@@ -23,5 +24,7 @@ export function menuForRoles(roles: OrganizationRole[]) {
 
 export function PortalShell({ organizationName, organizationId, roles, children }: { organizationName: string; organizationId: string; roles: OrganizationRole[]; children: React.ReactNode }) {
   const items = menuForRoles(roles);
-  return <div className="portal-shell"><header className="portal-header"><a className="brand" href={`/o/${organizationId}`}>CapacitaGov</a><span className="organization-name" title={organizationName}>{organizationName}</span><form action="/auth/signout" method="post"><button className="secondary-button" type="submit">Sair</button></form></header><div className="portal-body"><nav aria-label="Navegação institucional" className="portal-nav"><ul>{items.map((item) => <li key={item.label}><a href={`/o/${organizationId}${item.href}`}>{item.label}</a></li>)}</ul></nav><main className="portal-content">{children}</main></div></div>;
+  const pathname = usePathname();
+  return <div className="portal-shell"><a className="skip-link" href="#conteudo">Pular para o conteúdo</a><header className="portal-header"><a className="brand" href={`/o/${organizationId}`} aria-label="CapacitaGov, início"><span className="brand-mark" aria-hidden="true">C</span><span>CapacitaGov</span></a><div className="header-context"><span className="eyebrow">Organização ativa</span><span className="organization-name" title={organizationName}>{organizationName}</span></div><form action="/auth/signout" method="post"><button className="secondary-button" type="submit">Sair</button></form></header><div className="portal-body"><nav aria-label="Navegação institucional" className="portal-nav"><p className="nav-heading">Seu espaço</p><ul>{items.map((item) => { const href = `/o/${organizationId}${item.href}`; const active = pathname === href || (item.href !== '/' && pathname.startsWith(href)); return <li key={item.label}><a className={active ? 'active' : ''} aria-current={active ? 'page' : undefined} href={href}>{item.label}</a></li>; })}</ul></nav><main id="conteudo" className="portal-content">{children}</main></div></div>;
 }
+

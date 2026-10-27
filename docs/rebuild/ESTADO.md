@@ -18,6 +18,12 @@ Registro histórico inicial: pesquisa pública, inventário de código/infraestr
 
 O plano original contém 30 tasks em 10 metas; seus itens ainda precisam ser fechados formalmente com evidência individual. A revisão independente apontou ambiguidades que foram resolvidas no desenho: cálculo de presença por minutos, vínculo de matrícula com turma e limites de alteração pela oferta.
 
+## Atualização UX/UI — 27/10/2026
+
+Adotada a abordagem institucional sóbria: landing orientada a valor, autenticação com contexto, seleção de organização em cartões, shell do portal com navegação ativa, foco visível, atalho de acessibilidade, responsividade e estados vazios mais claros. Alterados `apps/web/src/app/globals.css`, `apps/web/src/app/page.tsx`, `apps/web/src/app/(auth)/login/page.tsx`, `apps/web/src/app/(portal)/selecionar-organizacao/page.tsx` e `apps/web/src/components/layout/portal-shell.tsx`.
+
+Verificação local: `npm run typecheck`, `npm run lint` e `npm run build` passaram após a mudança. A publicação dessa rodada ainda precisa ser criada e validada no domínio público.
+
 ## Próxima ação
 
 Fechar as pendências operacionais: SMTP/Auth de convite, observabilidade, preview com dados isolados, CI remoto, recuperação/rollback e auditoria independente final. O plano técnico continua sujeito a evidências, não a aprovação implícita.
@@ -26,7 +32,7 @@ Fechar as pendências operacionais: SMTP/Auth de convite, observabilidade, previ
 
 - Repositório: `https://github.com/dinheirodegraca013-spec/capacita-o`.
 - Supabase exclusivo: `zykfvzvydvifuzepujvv`, CAPACITAGOV, ativo; migrations funcionais e hardenings aplicados.
-- Vercel: projeto `capacita-o-x5hg`, domínio `https://capacita-o-x5hg.vercel.app/`, último deployment READY `dpl_7KE9Cje9s6YFSVBbXYEZt8VYsj6w`.
+- Vercel: projeto `capacita-o-x5hg`, domínio `https://capacita-o-x5hg.vercel.app/`, último deployment READY validado `dpl_3MckDyLVDVGF6thFHK7LPXbNPFaW`, commit `39d9008fe25789b175931bf1253a3436fe0eda0d`.
 - Raiz desta rodada: `E:/000  arquivos que nao puderam ser enviados/Downloads/SISTEMAS/CAPACITAGOV`.
 - Checkout de implementação: subpasta `capacita-o/`, branch `feat/capacitagov-rebuild`.
 - Código novo: `capacita-o/apps/web/`.
@@ -56,3 +62,4 @@ Provedor SMTP/serviço de envio e observabilidade; preview Vercel com dados não
 - Nova proteção de rota: `/gestao/*` exige papel `manager` no servidor e `/professor` exige `instructor` ou `manager`; typecheck, lint e build passaram. A publicação correspondente ficou READY em `dpl_7KE9Cje9s6YFSVBbXYEZt8VYsj6w`. A tentativa de criar uma segunda conta de teste para provar o bloqueio foi impedida pelo limite de envio de e-mail do Supabase; nenhum dado temporário permaneceu.
 - Otimização de banco aplicada: `20261027040000_rls_initplan_optimization`, `20261027041000_fk_indexes` e `20261027042000_fk_indexes_remaining`. `pg_prove` local continua 28/199 PASS; advisor remoto confirmou zero `auth_rls_initplan` e zero FK sem índice. Permanecem somente avisos INFO de índices não utilizados, esperados antes de carga real.
 - Procedimento de Vercel formalizado em `docs/rebuild/operations/deploy.md`; preview isolado continua pendente porque o único Supabase autorizado é o projeto remoto de produção.
+
