@@ -334,3 +334,5 @@ O deploy automático do GitHub concluiu `READY` no projeto `capacita-o-x5hg`, de
 
 O worker interno agora envia o `idempotency-key` do registro de outbox ao Resend (com fallback ao ID da notificação), evitando duplicidade quando uma entrega é confirmada pelo provedor e a resposta se perde antes da atualização do banco. A cobertura foi ampliada para **28 arquivos/68 testes PASS**, typecheck e lint PASS. O commit `c421d1d` foi sincronizado no `main`; a entrega real autenticada ainda requer caixa de homologação.
 
+Verificação de build — 27/10/2026 07:27: `npm run build` concluiu com sucesso e enumerou as rotas dinâmicas `/api/internal/notifications`, `/api/v1/invitations`, `/api/v1/invitations/resend` e `/auth/signout`. O status do commit remoto do worker registrou falha exclusiva do Vercel por `Deployment rate limited — retry in 24 hours`; não há falha de compilação ou teste local.
+
