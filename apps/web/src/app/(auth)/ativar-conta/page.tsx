@@ -14,6 +14,13 @@ export default function ActivateAccountPage() {
     const supabase = createSupabaseBrowserClient();
     let active = true;
     const token = new URLSearchParams(window.location.search).get('token');
+    const query = new URLSearchParams(window.location.search);
+    const code = query.get('code');
+    const tokenHash = query.get('token_hash');
+    const tokenType = query.get('type');
+    const hash = new URLSearchParams(window.location.hash.replace(/^#/, ''));
+    const accessToken = hash.get('access_token');
+    const refreshToken = hash.get('refresh_token');
     if (token) {
       invitationToken.current = token;
       // Keep Supabase's auth hash intact.  Replacing the URL without the hash
@@ -22,14 +29,25 @@ export default function ActivateAccountPage() {
       window.history.replaceState({}, '', `/ativar-conta${window.location.hash}`);
     }
     const loadSession = async () => {
-      // Invite links may deliver the session in the URL hash. The browser
-      // client normally consumes it automatically; getSession confirms that
-      // it is available before the user can submit the activation form.
+      // Handle every Supabase link format explicitly. Relying only on the
+      // browser client's automatic hash listener can race with the first
+      // render and make a valid invitation look like a dead button.
+      let linkError: { message: string } | null = null;
+      if (accessToken && refreshToken) {
+        const result = await supabase.auth.setSession({ access_token: accessToken, refresh_token: refreshToken });
+        linkError = result.error;
+      } else if (code) {
+        const result = await supabase.auth.exchangeCodeForSession(code);
+        linkError = result.error;
+      } else if (tokenHash && ['invite', 'magiclink', 'recovery'].includes(tokenType ?? '')) {
+        const result = await supabase.auth.verifyOtp({ token_hash: tokenHash, type: tokenType as 'invite' | 'magiclink' | 'recovery' });
+        linkError = result.error;
+      }
       const { data, error: sessionError } = await supabase.auth.getSession();
       if (!active) return;
       setExistingAccount(Boolean(data.session?.user?.email_confirmed_at));
-      setAuthReady(!sessionError && Boolean(data.session));
-      if (sessionError || !data.session) setError('Este convite expirou ou já foi utilizado. Solicite um novo convite.');
+      setAuthReady(!linkError && !sessionError && Boolean(data.session));
+      if (linkError || sessionError || !data.session) setError('Este convite expirou ou já foi utilizado. Solicite um novo convite.');
     };
     void loadSession();
     const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
