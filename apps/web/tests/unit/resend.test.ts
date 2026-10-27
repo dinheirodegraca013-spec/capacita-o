@@ -15,6 +15,7 @@ describe('Resend notification payload', () => {
     expect(result.html).toContain('&lt;unsafe&gt;');
     expect(result.html).toContain('Se o botão não abrir');
     expect(result.html).toContain('href="https://example.com/auth?token=&lt;unsafe&gt;"');
+    expect(result.html).toContain('target="_blank"');
   });
 });
 
