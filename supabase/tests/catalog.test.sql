@@ -1,0 +1,26 @@
+begin;
+select plan(8);
+select has_table('public'::name, 'course_grants'::name);
+select has_table('public'::name, 'offerings'::name);
+select ok(exists (select 1 from pg_policies where schemaname = 'public' and tablename = 'course_grants' and policyname = 'grants_insert_platform'), 'only platform can grant');
+select ok(exists (select 1 from pg_policies where schemaname = 'public' and tablename = 'offerings' and policyname = 'offerings_insert_manager'), 'manager offering policy exists');
+
+insert into auth.users(id) values ('00000000-0000-0000-0000-000000000033'), ('00000000-0000-0000-0000-000000000034');
+insert into public.platform_admins(user_id) values ('00000000-0000-0000-0000-000000000033');
+insert into public.organizations(id, name, slug, kind) values ('10000000-0000-0000-0000-000000000033', 'Catalog A', 'catalog-a', 'company'), ('10000000-0000-0000-0000-000000000034', 'Catalog B', 'catalog-b', 'company');
+insert into public.memberships(id, user_id, organization_id, status) values ('20000000-0000-0000-0000-000000000033', '00000000-0000-0000-0000-000000000033', '10000000-0000-0000-0000-000000000033', 'active'), ('20000000-0000-0000-0000-000000000034', '00000000-0000-0000-0000-000000000034', '10000000-0000-0000-0000-000000000034', 'active');
+insert into public.membership_roles(membership_id, role) values ('20000000-0000-0000-0000-000000000033', 'manager'), ('20000000-0000-0000-0000-000000000034', 'manager');
+insert into public.courses(id, owner_type, title, slug, status, license_confirmed) values ('40000000-0000-0000-0000-000000000033', 'central', 'Central Course', 'central-course', 'published', true);
+insert into public.course_versions(id, course_id, version_no, title, license_confirmed, status, learning_mode, published_at) values ('50000000-0000-0000-0000-000000000033', '40000000-0000-0000-0000-000000000033', 1, 'Central Course', true, 'published', 'self_paced', now());
+set local role authenticated;
+set local request.jwt.claim.sub = '00000000-0000-0000-0000-000000000033';
+insert into public.course_grants(organization_id, course_version_id, granted_by) values ('10000000-0000-0000-0000-000000000033', '50000000-0000-0000-0000-000000000033', '00000000-0000-0000-0000-000000000033');
+select is((select count(*)::integer from public.course_grants), 1, 'platform grant created');
+set local request.jwt.claim.sub = '00000000-0000-0000-0000-000000000033';
+insert into public.offerings(organization_id, course_version_id, title, enrollment_policy, status) values ('10000000-0000-0000-0000-000000000033', '50000000-0000-0000-0000-000000000033', 'Oferta A', 'self_enroll', 'published');
+select is((select count(*)::integer from public.offerings), 1, 'granted manager creates offering');
+set local request.jwt.claim.sub = '00000000-0000-0000-0000-000000000034';
+select is((select count(*)::integer from public.course_grants), 0, 'other tenant cannot see grant');
+select is((select count(*)::integer from public.offerings), 0, 'other tenant cannot see offering');
+select * from finish();
+rollback;

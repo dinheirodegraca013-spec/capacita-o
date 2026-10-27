@@ -1,0 +1,4 @@
+import { describe, expect, it, vi } from 'vitest';
+import { submitFeedback } from '../../src/modules/feedback/service';
+
+describe('feedback service', () => { it('validates rating before RPC', async () => { const client = { rpc: vi.fn() }; await expect(submitFeedback({ userId: 'u', organizationId: 'o', membershipId: 'm', roles: ['student'] }, { enrollmentId: 'e', rating: 6, comment: '' }, client)).rejects.toThrow('FEEDBACK_INVALID'); expect(client.rpc).not.toHaveBeenCalled(); }); it('submits one evaluation', async () => { const client = { rpc: vi.fn().mockResolvedValue({ data: 'f1', error: null }) }; await expect(submitFeedback({ userId: 'u', organizationId: 'o', membershipId: 'm', roles: ['student'] }, { enrollmentId: 'e', rating: 5, comment: ' Ótimo ' }, client)).resolves.toBe('f1'); }); });

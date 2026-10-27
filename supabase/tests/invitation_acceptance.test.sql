@@ -1,0 +1,14 @@
+begin;
+select plan(4);
+select has_function('public'::name, 'accept_invitation'::name);
+insert into auth.users(id) values ('00000000-0000-0000-0000-000000000071');
+insert into public.organizations(id, name, slug, kind) values ('10000000-0000-0000-0000-000000000071', 'Invite Org', 'invite-org', 'company');
+insert into public.invitations(id, organization_id, invited_by, email, roles, token_hash, expires_at) values ('90000000-0000-0000-0000-000000000071', '10000000-0000-0000-0000-000000000071', '00000000-0000-0000-0000-000000000071', 'new.user@example.com', array['student'], encode(digest('secret-token', 'sha256'), 'hex'), now() + interval '1 hour');
+set local role authenticated;
+set local request.jwt.claim.sub = '00000000-0000-0000-0000-000000000071';
+select set_config('request.jwt.claim.email', 'new.user@example.com', true);
+select is(public.accept_invitation('secret-token'), '10000000-0000-0000-0000-000000000071'::uuid, 'matching user accepts invitation');
+select is((select status from public.memberships where user_id = '00000000-0000-0000-0000-000000000071'), 'active', 'membership is activated');
+select is((select status from public.invitations where id = '90000000-0000-0000-0000-000000000071'), 'accepted', 'invitation is consumed');
+select * from finish();
+rollback;

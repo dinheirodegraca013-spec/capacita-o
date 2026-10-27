@@ -1,0 +1,24 @@
+begin;
+select plan(9);
+select has_table('public'::name, 'courses'::name);
+select has_table('public'::name, 'course_versions'::name);
+select has_table('public'::name, 'course_modules'::name);
+select ok(exists (select 1 from pg_policies where schemaname = 'public' and tablename = 'courses' and policyname = 'courses_select_scoped'), 'course scoped policy exists');
+select has_function('public'::name, 'prevent_published_version_mutation'::name);
+
+insert into auth.users(id) values ('00000000-0000-0000-0000-000000000031'), ('00000000-0000-0000-0000-000000000032');
+insert into public.organizations(id, name, slug, kind) values ('10000000-0000-0000-0000-000000000031', 'Course A', 'course-a', 'company'), ('10000000-0000-0000-0000-000000000032', 'Course B', 'course-b', 'company');
+insert into public.memberships(id, user_id, organization_id, status) values ('20000000-0000-0000-0000-000000000031', '00000000-0000-0000-0000-000000000031', '10000000-0000-0000-0000-000000000031', 'active'), ('20000000-0000-0000-0000-000000000032', '00000000-0000-0000-0000-000000000032', '10000000-0000-0000-0000-000000000032', 'active');
+insert into public.membership_roles(membership_id, role) values ('20000000-0000-0000-0000-000000000031', 'manager'), ('20000000-0000-0000-0000-000000000032', 'student');
+set local role authenticated;
+set local request.jwt.claim.sub = '00000000-0000-0000-0000-000000000031';
+insert into public.courses(id, organization_id, owner_type, title, slug, status, license_confirmed, created_by) values ('40000000-0000-0000-0000-000000000031', '10000000-0000-0000-0000-000000000031', 'organization', 'Course A', 'course-a', 'published', true, '00000000-0000-0000-0000-000000000031');
+insert into public.course_versions(id, course_id, version_no, title, license_confirmed, status, learning_mode, published_at) values ('50000000-0000-0000-0000-000000000031', '40000000-0000-0000-0000-000000000031', 1, 'Course A', true, 'published', 'self_paced', now());
+select is((select count(*)::integer from public.courses where id = '40000000-0000-0000-0000-000000000031'), 1, 'manager sees own course');
+set local request.jwt.claim.sub = '00000000-0000-0000-0000-000000000032';
+select is((select count(*)::integer from public.courses where id = '40000000-0000-0000-0000-000000000031'), 0, 'other tenant cannot see course');
+select is((select count(*)::integer from public.course_versions where id = '50000000-0000-0000-0000-000000000031'), 0, 'other tenant cannot see course version');
+update public.course_versions set title = 'Changed' where id = '50000000-0000-0000-0000-000000000031';
+select ok((select title from public.course_versions where id = '50000000-0000-0000-0000-000000000031') is null, 'other tenant cannot mutate version');
+select * from finish();
+rollback;

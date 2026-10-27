@@ -1,0 +1,22 @@
+begin;
+select plan(6);
+select has_function('public', 'verify_certificate', array['text'], 'public certificate verification should exist');
+select has_function('public', 'revoke_certificate', array['uuid','text'], 'certificate revocation should require reason');
+insert into auth.users(id) values ('00000000-0000-0000-0000-000000000131');
+insert into public.organizations(id, name, slug, kind) values ('00000000-0000-0000-0000-000000000131', 'Certificate Org', 'certificate-org', 'company');
+insert into public.memberships(id, user_id, organization_id, status) values ('00000000-0000-0000-0000-000000000131', '00000000-0000-0000-0000-000000000131', '00000000-0000-0000-0000-000000000131', 'active');
+insert into public.membership_roles(membership_id, role) values ('00000000-0000-0000-0000-000000000131', 'manager');
+insert into public.courses(id, organization_id, owner_type, title, slug, status) values ('00000000-0000-0000-0000-000000000131', '00000000-0000-0000-0000-000000000131', 'organization', 'Certificate Course', 'certificate-course', 'published');
+insert into public.course_versions(id, course_id, version_no, title, learning_mode, status) values ('00000000-0000-0000-0000-000000000131', '00000000-0000-0000-0000-000000000131', 1, 'Certificate v1', 'self_paced', 'published');
+insert into public.offerings(id, organization_id, course_version_id, title, enrollment_policy, status) values ('00000000-0000-0000-0000-000000000131', '00000000-0000-0000-0000-000000000131', '00000000-0000-0000-0000-000000000131', 'Certificate Offer', 'self_enroll', 'published');
+insert into public.enrollments(id, organization_id, offering_id, membership_id, course_version_id, mandatory_snapshot, enrollment_policy_snapshot) values ('00000000-0000-0000-0000-000000000131', '00000000-0000-0000-0000-000000000131', '00000000-0000-0000-0000-000000000131', '00000000-0000-0000-0000-000000000131', '00000000-0000-0000-0000-000000000131', false, 'self_enroll');
+insert into public.certificates(enrollment_id, organization_id, course_version_id, public_code, holder_name_snapshot, course_title_snapshot, organization_name_snapshot, workload_hours) values ('00000000-0000-0000-0000-000000000131', '00000000-0000-0000-0000-000000000131', '00000000-0000-0000-0000-000000000131', 'PUBLIC-CODE-131', 'Titular Público', 'Curso Público', 'Instituição Pública', 10);
+select id as certificate_id from public.certificates where public_code = 'PUBLIC-CODE-131' \gset
+select set_config('request.jwt.claim.sub', '00000000-0000-0000-0000-000000000131', true);
+select is((public.verify_certificate('PUBLIC-CODE-131')->>'holderName'), 'Titular Público', 'public verification returns holder');
+select ok((public.verify_certificate('PUBLIC-CODE-131') ? 'courseTitle') and not (public.verify_certificate('PUBLIC-CODE-131') ? 'email'), 'verification exposes only public fields');
+select is(public.is_org_manager('00000000-0000-0000-0000-000000000131'), true, 'manager is recognized');
+select public.revoke_certificate(:'certificate_id', 'correction requested');
+select is((public.verify_certificate('PUBLIC-CODE-131')->>'status'), 'revoked', 'revoked status is public');
+select * from finish();
+rollback;

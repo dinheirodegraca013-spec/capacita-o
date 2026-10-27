@@ -1,0 +1,5 @@
+import type { Actor } from '@/modules/identity/model';
+
+export type AttendanceClient = { rpc(name: 'issue_attendance_token' | 'confirm_attendance', args: Record<string, unknown>): Promise<{ data: string | null; error: { message: string } | null }> };
+export async function issueAttendanceToken(actor: Actor, meetingId: string, client: AttendanceClient) { if (!actor.roles.includes('manager') && !actor.roles.includes('instructor')) throw new Error('Instructor role required'); const { data, error } = await client.rpc('issue_attendance_token', { p_meeting_id: meetingId }); if (error || !data) throw new Error(error?.message ?? 'Token failed'); return data; }
+export async function confirmAttendance(actor: Actor, meetingId: string, token: string, client: AttendanceClient) { if (!actor.roles.includes('student')) throw new Error('Student role required'); if (!token.trim()) throw new Error('ATTENDANCE_TOKEN_INVALID'); const { data, error } = await client.rpc('confirm_attendance', { p_meeting_id: meetingId, p_token: token }); if (error || !data) throw new Error(error?.message ?? 'Attendance failed'); return data; }

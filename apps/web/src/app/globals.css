@@ -1,0 +1,28 @@
+:root { color-scheme: light; font-family: Arial, sans-serif; }
+* { box-sizing: border-box; }
+body { margin: 0; background: #f8fafc; color: #0f172a; }
+main { max-width: 72rem; margin: 0 auto; padding: 4rem 1.5rem; }
+.portal-shell { min-height: 100vh; }
+.portal-header { align-items: center; background: #0f172a; color: #fff; display: flex; gap: 1rem; justify-content: space-between; min-height: 4rem; padding: .75rem 1.5rem; }
+.brand { color: #fff; font-weight: 700; text-decoration: none; }
+.organization-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.portal-body { display: grid; grid-template-columns: 15rem minmax(0, 1fr); margin: 0 auto; max-width: 90rem; }
+.portal-nav { border-right: 1px solid #cbd5e1; min-height: calc(100vh - 4rem); padding: 1.5rem 1rem; }
+.portal-nav ul { list-style: none; margin: 0; padding: 0; }
+.portal-nav a { border-radius: .375rem; color: #0f172a; display: block; padding: .75rem; text-decoration: none; }
+.portal-nav a:focus-visible, .portal-nav a:hover { background: #e2e8f0; outline: 3px solid #38bdf8; outline-offset: 2px; }
+.portal-content { max-width: 72rem; padding: 2rem; width: 100%; }
+.secondary-button, button { border: 1px solid #64748b; border-radius: .375rem; cursor: pointer; padding: .625rem 1rem; }
+.secondary-button { background: transparent; color: #fff; }
+.primary-button { background: #0f766e; border: 1px solid #0f766e; border-radius: .375rem; color: #fff; cursor: pointer; display: inline-block; padding: .625rem 1rem; text-decoration: none; }
+.primary-button:disabled { cursor: not-allowed; opacity: .6; }
+.action-grid, .course-grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); margin-top: 1.5rem; }
+.course-card { background: #fff; border: 1px solid #cbd5e1; border-radius: .5rem; padding: 1rem; }
+.course-card h2 { font-size: 1.125rem; margin-top: 0; }
+.search-form { align-items: end; display: flex; flex-wrap: wrap; gap: .75rem; margin: 1.5rem 0; }
+.search-form label { display: grid; gap: .35rem; width: min(100%, 24rem); }
+.search-form input { border: 1px solid #94a3b8; border-radius: .375rem; padding: .625rem; }
+.course-list { display: grid; gap: .75rem; list-style: none; margin: 1.5rem 0; padding: 0; }
+.course-list li { align-items: center; background: #fff; border: 1px solid #cbd5e1; border-radius: .5rem; display: flex; justify-content: space-between; padding: 1rem; }
+.empty-state { background: #fff; border: 1px dashed #94a3b8; border-radius: .5rem; padding: 1.25rem; }
+@media (max-width: 640px) { .portal-header { padding: .75rem 1rem; } .portal-body { display: block; } .portal-nav { border-bottom: 1px solid #cbd5e1; border-right: 0; min-height: auto; overflow-x: auto; padding: .5rem; } .portal-nav ul { display: flex; gap: .25rem; } .portal-nav a { white-space: nowrap; } .portal-content { padding: 1rem; } }

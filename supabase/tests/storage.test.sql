@@ -1,0 +1,14 @@
+begin;
+select plan(8);
+select has_table('public'::name, 'assets'::name);
+select has_column('public'::name, 'assets'::name, 'object_path'::name, 'private object path');
+select ok(exists (select 1 from storage.buckets where id = 'course-assets' and public = false), 'course bucket is private');
+select ok(exists (select 1 from pg_policies where schemaname = 'public' and tablename = 'assets' and policyname = 'assets_insert_manager'), 'asset manager policy exists');
+select ok(exists (select 1 from pg_policies where schemaname = 'storage' and tablename = 'objects' and policyname = 'course_assets_select_member'), 'storage read policy exists');
+select ok(exists (select 1 from pg_policies where schemaname = 'storage' and tablename = 'objects' and policyname = 'course_assets_insert_manager'), 'storage upload policy exists');
+set local role authenticated;
+set local request.jwt.claim.sub = '00000000-0000-0000-0000-000000000031';
+select throws_ok($$insert into public.assets(organization_id, object_path, file_name, mime_type, kind, size_bytes) values ('10000000-0000-0000-0000-000000000031', '10000000-0000-0000-0000-000000000031/x/a.mp4', 'a.mp4', 'video/mp4', 'video', 100)$$, 42501, null, 'direct asset insert is denied without actor context');
+select throws_ok($$insert into storage.objects(bucket_id, name) values ('course-assets', '10000000-0000-0000-0000-000000000031/x/a.mp4')$$, 42501, null, 'direct storage insert is denied without storage grant');
+select * from finish();
+rollback;

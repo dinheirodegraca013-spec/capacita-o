@@ -1,0 +1,59 @@
+name: sql-regression
+
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+    branches: [main, 'feat/**']
+
+jobs:
+  pg-tap:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: capacitagov_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U postgres -d capacitagov_test"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install PostgreSQL client and pgTAP
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client-16 postgresql-16-pgtap libtap-parser-sourcehandler-pgtap-perl
+      - name: Apply migrations
+        env:
+          PGPASSWORD: postgres
+        run: |
+          psql --host=127.0.0.1 --port=5432 --username=postgres --dbname=capacitagov_test --set=ON_ERROR_STOP=1 <<'SQL'
+          create schema auth;
+          create table auth.users (id uuid primary key, email text);
+          create or replace function auth.uid() returns uuid language sql stable as $$ select nullif(current_setting('request.jwt.claim.sub', true), '')::uuid $$;
+          create role anon;
+          create role authenticated;
+          create role service_role;
+          grant usage on schema auth to authenticated;
+          grant insert, select on auth.users to authenticated;
+          create schema if not exists storage;
+          create table storage.buckets (id text primary key, name text not null, public boolean not null default false);
+          create table storage.objects (id uuid primary key default gen_random_uuid(), bucket_id text not null, name text not null);
+          create or replace function storage.foldername(path text) returns text[] language sql immutable as $$ select string_to_array(path, '/') $$;
+          SQL
+          for migration in $(find supabase/migrations -maxdepth 1 -type f -name '*.sql' | sort); do
+            echo "Applying $migration"
+            psql --host=127.0.0.1 --port=5432 --username=postgres --dbname=capacitagov_test --set=ON_ERROR_STOP=1 --file="$migration"
+          done
+      - name: Run pgTAP regression
+        env:
+          PGPASSWORD: postgres
+        run: |
+          psql --host=127.0.0.1 --port=5432 --username=postgres --dbname=capacitagov_test --set=ON_ERROR_STOP=1 --command='create extension if not exists pgtap;'
+          pg_prove --host=127.0.0.1 --port=5432 --username=postgres --dbname=capacitagov_test supabase/tests/*.sql

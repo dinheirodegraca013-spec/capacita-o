@@ -2,7 +2,11 @@ node_modules/
 build/
 dist/
 coverage/
+.next/
+supabase/.temp/
+*.tsbuildinfo
 .DS_Store
 *.log
+test-results/
 .env*
 !.env.example

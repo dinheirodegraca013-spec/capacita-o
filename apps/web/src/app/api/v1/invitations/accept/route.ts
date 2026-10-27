@@ -1,0 +1,3 @@
+import { NextRequest, NextResponse } from 'next/server';
+import { createSupabaseServerClient } from '@/lib/supabase/server';
+export async function POST(request: NextRequest) { const supabase = await createSupabaseServerClient(); const { data: { user } } = await supabase.auth.getUser(); if (!user) return NextResponse.json({ error: 'UNAUTHENTICATED' }, { status: 401 }); const body = await request.json().catch(() => null) as { token?: string } | null; if (!body?.token) return NextResponse.json({ error: 'VALIDATION' }, { status: 422 }); const { data, error } = await supabase.rpc('accept_invitation', { p_token: body.token }); if (error) return NextResponse.json({ error: 'INVITATION_INVALID' }, { status: 422 }); return NextResponse.json({ organizationId: data }); }

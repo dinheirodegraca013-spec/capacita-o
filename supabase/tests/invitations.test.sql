@@ -1,0 +1,13 @@
+begin;
+select plan(7);
+select has_table('public'::name, 'invitations'::name);
+select has_column('public'::name, 'invitations'::name, 'token_hash'::name, 'token hash column');
+select has_column('public'::name, 'invitations'::name, 'expires_at'::name, 'expiry column');
+select ok(exists (select 1 from pg_indexes where schemaname = 'public' and indexname = 'invitations_pending_email_idx'), 'pending email idempotency index exists');
+select ok(exists (select 1 from pg_policies where schemaname = 'public' and tablename = 'invitations' and policyname = 'invitations_select_member'), 'invitation select policy exists');
+set local role authenticated;
+set local request.jwt.claim.sub = '00000000-0000-0000-0000-000000000011';
+select throws_ok($$insert into public.invitations(organization_id, invited_by, email, roles, token_hash, expires_at) values ('10000000-0000-0000-0000-000000000011', '00000000-0000-0000-0000-000000000011', 'x@example.com', array['student'], repeat('a', 64), now() + interval '1 day')$$, 42501, null, 'direct invitation insert is denied');
+select throws_ok($$delete from public.invitations$$, 42501, null, 'direct invitation delete is denied');
+select * from finish();
+rollback;

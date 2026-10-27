@@ -1,0 +1,3 @@
+import type { Actor } from '@/modules/identity/model';
+export type ReportsClient = { rpc(name: 'get_organization_report' | 'get_course_report', args: Record<string, unknown>): Promise<{ data: Record<string, unknown> | null; error: { message: string } | null }> };
+export async function getOrganizationReport(actor: Actor, input: { from: string; to: string }, client: ReportsClient) { if (!actor.roles.includes('manager')) throw new Error('Manager required'); const { data, error } = await client.rpc('get_organization_report', { p_organization_id: actor.organizationId, p_from: input.from, p_to: input.to }); if (error || !data) throw new Error(error?.message ?? 'Report failed'); return data; }
