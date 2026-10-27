@@ -158,6 +158,8 @@ T07 idempotência — 27/10/2026: a confirmação agora deriva uma chave SHA-256
 
 T08 correção de sessão — 27/10/2026: o botão “Sair” apontava para `/auth/signout`, mas a rota não existia. Criada rota POST server-side que chama `supabase.auth.signOut()` e responde 303 para `/login`. Suíte web **27 arquivos/66 testes PASS**, typecheck, lint e build PASS; build expõe `/auth/signout` como rota dinâmica.
 
+Teste de regressão do logout — 27/10/2026: adicionado `tests/integration/signout.test.ts`, com mock do cliente server-side, verificando `signOut()` e redirecionamento 303. O Vitest passou **28 arquivos/67 testes**, com typecheck e lint PASS.
+
 T09/T11 complemento — o formulário de criação de curso próprio agora permite escolher `self_paced` (autoinstrucional, sem professor) ou `instructor_led` (jornada híbrida). O backend já persistia o modo; a UI deixou de forçar somente autoinstrucional. Typecheck, Vitest (**26 arquivos/53 testes**) e build passaram localmente.
 
 T10 complemento — adicionada `POST /api/v1/assets/[id]/complete`: somente gestor do tenant pode confirmar o upload, e o servidor consulta o bucket privado `course-assets` antes de alterar o asset de `pending` para `ready`. Sem objeto confirmado, a API retorna conflito e não libera URL assinada. Typecheck, Vitest (**26 arquivos/53 testes**) e build passaram; teste operacional com arquivo real permanece pendente.
