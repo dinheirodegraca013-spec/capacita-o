@@ -140,3 +140,7 @@ Correção de sincronização remota — 27/10/2026: uma atualização via API d
 
 O callback agora aceita tanto `code` quanto `token_hash` (`invite`, `magiclink` e `recovery`), evitando que o botão do e-mail termine em `/login?error=callback` sem processar o convite. A rota de convite usa `NEXT_PUBLIC_APP_URL` como origem canônica, e o formulário mostra conflitos/erros retornados pela API. Typecheck, suíte Vitest (**26 arquivos/53 testes**) e E2E público (**2 pass, 2 skip por ausência de Supabase público**) passaram localmente. No head remoto `0079bb4ded96cfc5806ec300cc993077a1d78923`, web run `40471969023` e SQL/pgTAP run `40471968979` concluíram `success`. A produção ainda não recebeu o código por limite diário de deployments da Vercel.
 
+## T08 — navegação responsiva — 27/10/2026
+
+Adicionado `tests/e2e/navigation.spec.ts` cobrindo login em viewport de 360px, foco via teclado, ausência de overflow horizontal e fronteira de rota institucional sem sessão. Localmente: 1 teste passou e 1 foi omitido por ausência das variáveis públicas do Supabase. CI remoto no head `c74018dcd4e4507dd974e02245d791a93ecdc2b3`: web run `40472324677` e SQL/pgTAP run `40472324553` concluíram `success`. O teste autenticado de navegação multi-organização continua pendente.
+
