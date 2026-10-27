@@ -268,6 +268,8 @@ A tela `/mfa` agora inicia cadastro TOTP quando não há fator, exibe QR/segredo
 
 Suíte web completa após o onboarding MFA: **27 arquivos/64 testes PASS**.
 
+T05 recebeu reenvio operacional: `GET /api/v1/invitations` lista apenas convites do tenant do gestor; `POST /api/v1/invitations/resend` aplica janela de 15 minutos, gira o token, usa origem canônica e envia via Resend. A tela de gestão agora lista convites recentes e oferece Reenviar. Typecheck, lint e build PASS; envio real continua pendente.
+
 Auditoria de dependências local: `npm audit --audit-level=high --json` retornou **0 vulnerabilidades** (27 dependências de produção, 426 de desenvolvimento, 493 totais).
 
 Regressão E2E de convite criada em `apps/web/tests/e2e/invitation.spec.ts`, cobrindo tela de ativação e callback com destino externo; execução local: **2 skipped** por ausência de variáveis públicas Supabase. Nova tentativa de preview Vercel para `c2c69da` retornou novamente `402 api-deployments-free-per-day` (retry 24h); não há deployment novo.
