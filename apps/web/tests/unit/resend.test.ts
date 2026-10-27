@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { buildInvitationEmail, buildResendNotification } from '../../src/modules/notifications/resend';
+import { buildInvitationEmail, buildProviderHeaders, buildResendNotification } from '../../src/modules/notifications/resend';
 
 describe('Resend notification payload', () => {
   it('builds a safe provider payload and escapes HTML', () => {
@@ -16,6 +16,10 @@ describe('Resend notification payload', () => {
     expect(result.html).toContain('Se o botão não abrir');
     expect(result.html).toContain('href="https://example.com/auth?token=&lt;unsafe&gt;"');
     expect(result.html).toContain('target="_blank"');
+  });
+
+  it('uses the outbox key for provider idempotency', () => {
+    expect(buildProviderHeaders('secret', 'notification-1')).toEqual({ authorization: 'Bearer secret', 'content-type': 'application/json', 'idempotency-key': 'notification-1' });
   });
 });
 
