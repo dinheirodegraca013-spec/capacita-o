@@ -136,6 +136,12 @@ Como a migration original já estava aplicada, o reclaim foi entregue por migrat
 
 O gate de entrega permanece aberto: o outbox está vazio e a conta Resend não mostra convite CapacitaGov recente do worker. Isso é ausência de evidência operacional, não aprovação implícita.
 
+### Atualização da ativação do convite — 27/10/2026 12:50
+
+A causa técnica foi reforçada em `/ativar-conta`: a sessão Supabase agora é consumida explicitamente nos formatos hash OAuth, `code` e `token_hash`, sem perder o token institucional. Typecheck, lint, build, suíte web e E2E público passaram. Risco remanescente: ainda não há clique comprovado a partir de uma mensagem real entregue pelo Resend em caixa de homologação autorizada.
+
+O advisor Supabase também reportou `notification_outbox` sem RLS. Embora os grants diretos já estivessem revogados, isso era uma defesa incompleta. A migration `20261027130000_enable_notification_outbox_rls.sql` corrigiu a configuração e foi verificada remotamente; `can_access_course_metadata` também foi removido da superfície `anon`. O alerta crítico foi eliminado; permanecem avisos esperados de funções `SECURITY DEFINER` autenticadas e da proteção de senhas comprometidas, que exigem decisão/configuração operacional separada.
+
 O domínio de envio foi confirmado como verificado e habilitado; o risco remanescente é a integração end-to-end do worker com uma caixa autorizada.
 
 Os critérios de liberação estão documentados, mas não há evidência suficiente para aprovação final. Pendências P0 operacionais permanecem abertas; não declarar produção pronta.
@@ -150,4 +156,28 @@ Os critérios de liberação estão documentados, mas não há evidência sufici
 ### Correção de estado — 27/10/2026 07:35
 
 O bloco histórico acima foi superseded por rechecagem posterior: o alias público passou a apontar para `dpl_5SpMeb6u658UAADLp1ZmByTDFEkL`, deployment Next READY. As rotas públicas `/ativar-conta`, `/api/v1/invitations` e `/auth/signout` responderam, respectivamente, 200, 401 e 405 nos métodos sem sessão. O HEAD posterior inclui hardening de idempotência do worker e da importação; a Vercel voltou a rejeitar novos commits por `Deployment rate limited — retry in 24 hours`. A liberação integral continua não aprovada por ausência de E2E autenticado de dois tenants, entrega Resend em caixa autorizada, backup/restauração e auditoria final independente.
+
+### Regressão corrigida — botão do convite — 27/10/2026 07:38
+
+Causa raiz identificada na ativação: a limpeza da URL removia o fragmento de sessão retornado pelo Supabase junto com o parâmetro do convite. A correção mantém o hash durante a inicialização do cliente Supabase. Verificações locais passaram; ainda falta validar um clique real em e-mail entregue por Resend.
+
+Backup/restauração local ensaiados em PostgreSQL temporário com dump customizado e restauração sem erro; os artefatos foram removidos ao final. O gate operacional ainda exige backup remoto/PITR, RTO/RPO e rollback de deployment, além das jornadas E2E autenticadas e auditoria independente final.
+
+As rotas de convite agora usam chaves idempotentes no Resend tanto na criação quanto no reenvio, reduzindo duplicidade em retries. A mudança foi compilada e testada localmente; ainda sem confirmação de entrega real.
+
+Achado importante corrigido: metadados de cursos centrais publicados não são mais visíveis sem concessão ativa. A correção passou a usar helper `security definer` isolado para evitar recursão entre policies de `courses` e `course_versions`; pgTAP local e policy remota foram verificados.
+
+O comportamento foi validado remotamente em transação descartável (`before_grant=0`, `after_grant=1`, `ROLLBACK`), sem introduzir dados de homologação na produção.
+
+O alias de produção agora aponta para o deployment `dpl_CyaBdVz13vJ2Wp7kovUndqrEX9Dt` (commit `f99a35a`), após a cota Vercel ser liberada. As rotas públicas críticas responderam conforme esperado; a liberação integral continua condicionada a E2E autenticado, entrega real Resend e revisão final independente.
+### Parecer independente — 27/10/2026
+
+Resultado: **BLOCKED para liberação integral**. A revisão local confirmou `npm audit` sem vulnerabilidades high/critical, build/typecheck/lint/testes verdes e ausência de segredos versionados. Não aprovo produção porque o patch final de convite ainda não foi publicado por limite de deployments Vercel e não há organização de homologação persistente para completar a jornada autenticada de convite; permanecem também os gates de backup remoto/PITR e auditoria E2E completa.
+
+### Reauditoria de links de autenticação — 27/10/2026
+
+Achado P0 reproduzido nas capturas: links nativos de recuperação apontavam para `localhost`. A correção customiza a recuperação via Resend e OTP Supabase, sem registrar segredo no cliente ou revelar existência de conta. Verificações locais verdes (**73 testes**, typecheck, lint e build). Não aprovar como corrigido em produção até o deployment do patch e um clique real em e-mail entregue.
+### Advisor Supabase — 27/10/2026
+
+Os avisos remotos foram triados: `notification_outbox` service-only e `verify_certificate` público são comportamentos intencionais documentados; a proteção contra senhas vazadas está desativada e deve ser habilitada no Auth antes da liberação integral. O alerta não é mascarado como correção de código.
 
