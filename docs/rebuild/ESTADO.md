@@ -266,6 +266,8 @@ Rotas `/o/[orgId]/gestao/*` agora consultam o nível de garantia Supabase no ser
 
 A tela `/mfa` agora inicia cadastro TOTP quando não há fator, exibe QR/segredo e valida o primeiro código antes de retornar à rota interna. Typecheck, lint e build PASS; execução real depende de conta de homologação.
 
+Suíte web completa após o onboarding MFA: **27 arquivos/64 testes PASS**.
+
 Auditoria de dependências local: `npm audit --audit-level=high --json` retornou **0 vulnerabilidades** (27 dependências de produção, 426 de desenvolvimento, 493 totais).
 
 Regressão E2E de convite criada em `apps/web/tests/e2e/invitation.spec.ts`, cobrindo tela de ativação e callback com destino externo; execução local: **2 skipped** por ausência de variáveis públicas Supabase. Nova tentativa de preview Vercel para `c2c69da` retornou novamente `402 api-deployments-free-per-day` (retry 24h); não há deployment novo.
