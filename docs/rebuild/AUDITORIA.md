@@ -187,4 +187,7 @@ Evidências atuais: **30 arquivos/76 testes web PASS**, typecheck/lint PASS; RLS
 ### Rechecagem pós-publicação — 27/10/2026 14:45 BRT
 
 O patch de recuperação chegou à produção: `dpl_5iptvUbq4mSb9aQn9UDp6CuSKYRJ`, commit `a9fb565`, READY e alias principal atualizado. A rota foi localizada publicamente (`GET` 405 esperado) e o E2E Playwright remoto passou **1/1**. O gate de clique com e-mail Resend real, dois tenants, backup/PITR e proteção de senha vazada permanece aberto.
+### Validação real do e-mail de recuperação — 27/10/2026 14:45 BRT
+
+Após o deployment READY, o fluxo foi exercitado com conta administrativa autorizada: Resend confirmou `delivered`, e a mensagem contém o caminho público `/redefinir-senha` sem `localhost`. O achado P0 das capturas está corrigido em produção; permanece pendente apenas a confirmação de clique/alteração de senha pelo usuário e os gates gerais de liberação.
 
