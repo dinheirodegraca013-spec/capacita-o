@@ -140,3 +140,10 @@ O domínio de envio foi confirmado como verificado e habilitado; o risco remanes
 
 Os critérios de liberação estão documentados, mas não há evidência suficiente para aprovação final. Pendências P0 operacionais permanecem abertas; não declarar produção pronta.
 
+### Estado autoritativo mais recente — 27/10/2026 07:19
+
+- O alias de produção aponta para `dpl_3ck2DvwQZQ8uoKNisi3CymyZco2S`, commit `db81004f3392d85524f066a5a1701854787bcbc9`; o HEAD do checkout ainda não está público.
+- O Vercel confirma `SUPABASE_SERVICE_ROLE_KEY` sensível e variáveis Resend configuradas; valores secretos não foram lidos.
+- RLS remoto: 34/35 tabelas públicas habilitadas, `notification_outbox` service-only sem grants públicos, `course-assets` privado. Testes transacionais cross-tenant de leitura e escrita passaram com rollback.
+- Playwright público mais recente: 5 passed/22 skipped; os skips exigem contas e fixtures autenticadas. O bloqueio de liberação permanece deployment atualizado, E2E autenticado de dois tenants, worker/SMTP operacional, backup/restauração e auditoria independente.
+
