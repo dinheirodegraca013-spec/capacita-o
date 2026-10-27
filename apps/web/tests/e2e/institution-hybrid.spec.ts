@@ -8,6 +8,7 @@ test.describe('jornada híbrida', () => {
     await expect(page.getByText(/Catálogo central \+ cursos próprios/i)).toBeVisible();
   });
   test('Storage não aceita operações sem sessão', async ({ request }) => {
+    test.skip(!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY, 'requires Supabase public environment to exercise the authenticated boundary');
     const upload = await request.post('/api/v1/assets', { data: { organizationId: '00000000-0000-0000-0000-000000000000', fileName: 'demo.mp4', mimeType: 'video/mp4', sizeBytes: 10 } });
     expect(upload.status()).toBe(401);
     const access = await request.get('/api/v1/assets/00000000-0000-0000-0000-000000000000/access');
