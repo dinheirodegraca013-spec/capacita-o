@@ -262,3 +262,5 @@ Runbooks de release, conteúdo e recuperação estão revisados e mantêm rollba
 
 O fluxo `/recuperar-senha` agora resolve a origem canônica com fallback para o host HTTPS do navegador quando `NEXT_PUBLIC_APP_URL` estiver ausente ou apontar para localhost em produção; também remove barra final antes de montar o callback. Testes de origem/callback e convite: **7/7 PASS**, typecheck e lint PASS. O commit `13d6e79` foi sincronizado no `main`; depende de novo deployment para validação pública.
 
+Após a correção, a suíte web completa foi executada novamente: **27 arquivos/63 testes PASS**, com typecheck e lint PASS; nenhum arquivo gerado permaneceu modificado.
+
