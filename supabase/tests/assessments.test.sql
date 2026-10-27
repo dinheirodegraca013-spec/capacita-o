@@ -1,0 +1,25 @@
+begin;
+select plan(10);
+select has_table('public', 'assessments', 'assessments table should exist');
+select has_table('public', 'assessment_questions', 'questions table should exist');
+select has_table('public', 'question_options', 'options table should exist');
+select has_function('public', 'publish_assessment', array['uuid'], 'publish assessment validates content');
+select has_function('public', 'create_assessment_with_questions', array['uuid','text','numeric','integer','integer','jsonb'], 'assessment authoring is atomic');
+select has_table('public', 'audit_events', 'assessment creation can be audited');
+select ok(exists (select 1 from pg_policies where schemaname = 'public' and tablename = 'question_options' and policyname = 'question_options_select_manager'), 'answers remain author scoped');
+
+insert into auth.users(id) values ('00000000-0000-0000-0000-000000000081');
+insert into public.organizations(id, name, slug, kind) values ('00000000-0000-0000-0000-000000000081', 'Assessment Org', 'assessment-org', 'company');
+insert into public.memberships(id, user_id, organization_id, status) values ('00000000-0000-0000-0000-000000000081', '00000000-0000-0000-0000-000000000081', '00000000-0000-0000-0000-000000000081', 'active');
+insert into public.membership_roles(membership_id, role) values ('00000000-0000-0000-0000-000000000081', 'manager');
+insert into public.courses(id, organization_id, owner_type, title, slug, status) values ('00000000-0000-0000-0000-000000000081', '00000000-0000-0000-0000-000000000081', 'organization', 'Assessment Course', 'assessment-course', 'published');
+insert into public.course_versions(id, course_id, version_no, title, learning_mode, status) values ('00000000-0000-0000-0000-000000000081', '00000000-0000-0000-0000-000000000081', 1, 'Assessment v1', 'self_paced', 'published');
+insert into public.assessments(id, course_version_id, title, passing_score, max_attempts, status) values ('00000000-0000-0000-0000-000000000081', '00000000-0000-0000-0000-000000000081', 'Final quiz', 70, 2, 'draft');
+select set_config('request.jwt.claim.sub', '00000000-0000-0000-0000-000000000081', true);
+select throws_ok($$select public.publish_assessment('00000000-0000-0000-0000-000000000081')$$, 'ASSESSMENT_INVALID', 'empty assessment cannot publish');
+insert into public.assessment_questions(id, assessment_id, position, prompt, points) values ('00000000-0000-0000-0000-000000000081', '00000000-0000-0000-0000-000000000081', 0, 'Question?', 1);
+insert into public.question_options(question_id, position, label, is_correct) values ('00000000-0000-0000-0000-000000000081', 0, 'Correct', true), ('00000000-0000-0000-0000-000000000081', 1, 'Wrong', false);
+select lives_ok($$select public.publish_assessment('00000000-0000-0000-0000-000000000081')$$, 'valid assessment publishes');
+select is((select status from public.assessments where id = '00000000-0000-0000-0000-000000000081'), 'published', 'published status is persisted');
+select * from finish();
+rollback;

@@ -1,0 +1,10 @@
+create index if not exists assessment_attempts_assessment_id_fkey_idx on public.assessment_attempts (assessment_id);
+create index if not exists attempt_answers_question_id_fkey_idx on public.attempt_answers (question_id);
+create index if not exists attendance_records_enrollment_id_fkey_idx on public.attendance_records (enrollment_id);
+create index if not exists course_grants_course_version_id_fkey_idx on public.course_grants (course_version_id);
+create index if not exists courses_organization_id_fkey_idx on public.courses (organization_id);
+create index if not exists enrollments_membership_id_fkey_idx on public.enrollments (membership_id);
+create index if not exists instructor_assignments_membership_id_fkey_idx on public.instructor_assignments (membership_id);
+create index if not exists lesson_progress_lesson_id_fkey_idx on public.lesson_progress (lesson_id);
+create index if not exists memberships_organization_id_fkey_idx on public.memberships (organization_id);
+create index if not exists path_assignments_membership_id_fkey_idx on public.path_assignments (membership_id);

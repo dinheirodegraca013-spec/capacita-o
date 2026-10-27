@@ -1,0 +1,17 @@
+begin;
+select plan(3);
+select has_function('public'::name, 'publish_offering'::name);
+insert into auth.users(id) values ('00000000-0000-0000-0000-000000000051');
+insert into public.organizations(id, name, slug, kind) values ('10000000-0000-0000-0000-000000000051', 'Offering Org', 'offering-org', 'company');
+insert into public.memberships(id, user_id, organization_id, status) values ('20000000-0000-0000-0000-000000000051', '00000000-0000-0000-0000-000000000051', '10000000-0000-0000-0000-000000000051', 'active');
+insert into public.membership_roles(membership_id, role) values ('20000000-0000-0000-0000-000000000051', 'manager');
+insert into public.courses(id, organization_id, owner_type, title, slug, status, license_confirmed) values ('40000000-0000-0000-0000-000000000051', '10000000-0000-0000-0000-000000000051', 'organization', 'Offering', 'offering', 'published', true);
+insert into public.course_versions(id, course_id, version_no, title, learning_mode, license_confirmed, status) values ('50000000-0000-0000-0000-000000000051', '40000000-0000-0000-0000-000000000051', 1, 'Offering', 'self_paced', true, 'published');
+insert into public.course_grants(organization_id, course_version_id, granted_by) values ('10000000-0000-0000-0000-000000000051', '50000000-0000-0000-0000-000000000051', '00000000-0000-0000-0000-000000000051');
+insert into public.offerings(id, organization_id, course_version_id, title, enrollment_policy) values ('70000000-0000-0000-0000-000000000051', '10000000-0000-0000-0000-000000000051', '50000000-0000-0000-0000-000000000051', 'Offering', 'self_enroll');
+set local role authenticated;
+set local request.jwt.claim.sub = '00000000-0000-0000-0000-000000000051';
+select is(public.publish_offering('70000000-0000-0000-0000-000000000051'), '70000000-0000-0000-0000-000000000051'::uuid, 'manager publishes granted version');
+select is((select status from public.offerings where id = '70000000-0000-0000-0000-000000000051'), 'published', 'offering status changes');
+select * from finish();
+rollback;

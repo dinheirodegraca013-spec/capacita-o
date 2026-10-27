@@ -1,0 +1,4 @@
+'use client';
+import { useState } from 'react';
+export function AssessmentPublishButton({ id, organizationId }: { id: string; organizationId: string }) { const [message, setMessage] = useState(''); const [busy, setBusy] = useState(false); async function publish() { setBusy(true); const response = await fetch(`/api/v1/assessments/${id}/publish`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ organizationId }) }); const data = await response.json(); setMessage(response.ok ? 'Publicado.' : data.error ?? 'Não foi possível publicar.'); setBusy(false); } return <span><button className="secondary-button" type="button" onClick={publish} disabled={busy}>{busy ? 'Publicando…' : 'Publicar'}</button>{message && <small role="status"> {message}</small>}</span>; }
+

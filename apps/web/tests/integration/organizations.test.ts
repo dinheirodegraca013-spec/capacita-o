@@ -1,0 +1,14 @@
+import { describe, expect, it } from 'vitest';
+import { normalizeOrganizationInput } from '../../src/modules/organizations/service';
+
+describe('organization management', () => {
+  it('normalizes organization labels and preserves the selected kind', () => {
+    expect(normalizeOrganizationInput({ name: '  Prefeitura  ', kind: 'municipality', timezone: 'America/Sao_Paulo' })).toEqual({ name: 'Prefeitura', kind: 'municipality', timezone: 'America/Sao_Paulo' });
+  });
+
+  it('rejects empty or oversized organization labels', () => {
+    expect(() => normalizeOrganizationInput({ name: ' ', kind: 'company', timezone: 'UTC' })).toThrow('Invalid organization name');
+    expect(() => normalizeOrganizationInput({ name: 'x'.repeat(181), kind: 'company', timezone: 'UTC' })).toThrow('Invalid organization name');
+  });
+});
+

@@ -1,0 +1,7 @@
+import { redirect } from 'next/navigation';
+import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { AssessmentCreateForm } from '@/components/assessments/assessment-create-form';
+import { AssessmentPublishButton } from '@/components/assessments/assessment-publish-button';
+export const dynamic = 'force-dynamic';
+export default async function AssessmentManagementPage({ params }: { params: Promise<{ orgId: string }> }) { const { orgId } = await params; const supabase = await createSupabaseServerClient(); const { data: { user } } = await supabase.auth.getUser(); if (!user) redirect('/login'); const { data: versions } = await supabase.from('course_versions').select('id, title, courses!inner(organization_id)').eq('courses.organization_id', orgId).eq('status', 'draft').order('created_at', { ascending: false }); const { data: assessments } = await supabase.from('assessments').select('id, title, status, course_version_id').order('created_at', { ascending: false }); return <section className="stack"><h1>Avaliações</h1>{versions?.[0] && <AssessmentCreateForm organizationId={orgId} courseVersionId={versions[0].id} />}<ul>{(assessments ?? []).map((assessment) => <li key={assessment.id}>{assessment.title} — {assessment.status} {assessment.status === 'draft' && <AssessmentPublishButton id={assessment.id} organizationId={orgId} />}</li>)}</ul></section>; }
+

@@ -1,0 +1,17 @@
+begin;
+select plan(5);
+select has_table('public', 'course_evaluations', 'course evaluations table should exist');
+select has_function('public', 'submit_course_feedback', array['uuid','integer','text'], 'feedback is validated by database');
+select ok(exists (select 1 from pg_policies where schemaname = 'public' and tablename = 'course_evaluations' and policyname = 'course_evaluations_select_member'), 'feedback visibility is tenant scoped');
+insert into auth.users(id) values ('00000000-0000-0000-0000-000000000141');
+insert into public.organizations(id, name, slug, kind) values ('00000000-0000-0000-0000-000000000141', 'Feedback Org', 'feedback-org', 'company');
+insert into public.memberships(id, user_id, organization_id, status) values ('00000000-0000-0000-0000-000000000141', '00000000-0000-0000-0000-000000000141', '00000000-0000-0000-0000-000000000141', 'active');
+insert into public.courses(id, organization_id, owner_type, title, slug, status) values ('00000000-0000-0000-0000-000000000141', '00000000-0000-0000-0000-000000000141', 'organization', 'Feedback Course', 'feedback-course', 'published');
+insert into public.course_versions(id, course_id, version_no, title, learning_mode, status) values ('00000000-0000-0000-0000-000000000141', '00000000-0000-0000-0000-000000000141', 1, 'Feedback v1', 'self_paced', 'published');
+insert into public.offerings(id, organization_id, course_version_id, title, enrollment_policy, status) values ('00000000-0000-0000-0000-000000000141', '00000000-0000-0000-0000-000000000141', '00000000-0000-0000-0000-000000000141', 'Feedback Offer', 'self_enroll', 'published');
+insert into public.enrollments(id, organization_id, offering_id, membership_id, course_version_id, status, mandatory_snapshot, enrollment_policy_snapshot) values ('00000000-0000-0000-0000-000000000141', '00000000-0000-0000-0000-000000000141', '00000000-0000-0000-0000-000000000141', '00000000-0000-0000-0000-000000000141', '00000000-0000-0000-0000-000000000141', 'completed', false, 'self_enroll');
+select set_config('request.jwt.claim.sub', '00000000-0000-0000-0000-000000000141', true);
+select lives_ok($$select public.submit_course_feedback('00000000-0000-0000-0000-000000000141', 5, 'Muito bom')$$, 'completed learner can submit feedback');
+select throws_ok($$select public.submit_course_feedback('00000000-0000-0000-0000-000000000141', 5, 'Repetido')$$, 'FEEDBACK_EXISTS', 'feedback is unique per enrollment');
+select * from finish();
+rollback;

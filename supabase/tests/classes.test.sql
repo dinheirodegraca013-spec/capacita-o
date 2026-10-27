@@ -1,0 +1,21 @@
+begin;
+select plan(6);
+select has_table('public', 'class_groups', 'class groups table should exist');
+select has_table('public', 'instructor_assignments', 'instructor assignments table should exist');
+select has_table('public', 'meetings', 'meetings table should exist');
+select ok(exists (select 1 from pg_policies where schemaname = 'public' and tablename = 'meetings' and policyname = 'meetings_select_member'), 'meeting visibility is tenant scoped');
+
+insert into auth.users(id) values ('00000000-0000-0000-0000-000000000101'), ('00000000-0000-0000-0000-000000000102');
+insert into public.organizations(id, name, slug, kind) values ('00000000-0000-0000-0000-000000000101', 'Class Org', 'class-org', 'company');
+insert into public.memberships(id, user_id, organization_id, status) values ('00000000-0000-0000-0000-000000000101', '00000000-0000-0000-0000-000000000101', '00000000-0000-0000-0000-000000000101', 'active'), ('00000000-0000-0000-0000-000000000102', '00000000-0000-0000-0000-000000000102', '00000000-0000-0000-0000-000000000101', 'active');
+insert into public.membership_roles(membership_id, role) values ('00000000-0000-0000-0000-000000000101', 'manager'), ('00000000-0000-0000-0000-000000000102', 'instructor');
+insert into public.courses(id, organization_id, owner_type, title, slug, status) values ('00000000-0000-0000-0000-000000000101', '00000000-0000-0000-0000-000000000101', 'organization', 'Class Course', 'class-course', 'published');
+insert into public.course_versions(id, course_id, version_no, title, learning_mode, status) values ('00000000-0000-0000-0000-000000000101', '00000000-0000-0000-0000-000000000101', 1, 'Class v1', 'instructor_led', 'published');
+insert into public.course_grants(organization_id, course_version_id, granted_by) values ('00000000-0000-0000-0000-000000000101', '00000000-0000-0000-0000-000000000101', '00000000-0000-0000-0000-000000000101');
+insert into public.offerings(id, organization_id, course_version_id, title, enrollment_policy, status) values ('00000000-0000-0000-0000-000000000101', '00000000-0000-0000-0000-000000000101', '00000000-0000-0000-0000-000000000101', 'Class Offer', 'manager_assigned', 'published');
+insert into public.class_groups(id, organization_id, offering_id, name, status) values ('00000000-0000-0000-0000-000000000101', '00000000-0000-0000-0000-000000000101', '00000000-0000-0000-0000-000000000101', 'Turma A', 'open');
+insert into public.instructor_assignments(organization_id, class_group_id, membership_id, status) values ('00000000-0000-0000-0000-000000000101', '00000000-0000-0000-0000-000000000101', '00000000-0000-0000-0000-000000000102', 'active');
+select lives_ok($$insert into public.meetings(class_group_id, organization_id, title, starts_at, ends_at, timezone, required) values ('00000000-0000-0000-0000-000000000101', '00000000-0000-0000-0000-000000000101', 'Encontro 1', '2030-01-01 10:00+00', '2030-01-01 12:00+00', 'America/Sao_Paulo', true)$$, 'valid meeting is accepted');
+select throws_ok($$insert into public.meetings(class_group_id, organization_id, title, starts_at, ends_at, timezone, required) values ('00000000-0000-0000-0000-000000000101', '00000000-0000-0000-0000-000000000101', 'Invalid', '2030-01-01 12:00+00', '2030-01-01 10:00+00', 'America/Sao_Paulo', true)$$, 'MEETING_TIME_INVALID', 'meeting end must follow start');
+select * from finish();
+rollback;
