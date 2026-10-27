@@ -116,5 +116,7 @@ Como a migration original já estava aplicada, o reclaim foi entregue por migrat
 
 O gate de entrega permanece aberto: o outbox está vazio e a conta Resend não mostra convite CapacitaGov recente do worker. Isso é ausência de evidência operacional, não aprovação implícita.
 
+O domínio de envio foi confirmado como verificado e habilitado; o risco remanescente é a integração end-to-end do worker com uma caixa autorizada.
+
 Os critérios de liberação estão documentados, mas não há evidência suficiente para aprovação final. Pendências P0 operacionais permanecem abertas; não declarar produção pronta.
 
