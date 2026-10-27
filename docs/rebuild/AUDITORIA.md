@@ -28,3 +28,11 @@ Atualização: o deployment `dpl_54N1x6Pydz8YTPd3BMMYrhwFkq38` foi criado explic
 - **Fechamento — 27/10/2026:** chaves de teste revogadas; segredo do scheduler configurado; alias de produção validado. `service_role` continua sem fonte segura no conector e não foi inventada.
 - **Imagens — 27/10/2026:** asset gerado sem texto/logotipo, com alt text e layout responsivo; verificação local passou. Produção ainda exibe a versão anterior até liberar novo deployment.
 
+## Auditoria intermediária — 27/10/2026
+
+**Parecer: BLOCKED para liberação integral; implementação continua em andamento.**
+
+Evidências novas: callback de convite com `code`/`token_hash`, navegação responsiva em 360px, ofertas para todas as versões publicadas, typecheck/testes/build locais e CI remoto web + pgTAP verdes. O branch `feat/capacitagov-rebuild` permanece limpo e o PR continua draft.
+
+Pendências que impedem PASS: E2E autenticado de duas organizações com contas de homologação explícitas; teste operacional de convite/SMTP e worker; backup, restauração e rollback ensaiados; preview Vercel do HEAD atual. A criação do preview foi tentada com o repositório correto e está bloqueada pela cota `api-deployments-free-per-day` (HTTP 402). Produção não foi alterada nesta auditoria.
+
