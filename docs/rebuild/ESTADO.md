@@ -28,6 +28,8 @@ Verificação local: `npm run typecheck`, `npm run lint` e `npm run build` passa
 
 `GET /api/v1/assets/[id]/access` passou a resolver primeiro a organização do asset e só então selecionar o vínculo ativo do usuário nessa organização. Isso elimina dependência de uma associação arbitrária quando a mesma pessoa pertence a múltiplos tenants; o serviço continua validando tenant, status `ready` e URL assinada de 5 minutos. Testes, typecheck, lint e build passaram.
 
+O `POST /api/v1/assets` agora também gera `createSignedUploadUrl` para o bucket privado `course-assets`, retornando token/path para o cliente enviar o arquivo sem expor credenciais privilegiadas. O registro permanece `pending` até processamento posterior; teste de integração cobre a capacidade assinada.
+
 ## Próxima ação
 
 Fechar as pendências operacionais: SMTP/Auth de convite, observabilidade, preview com dados isolados, CI remoto, recuperação/rollback e auditoria independente final. O plano técnico continua sujeito a evidências, não a aprovação implícita.

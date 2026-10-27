@@ -14,14 +14,17 @@ export function validateAssetUpload(input: { mimeType: string; sizeBytes: number
 
 export type AssetClient = { from(table: 'assets'): { insert(values: Record<string, unknown>): { select(): { single(): Promise<{ data: Record<string, unknown> | null; error: { message: string } | null }> } }; select(columns: string): { eq(column: string, value: string): { maybeSingle(): Promise<{ data: Record<string, unknown> | null; error: { message: string } | null }> } } } };
 export type StorageClient = { from(bucket: string): { createSignedUrl(path: string, expiresIn: number): Promise<{ data: { signedUrl: string } | null; error: { message: string } | null }> } };
+export type StorageUploadClient = { from(bucket: string): { createSignedUploadUrl(path: string): Promise<{ data: { signedUrl: string; token: string; path: string } | null; error: { message: string } | null }> } };
 
-export async function createAssetUpload(actor: Actor, input: { fileName: string; mimeType: string; sizeBytes: number }, client: AssetClient) {
+export async function createAssetUpload(actor: Actor, input: { fileName: string; mimeType: string; sizeBytes: number }, client: AssetClient, storage: StorageUploadClient) {
   if (!actor.roles.includes('manager')) throw new Error('Only managers can upload assets');
   const validation = validateAssetUpload(input); if (!validation.ok) throw new Error(validation.code);
   const assetId = randomUUID(); const objectPath = `${actor.organizationId}/${assetId}/${input.fileName.replace(/[^a-zA-Z0-9._-]/g, '_')}`;
   const { data, error } = await client.from('assets').insert({ id: assetId, organization_id: actor.organizationId, object_path: objectPath, file_name: input.fileName, mime_type: input.mimeType, size_bytes: input.sizeBytes, kind: validation.kind, status: 'pending', created_by: actor.userId }).select().single();
   if (error || !data) throw new Error(error?.message ?? 'Asset was not created');
-  return { assetId, objectPath, bucket: 'course-assets', kind: validation.kind };
+  const signed = await storage.from('course-assets').createSignedUploadUrl(objectPath);
+  if (signed.error || !signed.data) throw new Error(signed.error?.message ?? 'Asset upload URL unavailable');
+  return { assetId, objectPath, bucket: 'course-assets', kind: validation.kind, upload: signed.data };
 }
 
 export async function authorizeAsset(actor: Actor, assetId: string, client: AssetClient, storage: StorageClient) {
@@ -31,3 +34,4 @@ export async function authorizeAsset(actor: Actor, assetId: string, client: Asse
   if (signed.error || !signed.data) throw new Error(signed.error?.message ?? 'Asset URL unavailable');
   return { assetId, signedUrl: signed.data.signedUrl, expiresIn: 300 };
 }
+
