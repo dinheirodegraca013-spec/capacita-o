@@ -1,5 +1,6 @@
 alter table public.import_batches add column if not exists idempotency_key text;
 create unique index if not exists import_batches_org_idempotency_idx on public.import_batches (organization_id, idempotency_key) where idempotency_key is not null;
+create schema if not exists extensions;
 
 create or replace function public.commit_people_import(
   p_organization_id uuid,
@@ -56,8 +57,8 @@ end;
 $$;
 
 create or replace function public.commit_people_import(p_organization_id uuid, p_payload jsonb, p_size_bytes integer) returns uuid
-language sql security definer set search_path = public as $$
-  select public.commit_people_import(p_organization_id, p_payload, p_size_bytes, encode(extensions.digest(p_payload::text || ':' || p_size_bytes::text, 'sha256'), 'hex'));
+language sql security definer set search_path = public, extensions as $$
+  select public.commit_people_import(p_organization_id, p_payload, p_size_bytes, encode(digest(p_payload::text || ':' || p_size_bytes::text, 'sha256'), 'hex'));
 $$;
 
 revoke all on function public.commit_people_import(uuid, jsonb, integer, text) from public, anon;
