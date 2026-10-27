@@ -116,6 +116,8 @@ Regressão local completa: Vitest **27/27 arquivos, 64/64 testes PASS**; isso n�
 
 T05 hardening: reenvio agora exige gestor no tenant, filtra o convite por organização, impõe rate limit de 15 minutos e faz rotação do token antes do envio. A UI não expõe convites de outro tenant. Falta provar concorrência/entrega com Supabase/Auth/Resend reais.
 
+T06 hardening: a API não aceita mais `kind` fora do enum institucional nem slug fora do padrão do banco; a validação é compartilhada com o serviço. Evidência: 3/3 testes de organização e 65/65 testes web, além de typecheck/lint/build. Homologação multi-tenant permanece pendente.
+
 Auditoria de dependências: `npm audit --audit-level=high` sem vulnerabilidades high/critical; não há correção de pacote pendente neste ciclo.
 
 Foi criada regressão Playwright de convite (`invitation.spec.ts`) para ativação e bloqueio de destino externo; os dois casos foram omitidos localmente por falta de ambiente público Supabase, portanto a evidência permanece insuficiente até executar com conta/ambiente de homologação.
