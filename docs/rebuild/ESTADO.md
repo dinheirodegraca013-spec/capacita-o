@@ -124,3 +124,5 @@ T05 complemento — 27/10/2026: convites para e-mails já existentes agora usam 
 
 PR draft [#2](https://github.com/dinheirodegraca013-spec/capacita-o/pull/2) aberto contra `main`. No head `54505b239f164626596edefa6709de25b8413a02`, web run `40470454999` e SQL/pgTAP run `40470455090` concluíram `success`; o web job executou typecheck, lint, 52 testes e build, e o job SQL aplicou migrations e executou a regressão. A Vercel tentou criar preview, mas bloqueou por `api-deployments-free-per-day` (mais de 100 deploys); produção não foi alterada.
 
+Após os registros finais no branch, o head `b871f7c98b3e7a2d8dec8558f4823b48390a71b4` foi revalidado: web run `40470617197` e SQL/pgTAP run `40470617027` concluíram `success`, incluindo build e aplicação completa das migrations.
+
