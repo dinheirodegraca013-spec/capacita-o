@@ -2,6 +2,7 @@
 
 import { FormEvent, useState } from 'react';
 import { createSupabaseBrowserClient } from '@/lib/supabase/browser';
+import { resolveAppOrigin } from '@/modules/auth/redirect';
 
 export default function RecoverPasswordPage() {
   const [sent, setSent] = useState(false);
@@ -10,7 +11,7 @@ export default function RecoverPasswordPage() {
     event.preventDefault();
     setError(false);
     const email = String(new FormData(event.currentTarget).get('email'));
-    const appOrigin = process.env.NEXT_PUBLIC_APP_URL || window.location.origin;
+    const appOrigin = resolveAppOrigin(process.env.NEXT_PUBLIC_APP_URL, window.location.origin);
     const { error } = await createSupabaseBrowserClient().auth.resetPasswordForEmail(email, { redirectTo: `${appOrigin}/auth/callback?next=/redefinir-senha` });
     if (error) { setError(true); return; }
     setSent(true);
