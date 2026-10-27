@@ -153,5 +153,7 @@ Regressão adicional de origem canônica de recuperação: `tests/integration/au
 
 Suíte web completa pós-correção: **27 arquivos/63 testes PASS**.
 
+Build Next de produção pós-correção: PASS (30 rotas).
+
 - Runbooks revisados; checklist final não pode ser aprovado enquanto backup/restauração, SMTP/worker, E2E autenticado e preview atual estiverem ausentes.
 
