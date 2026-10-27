@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { normalizeOrganizationInput } from '@/modules/organizations/service';
 
 export async function PATCH(request: NextRequest, context: { params: Promise<{ orgId: string }> }) {
   const { orgId } = await context.params;
@@ -11,7 +12,9 @@ export async function PATCH(request: NextRequest, context: { params: Promise<{ o
   if (!membership || !roles.includes('manager')) return NextResponse.json({ error: 'FORBIDDEN' }, { status: 403 });
   const body = await request.json().catch(() => null) as { name?: string; kind?: string; timezone?: string; slug?: string } | null;
   if (!body?.name || !body.kind || !body.timezone) return NextResponse.json({ error: 'VALIDATION' }, { status: 422 });
-  const { data, error } = await supabase.from('organizations').update({ name: body.name.trim(), kind: body.kind, timezone: body.timezone, slug: body.slug?.trim().toLowerCase() }).eq('id', orgId).select().single();
+  let input;
+  try { input = normalizeOrganizationInput({ name: body.name, kind: body.kind as 'company' | 'municipality' | 'public_agency' | 'nonprofit' | 'other', timezone: body.timezone, slug: body.slug }); } catch { return NextResponse.json({ error: 'VALIDATION' }, { status: 422 }); }
+  const { data, error } = await supabase.from('organizations').update(input).eq('id', orgId).select().single();
   if (error) return NextResponse.json({ error: error.code === '42501' ? 'FORBIDDEN' : 'UNAVAILABLE' }, { status: error.code === '42501' ? 403 : 503 });
   return NextResponse.json({ organization: data });
 }
