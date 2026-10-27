@@ -206,3 +206,7 @@ Verificação local: `npm run typecheck` PASS; `npm test -- --run tests/integrat
 
 O serviço de turmas mantém abertura e atribuição de instrutor tenant-scoped; a validação de encontros rejeita janela inválida, título vazio e fuso ausente. O agendamento já está exposto em `/api/v1/meetings` e a tela de gestão permite criar turma e encontro; criado `tests/e2e/classes.spec.ts` para homologação autenticada. Verificação local: typecheck, lint e `tests/integration/classes.test.ts` **3/3 PASS**. A jornada híbrida real com professor e turma ainda está pendente.
 
+## T21 — chamada e QR com prazo — 27/10/2026
+
+Adicionada a RPC `correct_attendance` e a rota `POST /api/v1/attendance/correct`, restringidas a gestor ou instrutor atribuído, com validação de tenant/turma/matrícula e evento `attendance.correct` em auditoria. O QR e a confirmação continuam com expiração de cinco minutos e idempotência. Criado `tests/e2e/attendance.spec.ts`; homologação com token real ainda pendente.
+
