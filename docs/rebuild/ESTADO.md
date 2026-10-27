@@ -176,6 +176,8 @@ RLS de escrita — na mesma abordagem transacional, um gestor do tenant A teve *
 
 Homologação real de recuperação — 27/10/2026 07:17: o endpoint Auth `/recover` respondeu HTTP 200 para o endereço de homologação e os logs `auth_logs` registraram `mail.send`, `mail_type=recovery`, com remetente nativo Supabase e destinatário confirmado. O redirect solicitado foi `/redefinir-senha`; a validação de clique ainda depende do deployment público atualizado e da confirmação na caixa de entrada.
 
+Storage privado — verificação direta em 27/10/2026: requisição anônima ao objeto inexistente em `course-assets` retornou HTTP **400**, sem entrega de conteúdo. O bucket permanece `public=false`; autorização de arquivo real para matrícula ainda requer fixture autenticada.
+
 Correção do reset de senha — 27/10/2026: `recuperar-senha` agora aponta diretamente para `/redefinir-senha`; a página consome `code`, `token_hash` ou a sessão entregue no fragmento antes de habilitar a nova senha. Typecheck, lint, build e suíte Vitest **28 arquivos/67 testes PASS**. A confirmação pública e o recebimento real do e-mail continuam dependentes do novo deployment/SMTP.
 
 T09/T11 complemento — o formulário de criação de curso próprio agora permite escolher `self_paced` (autoinstrucional, sem professor) ou `instructor_led` (jornada híbrida). O backend já persistia o modo; a UI deixou de forçar somente autoinstrucional. Typecheck, Vitest (**26 arquivos/53 testes**) e build passaram localmente.
