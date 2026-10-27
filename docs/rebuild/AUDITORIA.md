@@ -40,3 +40,7 @@ Pendências que impedem PASS: E2E autenticado de duas organizações com contas 
 
 Diagnóstico: novos convites usavam `inviteUserByEmail`, deixando a entrega dependente do SMTP nativo do Supabase; o Resend era acionado apenas quando o usuário já existia. Correção: gerar o link no Supabase e enviar sempre pelo Resend server-only, com fallback para `magiclink` em contas existentes e marcação `failed` em erro de geração/entrega. Verificações locais passaram; o teste de caixa de entrada e a validação em produção continuam pendentes por falta de conta de homologação e novo deployment.
 
+### T11 — editor de cursos — 27/10/2026
+
+Implementação parcial verificada: conteúdo persistido é carregado no editor, novas aulas aceitam texto, a API valida títulos e a publicação fica bloqueada no cliente quando não há conteúdo. Typecheck, Vitest e build passaram; o E2E autenticado foi criado, mas ficou skipped sem credenciais de homologação. T11 permanece RUNNING e não pode ser considerada concluída.
+
