@@ -268,3 +268,5 @@ Build de produção pós-correção: `npm run build` PASS, com 30 rotas geradas 
 
 CI remoto do commit `5b30b9d06bb9cefbf5b6123b086e225bbeb54e00` passou após corrigir o contexto JWT do pgTAP de notificações: web run `40481748235` e SQL/pgTAP run `40481748186`, ambos `success`.
 
+Hardening adicional: a migration incremental `20261027082000_reclaim_legacy_notifications.sql` foi aplicada no Supabase `zykfvzvydvifuzepujvv`; a verificação remota confirmou `service_role=true`, `authenticated=false` e reclaim via `coalesce(processing_at, created_at)`.
+
