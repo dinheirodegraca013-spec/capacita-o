@@ -39,4 +39,5 @@ Não marcar a meta final como PASS enquanto SMTP, recuperação/rollback, previe
 - Storage multi-tenant: rota de URL assinada agora resolve o tenant pelo asset antes do vínculo ativo; `npm test -- --run` (**24 arquivos/46 testes PASS**), typecheck, lint e build PASS.
 - Upload Storage: `POST /api/v1/assets` retorna URL/token assinado para `course-assets`; teste de integração de capacidade assinada PASS. O processamento que promove `pending` para `ready` continua pendente de worker/observabilidade.
 - E2E público contra produção: **3 PASS, 2 skipped**; landing, login e as rotas de upload/acesso Storage retornaram os estados esperados (401 sem sessão). Jornadas autenticadas continuam condicionadas a credenciais temporárias explícitas.
+- Dependências: `npm audit --audit-level=high` PASS em `apps/web` (`found 0 vulnerabilities`).
 
