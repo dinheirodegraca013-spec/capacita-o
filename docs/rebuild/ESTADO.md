@@ -246,3 +246,7 @@ Aplicada a migration `notifications_recovery` no Supabase: `processing_at` permi
 
 O conjunto E2E público/auth foi executado: **4 passaram, 5 omitidos** por ausência de Supabase público e conta não produtiva; o teste de Storage agora omite corretamente sem ambiente Supabase. O teste SQL `isolation.test.sql` continua preparado para pgTAP em banco temporário/CI; jornadas autenticadas sem professor e híbrida ainda pendentes.
 
+## T29 — ambiente remoto e preview Vercel — 27/10/2026
+
+O projeto `capacita-o-x5hg` foi confirmado com root Next em `apps/web`; a tentativa de deployment do `main` foi rejeitada pela Vercel com `402 api-deployments-free-per-day` (retry informado: 24h). A spec de preview agora omite corretamente sem variáveis públicas Supabase; preview do SHA atual permanece pendente.
+
