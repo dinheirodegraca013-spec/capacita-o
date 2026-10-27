@@ -118,3 +118,5 @@ T03 foi revisada e marcada DONE no plano. Evidências: `tests/integration/sessio
 
 T04 complemento — 27/10/2026: criada `apps/web/tests/e2e/auth.spec.ts`; no servidor local, login/recuperação pública e callback sem código passaram `2/2`. O cenário de senha inválida foi explicitamente `skip` por ausência de `NEXT_PUBLIC_SUPABASE_URL` e `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`; login real, logout e MFA continuam sem evidência autenticada.
 
+T05 complemento — 27/10/2026: convites para e-mails já existentes agora usam `auth.admin.generateLink({ type: 'magiclink' })` e envio Resend server-only quando o convite padrão retorna usuário já registrado. A ativação detecta conta já confirmada e não força troca de senha. Suíte web completa: **26 arquivos/52 testes PASS**, typecheck e build PASS; E2E real de SMTP/Auth continua pendente.
+
