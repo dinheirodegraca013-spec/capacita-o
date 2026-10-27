@@ -19,6 +19,8 @@ export async function POST(request: NextRequest) {
     const invitation = await inviteMember({ userId: user.id, organizationId: body.organizationId, membershipId: membership.id, roles }, { email: body.email, roles: body.roles }, admin as never);
     const { error: inviteError } = await admin.auth.admin.inviteUserByEmail(invitation.email, { redirectTo: buildInvitationRedirect(request.nextUrl.origin, invitation.rawToken ?? '') });
     if (inviteError) return NextResponse.json({ error: 'INVITE_DELIVERY_FAILED' }, { status: 503 });
+    const { error: statusError } = await admin.from('invitations').update({ status: 'sent', last_sent_at: new Date().toISOString() }).eq('id', invitation.id);
+    if (statusError) return NextResponse.json({ error: 'INVITE_STATUS_FAILED' }, { status: 503 });
     return NextResponse.json({ invitation: { id: invitation.id, email: invitation.email, roles: invitation.roles, status: invitation.status, expiresAt: invitation.expiresAt } }, { status: 201 });
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Invitation failed';
