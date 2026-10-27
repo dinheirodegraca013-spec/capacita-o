@@ -128,3 +128,8 @@ Não marcar a meta final como PASS enquanto SMTP, recuperação/rollback, previe
 - Typecheck e lint PASS; `tests/integration/reports.test.ts`: **3/3 PASS**.
 - Cobertura local inclui range invertido e neutralização de fórmula CSV; dataset de dois tenants e E2E de gestor ainda pendentes.
 
+### T27 — notificações — 27/10/2026
+
+- Migration `notifications_recovery` aplicada; `enqueue_notification` autenticado e `claim_pending_notifications` restrito a `service_role` verificados remotamente.
+- Testes de serviço de outbox/retry existentes; entrega real em caixa autorizada ainda pendente.
+
