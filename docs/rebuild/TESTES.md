@@ -89,6 +89,10 @@ Não marcar a meta final como PASS enquanto SMTP, recuperação/rollback, previe
 
 - Criado `tests/e2e/learning.spec.ts` para conteúdo, posição retomada e matrícula autenticada.
 - O teste requer `E2E_USER_EMAIL`, `E2E_USER_PASSWORD`, `E2E_ORG_ID` e `E2E_ENROLLMENT_ID` não produtivos.
+
+## Estado autoritativo — 27/10/2026 07:19
+
+O alias público ainda serve `db81004`; os testes locais mais recentes registram **28 arquivos/67 testes Vitest**, typecheck/lint/build PASS e Playwright público **5 passed/22 skipped**. Skips são somente cenários autenticados sem fixtures. RLS/Storage foram verificados diretamente no Supabase com transações temporárias e rollback.
 - CI remoto no head documental `83ae989c390ff7568b3507a6ca041850ab68dc27`: web `40475154744` e SQL/pgTAP `40475154694`, ambos `success`.
 
 ### T16 — trilhas — 27/10/2026
