@@ -296,3 +296,5 @@ Rechecagem operacional somente leitura: `notification_outbox` está sem registro
 
 Resend rechecado: o domínio remetente `gestio.dev.br` está `verified` e com `Sending: enabled`; a pendência é exercitar o worker/aplicação com uma caixa de homologação, não DNS do provedor.
 
+Correção do botão de convite — 27/10/2026: a tela `/ativar-conta` agora aguarda e confirma a sessão entregue pelo link do Supabase antes de habilitar o formulário, escuta a chegada assíncrona da sessão no fragmento da URL e exibe orientação quando o convite expirou. Typecheck, lint e suíte web **27 arquivos/66 testes PASS**. Commit local `1a12c21`; sincronizado no `main` como `aeb2d82`. A validação pública depende de novo deployment Vercel.
+
