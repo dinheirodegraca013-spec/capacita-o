@@ -11,3 +11,5 @@ Antes da liberação integral ainda faltam backup remoto testado, RTO/RPO aprova
 
 Rechecagem de 27/10/2026: o deployment público atual é `dpl_5SpMeb6u658UAADLp1ZmByTDFEkL`; o rollback de aplicação permanece possível pelos deployments READY anteriores. Backup/restauração do banco e ensaio de RTO/RPO continuam pendentes.
 
+Atualização autoritativa 27/10/2026 13:27 BRT: a listagem da Vercel mostra o alias de produção no deployment READY `dpl_22Se4nQk3QNP8o53JR5EmczqoigE`, commit `c35a1a4`. O endpoint novo `/api/v1/auth/recover` ainda retorna 404 nesse deployment; o patch local/GitHub aguarda a janela de retry da cota. IDs anteriores permanecem apenas como referências históricas.
+
