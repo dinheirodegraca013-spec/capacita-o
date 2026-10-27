@@ -1,5 +1,5 @@
 begin;
-select plan(10);
+select plan(14);
 select has_table('public', 'assessment_attempts', 'attempts table should exist');
 select has_table('public', 'attempt_answers', 'answers table should exist');
 select has_function('public', 'start_attempt', array['uuid','uuid'], 'start attempt is server controlled');
@@ -21,8 +21,13 @@ select set_config('request.jwt.claim.sub', '00000000-0000-0000-0000-000000000091
 select public.start_attempt(:'enrollment_id', '00000000-0000-0000-0000-000000000091') as attempt_id \gset
 select lives_ok(format($$select public.save_attempt_answer('%s', '00000000-0000-0000-0000-000000000091', '00000000-0000-0000-0000-000000000091')$$, :'attempt_id'), 'valid answer is saved');
 select lives_ok(format($$select public.save_attempt_answer('%s', '00000000-0000-0000-0000-000000000091', '00000000-0000-0000-0000-000000000091')$$, :'attempt_id'), 'repeated answer is idempotent');
+select throws_ok(format($$select public.save_attempt_answer('%s', '00000000-0000-0000-0000-000000000092', '00000000-0000-0000-0000-000000000091')$$, :'attempt_id'), 'QUESTION_FORBIDDEN', 'question from another assessment is rejected');
 select throws_ok(format($$select public.start_attempt('%s', '00000000-0000-0000-0000-000000000091')$$, :'enrollment_id'), 'ATTEMPT_LIMIT', 'attempt limit is enforced');
 select lives_ok(format($$select public.finish_attempt('%s')$$, :'attempt_id'), 'finish is successful');
 select is((public.finish_attempt(:'attempt_id')->>'passed')::boolean, true, 'finish retry returns same result');
+select throws_ok(format($$select public.save_attempt_answer('%s', '00000000-0000-0000-0000-000000000091', '00000000-0000-0000-0000-000000000092')$$, :'attempt_id'), 'ATTEMPT_EXPIRED', 'submitted attempt cannot accept answers');
+select is((select count(*) from public.attempt_answers where attempt_id = :'attempt_id'), 1::bigint, 'repeated answers do not duplicate rows');
+select is((public.finish_attempt(:'attempt_id')->>'status'), 'submitted', 'finish remains idempotent after invalid retries');
 select * from finish();
 rollback;
+
