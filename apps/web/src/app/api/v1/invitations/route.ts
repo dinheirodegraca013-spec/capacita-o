@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
-import { buildInvitationRedirect, inviteMember } from '@/modules/invitations/service';
+import { buildInvitationRedirect, inviteMember, resolveInvitationOrigin } from '@/modules/invitations/service';
 import { buildInvitationEmail } from '@/modules/notifications/resend';
 import type { OrganizationRole } from '@/modules/identity/model';
 
@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
     const invitation = await inviteMember({ userId: user.id, organizationId: body.organizationId, membershipId: membership.id, roles }, { email: body.email, roles: body.roles }, admin as never);
     // Use the canonical public origin so links generated behind a preview/proxy
     // never point to an unreachable host or an unallowlisted Supabase redirect.
-    const publicOrigin = (process.env.NEXT_PUBLIC_APP_URL || request.nextUrl.origin).replace(/\/$/, '');
+    const publicOrigin = resolveInvitationOrigin(process.env.NEXT_PUBLIC_APP_URL, request.nextUrl.origin, process.env.NODE_ENV);
     const redirectTo = buildInvitationRedirect(publicOrigin, invitation.rawToken ?? '');
     const providerUrl = process.env.EMAIL_PROVIDER_URL;
     const providerKey = process.env.EMAIL_PROVIDER_KEY;
