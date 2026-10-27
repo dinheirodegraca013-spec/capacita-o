@@ -378,7 +378,7 @@ Status único: PENDING → RUNNING → REVIEW → DONE; BLOCKED somente para dep
 
 ### T22 — Conclusão e certificação únicas
 
-**Meta/prioridade:** M7/P0. **Status:** PENDING. **Depende:** T15,T18,T21. **Requisitos:** R05,R07.
+**Meta/prioridade:** M7/P0. **Status:** RUNNING. **Depende:** T15,T18,T21. **Requisitos:** R05,R07.
 
 **Criar/alterar:** `src/modules/completion/service.ts`, `src/modules/certificates/service.ts`, `src/app/api/v1/enrollments/[id]/complete/route.ts`, `supabase/migrations/<gerado>_completion.sql`.
 
@@ -388,7 +388,8 @@ Status único: PENDING → RUNNING → REVIEW → DONE; BLOCKED somente para dep
 
 **Aceite verificável:** Sem prova ignora nota; EAD sem encontros ignora presença; híbrido exige ambos; 69%/74% falham e limites 70%/75% passam se demais critérios cumpridos; presença ponderada por minutos programados, justificado zero, cancelados excluídos e encontro futuro bloqueia; duas finalizações emitem um certificado.
 
-- [ ] Executar ciclo da task e anexar evidência; revisar antes de marcar DONE.
+- [x] RPCs tenant-scoped avaliam aulas, provas publicadas e presença ponderada por minutos; EAD sem encontros não exige presença, híbrido exige; certificado tem unique por matrícula e finalização idempotente.
+- [ ] Executar cenários autenticados EAD/híbrido com limiares e anexar evidência; revisar antes de marcar DONE.
 
 ### T23 — PDF e verificação pública mínima
 
