@@ -20,8 +20,13 @@ export default function ResetPasswordPage() {
       const code = query.get('code');
       const tokenHash = query.get('token_hash');
       const type = query.get('type');
+      const authEmail = query.get('email');
+      const authOtp = query.get('otp');
       if (code) {
         const result = await supabase.auth.exchangeCodeForSession(code);
+        sessionError = result.error;
+      } else if (authEmail && authOtp) {
+        const result = await supabase.auth.verifyOtp({ email: authEmail, token: authOtp, type: 'recovery' });
         sessionError = result.error;
       } else if (tokenHash && type === 'recovery') {
         const result = await supabase.auth.verifyOtp({ token_hash: tokenHash, type: 'recovery' });
@@ -29,9 +34,13 @@ export default function ResetPasswordPage() {
       }
       const session = await supabase.auth.getSession();
       if (!active) return;
-      if (!sessionError && (code || tokenHash)) window.history.replaceState({}, '', '/redefinir-senha');
-      setSessionReady(!sessionError && Boolean(session.data.session));
-      if (sessionError || !session.data.session) setError('O link expirou ou já foi utilizado. Solicite uma nova recuperação.');
+      const hasSession = Boolean(session.data.session);
+      if (!sessionError && (code || tokenHash || authOtp)) window.history.replaceState({}, '', '/redefinir-senha');
+      // The browser client may consume the recovery OTP concurrently with
+      // the explicit verifyOtp call; an established session is authoritative.
+      setSessionReady(hasSession);
+      if (!hasSession) setError('O link expirou ou já foi utilizado. Solicite uma nova recuperação.');
+      else if (sessionError) setError(null);
     }
     void prepareSession();
     const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
