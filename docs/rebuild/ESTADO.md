@@ -266,3 +266,5 @@ Após a correção, a suíte web completa foi executada novamente: **27 arquivos
 
 Build de produção pós-correção: `npm run build` PASS, com 30 rotas geradas e nenhum arquivo gerado pendente.
 
+CI remoto do commit `5b30b9d06bb9cefbf5b6123b086e225bbeb54e00` passou após corrigir o contexto JWT do pgTAP de notificações: web run `40481748235` e SQL/pgTAP run `40481748186`, ambos `success`.
+
