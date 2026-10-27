@@ -34,6 +34,8 @@ Reauditoria remota somente leitura confirmou bucket `course-assets` privado, pol
 
 O procedimento operacional de e-mail foi documentado em `docs/rebuild/operations/email.md`: fila idempotente, endpoint interno protegido, retry/backoff e variáveis server-only. SMTP/provedor real continua pendente de credenciais e domínio remetente.
 
+Revisão independente apontou uma lacuna real no ciclo de tentativas: matrícula cancelada ainda podia manter resposta/finalização. A migration `20261027060000_harden_attempt_enrollment_status.sql` foi aplicada no Supabase e as três funções (`save_attempt_answer`, `finish_attempt`, `get_attempt_delivery`) agora exigem `enrollments.status = 'active'`; consulta remota confirmou os três guards.
+
 ## Próxima ação
 
 Fechar as pendências operacionais: SMTP/Auth de convite, observabilidade, preview com dados isolados, CI remoto, recuperação/rollback e auditoria independente final. O plano técnico continua sujeito a evidências, não a aprovação implícita.
