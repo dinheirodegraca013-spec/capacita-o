@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
-import { createOffering } from '@/modules/catalog/service';
+import { createOffering, listCatalog } from '@/modules/catalog/service';
 import type { OrganizationRole } from '@/modules/identity/model';
 
 export async function GET(request: NextRequest) {
@@ -9,9 +9,11 @@ export async function GET(request: NextRequest) {
   const supabase = await createSupabaseServerClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: 'UNAUTHENTICATED' }, { status: 401 });
-  const { data, error } = await supabase.from('offerings').select('id, organization_id, course_version_id, title, mandatory, capacity, enrollment_policy, starts_at, ends_at, status').eq('organization_id', organizationId).eq('status', 'published').order('starts_at', { ascending: true });
-  if (error) return NextResponse.json({ error: error.message }, { status: 422 });
-  return NextResponse.json({ items: data ?? [] });
+  const { data: membership } = await supabase.from('memberships').select('id, membership_roles(role)').eq('user_id', user.id).eq('organization_id', organizationId).eq('status', 'active').maybeSingle();
+  const roles = ((membership?.membership_roles ?? []) as Array<{ role: OrganizationRole }>).map((item) => item.role);
+  if (!membership) return NextResponse.json({ error: 'FORBIDDEN' }, { status: 403 });
+  try { return NextResponse.json({ items: await listCatalog({ userId: user.id, organizationId, membershipId: membership.id, roles }, supabase as never) }); }
+  catch (error) { return NextResponse.json({ error: error instanceof Error ? error.message : 'Catalog failed' }, { status: 422 }); }
 }
 
 export async function POST(request: NextRequest) {
@@ -26,3 +28,4 @@ export async function POST(request: NextRequest) {
   try { return NextResponse.json(await createOffering({ userId: user.id, organizationId: body.organizationId, membershipId: membership.id, roles }, { ...body, courseVersionId: body.courseVersionId, title: body.title, mandatory: body.mandatory ?? false, capacity: body.capacity ?? null, enrollmentPolicy: body.enrollmentPolicy }, supabase as never), { status: 201 }); }
   catch (error) { return NextResponse.json({ error: error instanceof Error ? error.message : 'Offering failed' }, { status: 422 }); }
 }
+
