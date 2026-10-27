@@ -85,3 +85,8 @@ Não marcar a meta final como PASS enquanto SMTP, recuperação/rollback, previe
 - A execução autenticada requer `E2E_USER_EMAIL`, `E2E_USER_PASSWORD` e `E2E_ORG_ID` não produtivos.
 - CI remoto no head documental `c4b7bfdfd2c3aa4eebc82d3c6b3880915e2610d9`: web `40474826961` e SQL/pgTAP `40474826848`, ambos `success`.
 
+### T15 — player e progresso — 27/10/2026
+
+- Criado `tests/e2e/learning.spec.ts` para conteúdo, posição retomada e matrícula autenticada.
+- O teste requer `E2E_USER_EMAIL`, `E2E_USER_PASSWORD`, `E2E_ORG_ID` e `E2E_ENROLLMENT_ID` não produtivos.
+
