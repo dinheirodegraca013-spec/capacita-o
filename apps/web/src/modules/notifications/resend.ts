@@ -6,6 +6,10 @@ export type ResendNotification = {
   html: string;
 };
 
+export function buildProviderHeaders(providerKey: string, idempotencyKey: string) {
+  return { authorization: `Bearer ${providerKey}`, 'content-type': 'application/json', 'idempotency-key': idempotencyKey };
+}
+
 function escapeHtml(value: string) {
   return value.replace(/[&<>"']/g, (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[character] ?? character);
 }
