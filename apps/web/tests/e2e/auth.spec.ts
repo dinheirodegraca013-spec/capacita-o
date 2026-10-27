@@ -16,6 +16,12 @@ test.describe('fronteiras públicas de autenticação', () => {
     await expect(page).toHaveURL(/\/login\?error=callback$/);
   });
 
+  test('callback de convite aceita token_hash sem abrir destino externo', async ({ page }) => {
+    test.skip(!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY, 'requires Supabase public environment');
+    await page.goto('/auth/callback?token_hash=invalid&type=invite&next=%2Fativar-conta');
+    await expect(page).toHaveURL(/\/login\?error=callback$/);
+  });
+
   test('senha inválida não expõe conta nem deixa a tela', async ({ page }) => {
     test.skip(!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY, 'requires Supabase public environment');
     await page.goto('/login');
