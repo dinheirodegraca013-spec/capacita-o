@@ -184,4 +184,7 @@ Os avisos remotos foram triados: `notification_outbox` service-only e `verify_ce
 ### Parecer de rechecagem — 27/10/2026 13:30 BRT
 
 Evidências atuais: **30 arquivos/76 testes web PASS**, typecheck/lint PASS; RLS remoto **35/35 tabelas**, **71 policies**; migrations local/remoto **56/56**; policies de ofertas/matrículas sem condição cross-tenant na inspeção; endpoint de recuperação coberto por 3/3 testes e sincronizado no GitHub. Resultado permanece **BLOCKED para liberação integral**, pois o alias Vercel ainda executa `c35a1a4` sem `/api/v1/auth/recover`, não há E2E autenticado de dois tenants/entrega Resend real, backup remoto/PITR ensaiado ou proteção de senhas vazadas habilitada.
+### Rechecagem pós-publicação — 27/10/2026 14:45 BRT
+
+O patch de recuperação chegou à produção: `dpl_5iptvUbq4mSb9aQn9UDp6CuSKYRJ`, commit `a9fb565`, READY e alias principal atualizado. A rota foi localizada publicamente (`GET` 405 esperado) e o E2E Playwright remoto passou **1/1**. O gate de clique com e-mail Resend real, dois tenants, backup/PITR e proteção de senha vazada permanece aberto.
 
