@@ -32,7 +32,7 @@ Fechar as pendências operacionais: SMTP/Auth de convite, observabilidade, previ
 
 - Repositório: `https://github.com/dinheirodegraca013-spec/capacita-o`.
 - Supabase exclusivo: `zykfvzvydvifuzepujvv`, CAPACITAGOV, ativo; migrations funcionais e hardenings aplicados.
-- Vercel: projeto `capacita-o-x5hg`, domínio `https://capacita-o-x5hg.vercel.app/`, último deployment READY validado `dpl_3MckDyLVDVGF6thFHK7LPXbNPFaW`, commit `39d9008fe25789b175931bf1253a3436fe0eda0d`.
+- Vercel: projeto `capacita-o-x5hg`, domínio `https://capacita-o-x5hg.vercel.app/`, deployment READY publicado `dpl_CRyDhAkDad4RptLPSKRZ2qvLwVGJ`, commit `4200978b24c4a6606e7e7997a21eee1d5df66e39`; `/` e `/login` retornaram 200 com HTML Next novo. O deployment automático `dpl_9XVyAaudxQphFsSRARP39KBJgTgP` foi identificado como Vite antigo e não recebeu o alias principal.
 - Raiz desta rodada: `E:/000  arquivos que nao puderam ser enviados/Downloads/SISTEMAS/CAPACITAGOV`.
 - Checkout de implementação: subpasta `capacita-o/`, branch `feat/capacitagov-rebuild`.
 - Código novo: `capacita-o/apps/web/`.
