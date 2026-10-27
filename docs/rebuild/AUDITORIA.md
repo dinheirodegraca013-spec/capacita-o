@@ -6,6 +6,10 @@ Evidências confirmadas: cadeia nova de migrations aplicada em PostgreSQL 18.6 t
 
 O deployment de produção usa somente variáveis públicas do Supabase no navegador; service role não é enviada ao bundle. A conta e organização temporárias de E2E foram removidas após a validação. O próximo gate é concluir dependências operacionais e repetir a auditoria final com o HEAD publicado.
 
+### Atualização de evidências — 27/10/2026
+
+O branch de reconstrução foi publicado pelo conector GitHub. CI remoto recente aprovou migrations/pgTAP e web (typecheck, lint, testes e build), incluindo os runs `40454215760` e `40454215729`. O deployment Next ativo continua no alias `capacita-o-x5hg.vercel.app`; o teste `preview.spec.ts` passou 2/2 contra o domínio, cobrindo rota profunda sem 404 e contexto anônimo sem cache. Ainda não há contas oficiais de homologação para repetir as jornadas autenticadas de duas organizações, nem credenciais de SMTP/worker ou ensaio de backup/restauração.
+
 ## UX/UI — 27/10/2026
 
 A reconstrução visual institucional foi implementada e validada por typecheck, lint e build. O shell agora comunica organização ativa, destaca a rota atual, oferece foco por teclado e adaptação mobile; landing, login e seleção de organização receberam hierarquia, feedback e estados vazios mais claros. A validação visual pública da nova versão deve acompanhar o próximo deployment.
@@ -20,4 +24,7 @@ Evidência: 28 arquivos/199 testes pgTAP PASS no PostgreSQL temporário; as migr
 O deployment `dpl_7KE9Cje9s6YFSVBbXYEZt8VYsj6w` foi construído como produção a partir da árvore local de `apps/web`, com `next build`, e ficou READY. O domínio `https://capacita-o-x5hg.vercel.app/` respondeu 200 em `/` e `/login`; o Playwright autenticado confirmou 3/3 jornadas após a correção da seleção de organização.
 
 Atualização: o deployment `dpl_54N1x6Pydz8YTPd3BMMYrhwFkq38` foi criado explicitamente com `rootDirectory=apps/web`, `framework=nextjs` e `npm run build`, ficou READY e recebeu o alias principal. A validação final retornou 200 em `/` e `/login` com a nova landing/login. O deployment automático `dpl_9XVyAaudxQphFsSRARP39KBJgTgP` foi mantido fora do alias por ainda servir o Vite legado.
+- **Resend — 27/10/2026:** domínio remetente verificado `gestio.dev.br`; chave com escopo mínimo armazenada somente como variável sensível no Vercel; endpoint não expõe a chave e resolve destinatário pelo Supabase Auth Admin. Pendentes: `service_role`, segredo do scheduler, teste controlado e SMTP do Auth (indisponível no conector Supabase).
+- **Fechamento — 27/10/2026:** chaves de teste revogadas; segredo do scheduler configurado; alias de produção validado. `service_role` continua sem fonte segura no conector e não foi inventada.
+- **Imagens — 27/10/2026:** asset gerado sem texto/logotipo, com alt text e layout responsivo; verificação local passou. Produção ainda exibe a versão anterior até liberar novo deployment.
 

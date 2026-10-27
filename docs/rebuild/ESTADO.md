@@ -83,4 +83,26 @@ Provedor SMTP/serviço de envio e observabilidade; preview Vercel com dados não
 - Otimização de banco aplicada: `20261027040000_rls_initplan_optimization`, `20261027041000_fk_indexes` e `20261027042000_fk_indexes_remaining`. `pg_prove` local continua 28/199 PASS; advisor remoto confirmou zero `auth_rls_initplan` e zero FK sem índice. Permanecem somente avisos INFO de índices não utilizados, esperados antes de carga real.
 - Procedimento de Vercel formalizado em `docs/rebuild/operations/deploy.md`; preview isolado continua pendente porque o único Supabase autorizado é o projeto remoto de produção.
 - CI SQL: run `40451913650` verde em PostgreSQL 16 + pgTAP, incluindo instalação, bootstrap, migrations e `pg_prove`; a cadeia exclui explicitamente `20261007_init.sql`, migration legada que duplicava o schema. Suíte local: 28 arquivos/199 testes PASS.
+- Promoção mais recente: deployment Next `dpl_4LDQwbm6YeGGRES9hYup8zfzq5KM` (commit `071134959a8d7a843fafe9e5c108434b83b3a93b`) ficou READY e recebeu o alias `capacita-o-x5hg.vercel.app`, substituindo o anterior. Validação direta: `/` e `/login` HTTP 200 com título `CapacitaGov`; `/api/v1/context` HTTP 401 anônimo, `Cache-Control: no-store, private`.
+- Tentativa de ampliar o E2E para duas contas reais: o Auth remoto respondeu `over_email_send_rate_limit` no fluxo público de cadastro; contas sintéticas criadas somente para diagnóstico via SQL foram removidas na mesma sessão (usuários, perfis, organizações e memberships). O gate continua pendente de contas de homologação/credenciais autorizadas.
+- Nova tentativa controlada sem envio de e-mail: inserir usuário diretamente em `auth.users` produziu `unexpected_failure` no Auth por inconsistência interna; o registro foi removido imediatamente. Não usar inserção manual de usuários para homologação.
+- Auditoria de ambiente Vercel: somente `NEXT_PUBLIC_SUPABASE_URL` e `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` estão configuradas nos três ambientes; service role, segredo do worker e provedor de e-mail ainda não foram fornecidos/configurados.
+- Advisor de performance rechecado após `20261027063000_instructor_tenant_fk_index`: o alerta de FK sem índice desapareceu; permanecem apenas INFO de índices ainda não utilizados, esperado antes de carga real.
+- CI após o índice composto: SQL run `40453740988`/job `122022151144` e web run `40453741060`/job `122022151634` concluíram `success`; migrations, pgTAP, typecheck, lint, testes e build passaram.
+- Operação remota rechecada: Supabase `zykfvzvydvifuzepujvv` está `ACTIVE_HEALTHY` em PostgreSQL 17.11; não existem branches Supabase adicionais. Em produção, `/api/internal/notifications` rejeitou chamada sem segredo (401) e Storage sem sessão rejeitou acesso (401), confirmando as fronteiras de segurança. Backup/restauração e SMTP continuam sem evidência operacional.
+- O contrato de configuração em `apps/web/.env.example` agora identifica explicitamente as variáveis server-only (`SUPABASE_SERVICE_ROLE_KEY`, segredo do worker e provedor). CI do commit `a99883adeb331c4c1c5d6ab113ad1c09b7a8a657` passou web job `122023657349` e pgTAP job `122023657846`.
+- O checklist `docs/rebuild/operations/homologacao.md` foi sincronizado para o branch remoto (`401d6931896a6c399d158721ffd3b8a7e69aa16b`), sem incluir credenciais.
+- CI do checklist remoto aprovado: web job `122024502124` e pgTAP job `122024502275` concluíram `success` nos runs `40454482796` e `40454482844`.
+
+## Fechamento Resend — 27/10/2026
+
+As duas chaves de teste não utilizadas foram revogadas. `NOTIFICATION_JOB_SECRET` foi criado como segredo no Vercel nos três ambientes. O deployment `dpl_7unt8EvMG1sVgH5TvKgf9G5XSA27` ficou READY e o alias principal respondeu HTTP 200 com título CapacitaGov. Continua pendente somente `SUPABASE_SERVICE_ROLE_KEY` para o worker administrativo.
+
+## Imagens institucionais — 27/10/2026
+
+Adicionada ilustração hero responsiva em `apps/web/public/images/capacitagov-hero.png`, com texto alternativo, carregamento prioritário e composição mobile. Typecheck, lint e build locais passaram. O novo deployment não pôde ser criado por limite diário da Vercel (`api-deployments-free-per-day`), com retry informado em 24 horas.
+
+## Resend — 27/10/2026
+
+Domínio Resend `gestio.dev.br` confirmado como verificado e habilitado para envio. Foi criada uma chave restrita de `sending_access` para CapacitaGov e configuradas no projeto Vercel `capacita-o-x5hg` as variáveis server-only `EMAIL_PROVIDER_URL`, `EMAIL_PROVIDER_KEY` e `EMAIL_FROM` nos três ambientes. O worker passou a transformar notificações no contrato `/emails` da API Resend e resolver o e-mail do destinatário via Supabase Auth Admin. A chave não foi registrada em arquivos ou logs.
 
