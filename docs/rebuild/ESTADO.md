@@ -30,6 +30,8 @@ Verificação local: `npm run typecheck`, `npm run lint` e `npm run build` passa
 
 O `POST /api/v1/assets` agora também gera `createSignedUploadUrl` para o bucket privado `course-assets`, retornando token/path para o cliente enviar o arquivo sem expor credenciais privilegiadas. O registro permanece `pending` até processamento posterior; teste de integração cobre a capacidade assinada.
 
+Reauditoria remota somente leitura confirmou bucket `course-assets` privado, policy de INSERT limitada a `is_org_manager(foldername(name)[1])` e SELECT limitada a `is_active_member(foldername(name)[1])`. As funções RPC `SECURITY DEFINER` continuam concedidas somente aos papéis necessários; `verify_certificate` permanece público por desenho para validação de certificados.
+
 ## Próxima ação
 
 Fechar as pendências operacionais: SMTP/Auth de convite, observabilidade, preview com dados isolados, CI remoto, recuperação/rollback e auditoria independente final. O plano técnico continua sujeito a evidências, não a aprovação implícita.
