@@ -258,3 +258,7 @@ Consulta somente leitura no Supabase autorizado (27/10/2026) retornou `auth.user
 
 Runbooks de release, conteúdo e recuperação estão revisados e mantêm rollback, outbox, certificados, auditoria, backup e critérios de aprovação. T30 permanece RUNNING: faltam backup/restauração ensaiados, SMTP/worker real, conta E2E, preview do SHA atual e auditoria independente final.
 
+## Correção adicional de recuperação — 27/10/2026
+
+O fluxo `/recuperar-senha` agora resolve a origem canônica com fallback para o host HTTPS do navegador quando `NEXT_PUBLIC_APP_URL` estiver ausente ou apontar para localhost em produção; também remove barra final antes de montar o callback. Testes de origem/callback e convite: **7/7 PASS**, typecheck e lint PASS. O commit `13d6e79` foi sincronizado no `main`; depende de novo deployment para validação pública.
+
