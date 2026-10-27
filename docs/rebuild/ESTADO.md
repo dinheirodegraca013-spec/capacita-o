@@ -42,6 +42,12 @@ Revisão independente apontou uma lacuna real no ciclo de tentativas: matrícula
 
 Fechar as pendências operacionais: SMTP/Auth de convite, observabilidade, preview com dados isolados, CI remoto, recuperação/rollback e auditoria independente final. O plano técnico continua sujeito a evidências, não a aprovação implícita.
 
+## Correções após revisão independente — 27/10/2026
+
+A revisão encontrou lacunas de integridade que exigiram correção antes da próxima aprovação: a migration `20261027062000_tenant_composite_fks.sql` foi aplicada ao Supabase autorizado e adicionou FKs compostas para oferta/turma, turma/instrutor, membership/instrutor e turma/encontro; também reforçou `confirm_attendance` para exigir matrícula e membership ativos no mesmo tenant. A consulta remota confirmou os quatro constraints e o guard de matrícula ativa.
+
+Na UI de catálogo institucional, cursos próprios da organização passaram a aparecer junto aos cursos centrais concedidos; a consulta continua tenant-scoped e o backend mantém a distinção entre concessão central e propriedade institucional. A regressão pgTAP `tenant_integrity.test.sql` cobre esses limites. A meta permanece em revisão: ainda faltam E2E autenticado de duas organizações, SMTP/worker, backup/rollback e auditoria final.
+
 ## Contexto mínimo para retomar
 
 - Repositório: `https://github.com/dinheirodegraca013-spec/capacita-o`.
