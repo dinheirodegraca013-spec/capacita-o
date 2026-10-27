@@ -158,3 +158,7 @@ T09/T11 complemento — o formulário de criação de curso próprio agora permi
 
 T10 complemento — adicionada `POST /api/v1/assets/[id]/complete`: somente gestor do tenant pode confirmar o upload, e o servidor consulta o bucket privado `course-assets` antes de alterar o asset de `pending` para `ready`. Sem objeto confirmado, a API retorna conflito e não libera URL assinada. Typecheck, Vitest (**26 arquivos/53 testes**) e build passaram; teste operacional com arquivo real permanece pendente.
 
+## Correção do botão de convite — 27/10/2026
+
+O endpoint de convite deixou de depender do remetente nativo do Supabase Auth, que podia criar o convite sem entregar um botão utilizável quando o SMTP/Auth estava indisponível ou limitado. Agora ele gera o action link do Supabase (`invite`, com fallback `magiclink` para contas existentes) e sempre o entrega pelo Resend configurado; falhas marcam o convite como `failed` e retornam erro explícito à interface. Typecheck, Vitest (**26 arquivos/53 testes**) e build passaram. Envio real e publicação do HEAD continuam pendentes por homologação SMTP e limite da Vercel.
+
