@@ -5,6 +5,11 @@ export type OrganizationClient = { from(table: 'organizations' | 'org_units'): {
 
 const ORGANIZATION_KINDS: Organization['kind'][] = ['company', 'municipality', 'public_agency', 'nonprofit', 'other'];
 
+export function buildOrganizationSlug(name: string) {
+  const normalized = name.normalize('NFKD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+  return normalized.replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 120);
+}
+
 export function normalizeOrganizationInput(input: OrganizationInput): OrganizationInput {
   const name = input.name.trim();
   if (!name || name.length > 180) throw new Error('Invalid organization name');
@@ -30,4 +35,3 @@ export async function saveOrgUnit(actor: Actor, name: string, client: Organizati
   if (error || !data) throw new Error(error?.message ?? 'Organization unit was not saved');
   return data;
 }
-
