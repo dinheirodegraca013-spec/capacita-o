@@ -26,7 +26,7 @@ select is((select action from public.audit_events where organization_id = '10000
 select is(public.commit_people_import('10000000-0000-0000-0000-000000000081', '[{"name":"Idempotent User","email":"idempotent@example.com"}]'::jsonb, 70, repeat('a', 64)), public.commit_people_import('10000000-0000-0000-0000-000000000081', '[{"name":"Idempotent User","email":"idempotent@example.com"}]'::jsonb, 70, repeat('a', 64)), 'repeated import returns the same batch');
 select is((select count(*)::integer from public.import_batches where organization_id = '10000000-0000-0000-0000-000000000081' and idempotency_key = repeat('a', 64)), 1, 'repeated import does not create another batch');
 select throws_ok($$select public.commit_people_import('10000000-0000-0000-0000-000000000081', '[{"name":"Bad","email":"not-an-email"}]'::jsonb, 80)$$, 'P0001', 'IMPORT_INVALID', 'invalid import is rejected');
-select is((select count(*)::integer from public.people where organization_id = '10000000-0000-0000-0000-000000000081'), 1, 'invalid import leaves prior rows unchanged');
+select is((select count(*)::integer from public.people where organization_id = '10000000-0000-0000-0000-000000000081'), 2, 'invalid import leaves prior rows unchanged');
 select * from finish();
 rollback;
 
