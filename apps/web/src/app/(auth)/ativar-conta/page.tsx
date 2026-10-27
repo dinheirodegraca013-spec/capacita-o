@@ -18,6 +18,8 @@ export default function ActivateAccountPage() {
     const code = query.get('code');
     const tokenHash = query.get('token_hash');
     const tokenType = query.get('type');
+    const authEmail = query.get('email');
+    const authOtp = query.get('otp');
     const hash = new URLSearchParams(window.location.hash.replace(/^#/, ''));
     const accessToken = hash.get('access_token');
     const refreshToken = hash.get('refresh_token');
@@ -38,6 +40,9 @@ export default function ActivateAccountPage() {
         linkError = result.error;
       } else if (code) {
         const result = await supabase.auth.exchangeCodeForSession(code);
+        linkError = result.error;
+      } else if (authEmail && authOtp) {
+        const result = await supabase.auth.verifyOtp({ email: authEmail, token: authOtp, type: 'invite' });
         linkError = result.error;
       } else if (tokenHash && ['invite', 'magiclink', 'recovery'].includes(tokenType ?? '')) {
         const result = await supabase.auth.verifyOtp({ token_hash: tokenHash, type: tokenType as 'invite' | 'magiclink' | 'recovery' });
