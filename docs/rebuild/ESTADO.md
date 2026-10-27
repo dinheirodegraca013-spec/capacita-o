@@ -168,3 +168,7 @@ O editor agora exibe módulos/aulas já persistidos, permite cadastrar conteúdo
 
 CI remoto do head `dbce0b205a2c3fd218985b7afb99802563e0fbdd`: web run `40474451225` e SQL/pgTAP run `40474451137`, ambos `success`.
 
+## T14 — catálogo e biblioteca do aluno — 27/10/2026
+
+O cartão de oferta agora informa início, prazo e capacidade quando definidos, mantém a política de matrícula explícita e comunica falha de inscrição com alerta acessível. Foi criado `tests/e2e/student-catalog.spec.ts` para catálogo e biblioteca, condicionado a conta de aluno não produtiva. Typecheck, Vitest, build e execução E2E serão registrados após a validação deste ciclo; homologação autenticada continua pendente.
+
