@@ -15,6 +15,6 @@ export default async function CatalogManagementPage({ params }: { params: Promis
   ]);
   const versions = [...(centralVersions ?? []), ...(ownVersions ?? [])].filter((version, index, list) => list.findIndex((item) => item.id === version.id) === index);
 
-  return <section className="stack"><h1>Catálogo institucional</h1>{versions[0] ? <OfferingManagementForm organizationId={orgId} courseVersionId={versions[0].id} /> : <p className="empty-state">Nenhum curso publicado/concedido disponível.</p>}<ul>{(offerings ?? []).map((offering) => <li key={offering.id}>{offering.title} — {offering.status}</li>)}</ul></section>;
+  return <section className="stack"><h1>Catálogo institucional</h1>{versions.length ? <div className="stack">{versions.map((version) => <OfferingManagementForm key={version.id} organizationId={orgId} courseVersionId={version.id} courseTitle={version.title} />)}</div> : <p className="empty-state">Nenhum curso publicado/concedido disponível.</p>}<ul>{(offerings ?? []).map((offering) => <li key={offering.id}>{offering.title} — {offering.status}</li>)}</ul></section>;
 }
 
