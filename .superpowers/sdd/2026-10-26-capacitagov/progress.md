@@ -76,7 +76,7 @@ Task 27: running — outbox de notificações com chave idempotente, payload sem
 
 Task 28: running — isolamento RLS sob role `authenticated` passou `4/4`; Playwright configurado e executado com 2 specs explicitamente skipped sem conta não produtiva. Falta executar jornadas reais com Auth/API/Storage de homologação e anexar evidências do navegador.
 
-Task 28 complemento: Chromium instalado localmente; smoke test público de login passou `1/1` e gerou screenshot, enquanto 2 testes autenticados seguem skipped sem credenciais de homologação. Falta RLS/API/Storage remoto e jornadas completas.
+Task 28 complemento: Chromium instalado localmente; E2E com variáveis públicas do Supabase autorizado passou `3/3`, com landing, login e Storage sem sessão; 2 jornadas autenticadas seguem skipped sem credenciais de homologação. Falta RLS/API/Storage remoto autenticado e jornadas completas.
 
 Task 29: running — runbook de release, recuperação e gates remotos documentados; consulta somente leitura confirmou Supabase ativo sem migrations e nenhum projeto Vercel. Não aplicar DDL/deploy sem autorização explícita.
 
