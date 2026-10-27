@@ -1,9 +1,11 @@
 begin;
-select plan(14);
+select plan(18);
 select has_table('public'::name, 'people'::name);
 select has_table('public'::name, 'import_batches'::name);
 select has_function('public'::name, 'commit_people_import'::name);
 select has_column('public'::name, 'import_batches'::name, 'payload'::name, 'server stored payload');
+select has_column('public'::name, 'import_batches'::name, 'idempotency_key'::name, 'import idempotency key');
+select ok(exists (select 1 from pg_indexes where schemaname = 'public' and indexname = 'import_batches_org_idempotency_idx'), 'import idempotency index exists');
 select ok(exists (select 1 from pg_policies where schemaname = 'public' and tablename = 'people' and policyname = 'people_insert_manager'), 'people manager insert policy exists');
 select ok(exists (select 1 from pg_policies where schemaname = 'public' and tablename = 'import_batches' and policyname = 'imports_select_member'), 'import select policy exists');
 set local role authenticated;
@@ -21,7 +23,10 @@ select ok(public.commit_people_import('10000000-0000-0000-0000-000000000081', '[
 select is((select count(*)::integer from public.people where organization_id = '10000000-0000-0000-0000-000000000081'), 1, 'committed import creates people');
 select is((select status from public.import_batches where organization_id = '10000000-0000-0000-0000-000000000081'), 'committed', 'committed import stores status');
 select is((select action from public.audit_events where organization_id = '10000000-0000-0000-0000-000000000081' and resource_type = 'import_batch'), 'people.import.committed', 'committed import is audited');
+select is(public.commit_people_import('10000000-0000-0000-0000-000000000081', '[{"name":"Idempotent User","email":"idempotent@example.com"}]'::jsonb, 70, repeat('a', 64)), public.commit_people_import('10000000-0000-0000-0000-000000000081', '[{"name":"Idempotent User","email":"idempotent@example.com"}]'::jsonb, 70, repeat('a', 64)), 'repeated import returns the same batch');
+select is((select count(*)::integer from public.import_batches where organization_id = '10000000-0000-0000-0000-000000000081' and idempotency_key = repeat('a', 64)), 1, 'repeated import does not create another batch');
 select throws_ok($$select public.commit_people_import('10000000-0000-0000-0000-000000000081', '[{"name":"Bad","email":"not-an-email"}]'::jsonb, 80)$$, 'P0001', 'IMPORT_INVALID', 'invalid import is rejected');
 select is((select count(*)::integer from public.people where organization_id = '10000000-0000-0000-0000-000000000081'), 1, 'invalid import leaves prior rows unchanged');
 select * from finish();
 rollback;
+
