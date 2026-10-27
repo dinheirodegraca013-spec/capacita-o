@@ -161,5 +161,7 @@ Reclaim de jobs legados verificado no Supabase após migration incremental `2026
 
 Estado de homologação de entrega: outbox remoto vazio e nenhum convite CapacitaGov recente identificado no Resend; não há teste de entrega real para aprovar T27.
 
+Pré-requisito do provedor confirmado: `gestio.dev.br` verificado e envio habilitado no Resend.
+
 - Runbooks revisados; checklist final não pode ser aprovado enquanto backup/restauração, SMTP/worker, E2E autenticado e preview atual estiverem ausentes.
 
