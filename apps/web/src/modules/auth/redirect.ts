@@ -15,3 +15,7 @@ export function requiresAdministrativeMfa(roles: OrganizationRole[]) {
   return roles.includes('manager');
 }
 
+export function requiresMfaForAssurance(roles: OrganizationRole[], currentLevel: string | null | undefined) {
+  return requiresAdministrativeMfa(roles) && currentLevel !== 'aal2';
+}
+
