@@ -56,3 +56,5 @@ CI remoto confirmou web e SQL/pgTAP verdes no head documental `c4b7bfdfd2c3aa4ee
 
 Implementação parcial verificada: conteúdo da aula e posição persistida estão disponíveis no player, com RPC idempotente já coberto por pgTAP. O E2E autenticado foi criado, mas ainda não há matrícula de homologação para executá-lo; T15 permanece RUNNING.
 
+CI remoto confirmou web e SQL/pgTAP verdes no head documental `83ae989c390ff7568b3507a6ca041850ab68dc27` (runs `40475154744` e `40475154694`).
+
