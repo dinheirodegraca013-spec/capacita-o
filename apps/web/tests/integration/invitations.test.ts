@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { buildInvitationRedirect, canResendInvitation, normalizeInvitationEmail, resolveInvitationOrigin } from '../../src/modules/invitations/service';
+import { buildInvitationActivationLink, buildInvitationRedirect, canResendInvitation, normalizeInvitationEmail, resolveInvitationOrigin } from '../../src/modules/invitations/service';
 
 describe('recoverable institutional invitations', () => {
   it('normalizes email without revealing another tenant', () => {
@@ -14,6 +14,10 @@ describe('recoverable institutional invitations', () => {
 
   it('keeps the activation token inside an internal callback redirect', () => {
     expect(buildInvitationRedirect('https://capacita-o-x5hg.vercel.app', 'abc/123')).toBe('https://capacita-o-x5hg.vercel.app/ativar-conta?token=abc%2F123');
+  });
+
+  it('builds a production activation link with the Supabase invite OTP', () => {
+    expect(buildInvitationActivationLink('https://capacita-o-x5hg.vercel.app/', 'raw/token', ' Person@Example.COM ', '123456')).toBe('https://capacita-o-x5hg.vercel.app/ativar-conta?token=raw%2Ftoken&email=person%40example.com&otp=123456');
   });
 
   it('ignores a localhost app URL in production', () => {
