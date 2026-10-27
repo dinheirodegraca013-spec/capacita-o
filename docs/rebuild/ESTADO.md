@@ -238,3 +238,7 @@ O formulário de avaliação foi integrado à área de certificados válidos; a 
 
 O relatório institucional passou a retornar totais e breakdowns por status/curso, com filtro temporal e tenant-scoped; CSV continua neutralizando fórmulas de planilha. Migration `reports_breakdown` aplicada no Supabase `zykfvzvydvifuzepujvv`; privilégio de execução autenticada confirmado. Typecheck, lint e testes locais de serviço/exportação **3/3 PASS**; dataset autenticado de dois tenants ainda necessário.
 
+## T27 — outbox e recuperação de notificações — 27/10/2026
+
+Aplicada a migration `notifications_recovery` no Supabase: `processing_at` permite recuperar jobs abandonados após 15 minutos; enqueue exige usuário autenticado e gerente do mesmo tenant para destinatários de terceiros; claim permanece exclusivo de `service_role`. Verificação remota confirmou `enqueue_notification` para authenticated e `claim_pending_notifications` somente para service role. Envio real pelo Resend ainda pendente.
+
