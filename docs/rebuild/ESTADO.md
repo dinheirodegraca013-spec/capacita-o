@@ -210,3 +210,7 @@ O serviço de turmas mantém abertura e atribuição de instrutor tenant-scoped;
 
 Adicionada a RPC `correct_attendance` e a rota `POST /api/v1/attendance/correct`, restringidas a gestor ou instrutor atribuído, com validação de tenant/turma/matrícula e evento `attendance.correct` em auditoria. O QR e a confirmação continuam com expiração de cinco minutos e idempotência. Criado `tests/e2e/attendance.spec.ts`; homologação com token real ainda pendente. A migration `20261027070000_attendance_correction.sql` foi aplicada no Supabase `zykfvzvydvifuzepujvv`; consulta remota confirmou execução para `authenticated`.
 
+## T22 — conclusão e certificação únicas — 27/10/2026
+
+Consulta remota confirmou que `evaluate_completion` exige matrícula e vínculo ativos, ignora nota quando não há prova publicada, não exige presença em EAD sem encontros e aplica presença por minutos programados com bloqueio de encontros futuros; em cursos híbridos, a turma da matrícula restringe os encontros. `complete_enrollment` mantém emissão idempotente por `unique(enrollment_id)` e atualiza a matrícula somente após avaliação elegível. Testes locais de serviço: **2/2 PASS**; cenários autenticados com limiares e emissão real continuam pendentes.
+
