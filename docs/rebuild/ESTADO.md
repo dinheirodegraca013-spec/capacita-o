@@ -270,6 +270,8 @@ Suíte web completa após o onboarding MFA: **27 arquivos/64 testes PASS**.
 
 T05 recebeu reenvio operacional: `GET /api/v1/invitations` lista apenas convites do tenant do gestor; `POST /api/v1/invitations/resend` aplica janela de 15 minutos, gira o token, usa origem canônica e envia via Resend. A tela de gestão agora lista convites recentes e oferece Reenviar. Typecheck, lint e build PASS; envio real continua pendente.
 
+T06 hardening: atualização de organização agora valida `kind` contra o contrato do domínio e rejeita slug inseguro antes da escrita; a rota usa o mesmo normalizador do serviço. Teste de organizações **3/3 PASS**; suíte web **27 arquivos/65 testes PASS**, typecheck, lint e build PASS.
+
 Auditoria de dependências local: `npm audit --audit-level=high --json` retornou **0 vulnerabilidades** (27 dependências de produção, 426 de desenvolvimento, 493 totais).
 
 Regressão E2E de convite criada em `apps/web/tests/e2e/invitation.spec.ts`, cobrindo tela de ativação e callback com destino externo; execução local: **2 skipped** por ausência de variáveis públicas Supabase. Nova tentativa de preview Vercel para `c2c69da` retornou novamente `402 api-deployments-free-per-day` (retry 24h); não há deployment novo.
