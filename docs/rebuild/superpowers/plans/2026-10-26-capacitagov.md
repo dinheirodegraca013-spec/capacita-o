@@ -258,7 +258,7 @@ Status único: PENDING → RUNNING → REVIEW → DONE; BLOCKED somente para dep
 
 ### T14 — Catálogo e biblioteca do aluno
 
-**Meta/prioridade:** M4/P1. **Status:** PENDING. **Depende:** T08,T12,T13. **Requisitos:** R04.
+**Meta/prioridade:** M4/P1. **Status:** RUNNING. **Depende:** T08,T12,T13. **Requisitos:** R04.
 
 **Criar/alterar:** `src/app/(portal)/o/[orgId]/aluno/page.tsx`, `src/app/(portal)/o/[orgId]/aluno/catalogo/page.tsx`, `src/app/(portal)/o/[orgId]/aluno/cursos/page.tsx`, `src/components/courses/course-card.tsx`.
 
@@ -268,7 +268,8 @@ Status único: PENDING → RUNNING → REVIEW → DONE; BLOCKED somente para dep
 
 **Aceite verificável:** Busca sem resultados mostra estado vazio; catálogo sem cursos não fabrica conteúdo; aluno enxerga somente suas matrículas e ofertas acessíveis; links externos não marcam conclusão interna.
 
-- [ ] Executar ciclo da task e anexar evidência; revisar antes de marcar DONE.
+- [x] Catálogo e biblioteca exibem estados vazios reais, prazos, política de matrícula e capacidade; jornada E2E criada.
+- [ ] Executar jornada autenticada e anexar evidência; revisar antes de marcar DONE.
 
 ### T15 — Player e progresso persistente
 
