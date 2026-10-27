@@ -214,3 +214,7 @@ Adicionada a RPC `correct_attendance` e a rota `POST /api/v1/attendance/correct`
 
 Consulta remota confirmou que `evaluate_completion` exige matrícula e vínculo ativos, ignora nota quando não há prova publicada, não exige presença em EAD sem encontros e aplica presença por minutos programados com bloqueio de encontros futuros; em cursos híbridos, a turma da matrícula restringe os encontros. `complete_enrollment` mantém emissão idempotente por `unique(enrollment_id)` e atualiza a matrícula somente após avaliação elegível. Testes locais de serviço: **2/2 PASS**; cenários autenticados com limiares e emissão real continuam pendentes.
 
+## T23 — PDF e validação pública — 27/10/2026
+
+O PDF usa snapshot imutável do certificado, sem dados pessoais desnecessários, e a rota privada agora impede cache compartilhado. A página pública exibe somente titular, curso, instituição, status e código; foi criado `tests/e2e/certificate.spec.ts` para PDF/validação com fixture autenticada. Typecheck, lint e `tests/integration/certificate-verification.test.ts` **2/2 PASS**; renderização visual A4 e certificado revogado ainda exigem homologação.
+
