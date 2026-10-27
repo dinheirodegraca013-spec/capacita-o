@@ -344,3 +344,5 @@ Verificação remota adicional: `extensions.digest(text,text)` existe no projeto
 
 Homologação remota transacional da importação: sob `authenticated` com gestor temporário, duas chamadas idênticas retornaram o mesmo lote; o resultado foi `people_count=1` e `batch_count=1`. A transação terminou com `ROLLBACK`, sem dados persistentes.
 
+Auditoria Storage remota: o bucket `course-assets` está `public=false`; as únicas políticas observadas são `course_assets_insert_manager` (INSERT condicionado a gestor da organização) e `course_assets_select_member` (SELECT condicionado a vínculo ativo). Não existe política pública de leitura irrestrita; o teste HTTP anônimo anterior retornou 400 para objeto inexistente.
+
