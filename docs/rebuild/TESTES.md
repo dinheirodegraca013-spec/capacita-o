@@ -153,6 +153,8 @@ Consulta remota somente leitura: `auth.users=1`, `organizations=0`, `active_memb
 
 O redirect agora preserva o token na tela cliente de ativação, compatível com sessões Supabase retornadas em fragmento. `tests/integration/invitations.test.ts`: **4/4 PASS**; typecheck e lint PASS. Falta validar em deployment atualizado e com e-mail de homologação.
 
+Hardening MFA T04: rota de gestão exige `aal2` no servidor e preserva retorno interno. `tests/integration/auth.test.ts`: **3/3 PASS**; typecheck, lint e build PASS. `npm audit --audit-level=high`: **0 vulnerabilidades**.
+
 ### T30 — liberação — 27/10/2026
 
 Regressão adicional de origem canônica de recuperação: `tests/integration/auth-redirect.test.ts` e convites **7/7 PASS**; typecheck/lint PASS. Validação por e-mail real continua pendente.
