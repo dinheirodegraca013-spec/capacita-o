@@ -273,7 +273,7 @@ Status único: PENDING → RUNNING → REVIEW → DONE; BLOCKED somente para dep
 
 ### T15 — Player e progresso persistente
 
-**Meta/prioridade:** M4/P0. **Status:** PENDING. **Depende:** T10,T13,T14. **Requisitos:** R04,R05.
+**Meta/prioridade:** M4/P0. **Status:** RUNNING. **Depende:** T10,T13,T14. **Requisitos:** R04,R05.
 
 **Criar/alterar:** `src/modules/learning/service.ts`, `src/app/(portal)/o/[orgId]/aluno/cursos/[enrollmentId]/page.tsx`, `src/app/api/v1/progress/route.ts`, `supabase/migrations/<gerado>_progress.sql`.
 
@@ -283,7 +283,8 @@ Status único: PENDING → RUNNING → REVIEW → DONE; BLOCKED somente para dep
 
 **Aceite verificável:** Recarregar e nova sessão retomam posição; aula alheia/posição impossível negadas; POST repetido não aumenta progresso; leitura confirma sem tempo fictício; falha de mídia é explícita.
 
-- [ ] Executar ciclo da task e anexar evidência; revisar antes de marcar DONE.
+- [x] Player exibe conteúdo textual salvo, retoma posição persistida e envia progresso idempotente; E2E de aprendizagem criado.
+- [ ] Executar jornada autenticada e anexar evidência; revisar antes de marcar DONE.
 
 ### T16 — Trilhas e obrigatoriedades
 
