@@ -511,6 +511,7 @@ Status único: PENDING → RUNNING → REVIEW → DONE; BLOCKED somente para dep
 **Aceite verificável:** Preview protegido abre todas as rotas profundas; auth callback, RLS e arquivos funcionam; nenhum dado/segredo de outro projeto; build e E2E do SHA implantado registrados. Não criar serviço pago sem autorização.
 
 - [x] Root `apps/web`, projeto `capacita-o-x5hg`, callbacks e preview spec registrados; Vercel respondeu `402 api-deployments-free-per-day` ao tentar publicar o HEAD.
+- [x] Rechecagem 27/10: o `main` atual (`a9fb565`) foi publicado em `dpl_5iptvUbq4mSb9aQn9UDp6CuSKYRJ` com estado READY e alias principal; E2E público de recuperação passou 1/1. T29 permanece RUNNING porque ainda falta a homologação isolada completa e a revisão final de dois tenants.
 - [ ] Criar/validar preview do SHA atual após a cota liberar; revisar antes de marcar DONE.
 
 ### T30 — Liberação e operação verificadas
@@ -526,6 +527,7 @@ Status único: PENDING → RUNNING → REVIEW → DONE; BLOCKED somente para dep
 **Aceite verificável:** Nenhuma pendência P0; responsáveis e suporte definidos; recuperação comprovada; publicar somente após revisão final concreta e autorização aplicável; status não muda para DONE com testes pendentes.
 
 - [x] Runbooks de conteúdo, recuperação e release mantêm rollback, outbox, certificados, auditoria e critérios de aprovação explícitos.
+- [x] Recuperação de senha validada em produção: Resend registrou entrega real e o corpo não contém `localhost`; E2E remoto 1/1.
 - [ ] Confirmar backup/restauração, SMTP/worker, contas E2E, preview do SHA atual e revisão independente; só então avaliar DONE.
 
 ## Transferência e limites
