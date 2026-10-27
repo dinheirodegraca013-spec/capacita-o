@@ -256,6 +256,10 @@ O deployment de produção foi criado em `2026-10-27T09:21:01Z`; a próxima tent
 
 Consulta somente leitura no Supabase autorizado (27/10/2026) retornou `auth.users=1`, `organizations=0` e `active_memberships=0`. Portanto, não há atualmente dataset institucional ou duas contas não produtivas para executar as jornadas autenticadas sem inventar evidência; o acesso de navegador também não pôde ser capturado nesta sessão.
 
+## Correção do botão de convite — 27/10/2026
+
+`buildInvitationRedirect` agora aponta diretamente para `/ativar-conta?token=...`. Isso evita perder o `#access_token` devolvido pelo Supabase em uma rota exclusivamente server-side; a página cliente de ativação consome a sessão no navegador. Teste direcionado, typecheck e lint passaram; deployment público ainda pendente.
+
 ## T30 — liberação e operação — 27/10/2026
 
 Runbooks de release, conteúdo e recuperação estão revisados e mantêm rollback, outbox, certificados, auditoria, backup e critérios de aprovação. T30 permanece RUNNING: faltam backup/restauração ensaiados, SMTP/worker real, conta E2E, preview do SHA atual e auditoria independente final.
