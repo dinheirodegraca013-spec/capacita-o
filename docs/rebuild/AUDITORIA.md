@@ -114,5 +114,7 @@ A falha anterior do SQL/pgTAP foi reproduzida no run `40481533748`: `enqueue_not
 
 Como a migration original já estava aplicada, o reclaim foi entregue por migration incremental `20261027082000` e verificado diretamente no banco autorizado; não foi feita alteração retroativa dependente de reexecução.
 
+O gate de entrega permanece aberto: o outbox está vazio e a conta Resend não mostra convite CapacitaGov recente do worker. Isso é ausência de evidência operacional, não aprovação implícita.
+
 Os critérios de liberação estão documentados, mas não há evidência suficiente para aprovação final. Pendências P0 operacionais permanecem abertas; não declarar produção pronta.
 
