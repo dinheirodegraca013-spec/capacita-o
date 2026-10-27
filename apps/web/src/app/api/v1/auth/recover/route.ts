@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
     const actionLink = buildRecoveryLink(publicOrigin, email, emailOtp);
     await fetch(providerUrl, {
       method: 'POST',
-      headers: buildProviderHeaders(providerKey, `recovery:${email}`),
+      headers: buildProviderHeaders(providerKey, `recovery:${email}:${emailOtp}`),
       body: JSON.stringify(buildRecoveryEmail({ from, to: email, actionLink })),
     });
   } catch {
