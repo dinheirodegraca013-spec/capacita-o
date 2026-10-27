@@ -186,3 +186,7 @@ Adicionada atribuição de trilha pelo gestor (`POST /api/v1/paths/[id]/assign`)
 
 CI remoto do head documental `3eb1d0f4aa30852c794130001c531f66eaabbf4f`: web run `40475613669` e SQL/pgTAP run `40475613670`, ambos `success`.
 
+## T17 — banco de questões e publicação — 27/10/2026
+
+O editor de avaliações passou a aceitar múltiplas questões, opções com alternativa correta selecionável, nota mínima, tempo limite e tentativas máximas. A tela de gestão agora oferece publicação explícita de rascunhos. Criado `tests/e2e/assessment-authoring.spec.ts`; homologação autenticada permanece pendente.
+
