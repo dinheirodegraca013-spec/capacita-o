@@ -318,7 +318,7 @@ Status único: PENDING → RUNNING → REVIEW → DONE; BLOCKED somente para dep
 
 ### T18 — Tentativa, relógio e correção atômica
 
-**Meta/prioridade:** M5/P0. **Status:** PENDING. **Depende:** T13,T17. **Requisitos:** R05,R09.
+**Meta/prioridade:** M5/P0. **Status:** RUNNING. **Depende:** T13,T17. **Requisitos:** R05,R09.
 
 **Criar/alterar:** `src/modules/assessments/attempts.ts`, `src/app/api/v1/attempts/route.ts`, `src/app/api/v1/attempts/[id]/answers/route.ts`, `src/app/api/v1/attempts/[id]/finish/route.ts`, `supabase/migrations/<gerado>_attempts.sql`.
 
@@ -328,7 +328,8 @@ Status único: PENDING → RUNNING → REVIEW → DONE; BLOCKED somente para dep
 
 **Aceite verificável:** Duas abas não excedem tentativas; relógio não depende do cliente; resposta após expiração rejeitada; finish repetido retorna mesmo resultado; IDs de questão/opção alheios recusados.
 
-- [ ] Executar ciclo da task e anexar evidência; revisar antes de marcar DONE.
+- [x] Camada server-side usa RPCs transacionais para relógio, limite de tentativas, respostas e correção idempotente; sala finaliza automaticamente ao expirar e preserva respostas não salvas.
+- [ ] Executar jornada autenticada em duas abas e anexar evidência; revisar antes de marcar DONE.
 
 ### T19 — Sala de avaliação retomável
 
