@@ -94,3 +94,7 @@ O job não é público: claim exige `service_role`, o enqueue rejeita payload co
 
 As fronteiras públicas passaram sem sessão; não há evidência suficiente para declarar as jornadas completas porque Supabase público e credenciais de homologação não estão disponíveis neste ambiente. O status permanece RUNNING.
 
+### T29 — preview — 27/10/2026
+
+O escopo do projeto Vercel e o root `apps/web` estão documentados, mas o deployment atual não foi atualizado: a API retornou cota diária esgotada. Não marcar preview como verificado.
+
