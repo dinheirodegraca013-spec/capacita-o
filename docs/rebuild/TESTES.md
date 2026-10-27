@@ -79,3 +79,8 @@ Não marcar a meta final como PASS enquanto SMTP, recuperação/rollback, previe
 - A cobertura autenticada de criação, conteúdo e publicação permanece pendente.
 - CI remoto no head `dbce0b205a2c3fd218985b7afb99802563e0fbdd`: web `40474451225` e SQL/pgTAP `40474451137`, ambos `success`.
 
+### T14 — catálogo e biblioteca — 27/10/2026
+
+- Criado `tests/e2e/student-catalog.spec.ts` cobrindo catálogo, busca de entrada e biblioteca do aluno.
+- A execução autenticada requer `E2E_USER_EMAIL`, `E2E_USER_PASSWORD` e `E2E_ORG_ID` não produtivos.
+
