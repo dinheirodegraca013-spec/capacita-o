@@ -393,7 +393,7 @@ Status único: PENDING → RUNNING → REVIEW → DONE; BLOCKED somente para dep
 
 ### T23 — PDF e verificação pública mínima
 
-**Meta/prioridade:** M7/P0. **Status:** PENDING. **Depende:** T22. **Requisitos:** R07,R04.
+**Meta/prioridade:** M7/P0. **Status:** RUNNING. **Depende:** T22. **Requisitos:** R07,R04.
 
 **Criar/alterar:** `src/app/(portal)/o/[orgId]/aluno/certificados/page.tsx`, `src/app/validar-certificado/[code]/page.tsx`, `src/app/api/v1/certificates/[id]/pdf/route.ts`, `src/modules/certificates/document.tsx`.
 
@@ -403,7 +403,8 @@ Status único: PENDING → RUNNING → REVIEW → DONE; BLOCKED somente para dep
 
 **Aceite verificável:** A4 sem corte com nomes longos; QR aponta domínio configurado; público não recebe CPF/email/matrícula/nota; código inválido/revogado claro; certificado antigo mantém versão e emissor originais.
 
-- [ ] Executar ciclo da task e anexar evidência; revisar antes de marcar DONE.
+- [x] PDF A4 e validação pública usam snapshot do certificado sem CPF/e-mail/nota; download privado agora envia `cache-control: private, no-store`; E2E condicionado criado.
+- [ ] Executar renderização visual e validação autenticada/revogada; revisar antes de marcar DONE.
 
 ### T24 — Satisfação após conclusão
 
