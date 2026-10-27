@@ -237,4 +237,7 @@ Novo `auth-recover-route.test.ts`: **3/3 PASS**, cobrindo validação de e-mail,
 ### Recuperação em produção — 27/10/2026 14:45 BRT
 
 Deployment `dpl_5iptvUbq4mSb9aQn9UDp6CuSKYRJ` READY no alias público. `GET /api/v1/auth/recover` retornou 405 com `x-matched-path` correto; E2E Playwright com `E2E_BASE_URL=https://capacita-o-x5hg.vercel.app`: **1/1 PASS**.
+### Entrega Resend de recuperação — 27/10/2026 14:45 BRT
+
+Teste controlado em conta autorizada: POST público 202, Resend **delivered**, corpo contém domínio público e não contém `localhost`. O token foi omitido da evidência.
 
