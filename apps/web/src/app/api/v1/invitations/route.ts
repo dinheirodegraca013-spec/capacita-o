@@ -25,7 +25,12 @@ export async function POST(request: NextRequest) {
     const providerUrl = process.env.EMAIL_PROVIDER_URL;
     const providerKey = process.env.EMAIL_PROVIDER_KEY;
     const from = process.env.EMAIL_FROM;
-    if (!providerUrl || !providerKey || !from) return NextResponse.json({ error: 'INVITE_DELIVERY_FAILED' }, { status: 503 });
+    if (!providerUrl || !providerKey || !from) {
+      // Do not leave a pending invitation that can never be delivered. A retry
+      // would otherwise be rejected as a duplicate and look like a dead button.
+      await admin.from('invitations').update({ status: 'failed' }).eq('id', invitation.id);
+      return NextResponse.json({ error: 'INVITE_DELIVERY_FAILED' }, { status: 503 });
+    }
 
     // Generate the Supabase action link but deliver it through the configured
     // transactional provider. Relying on Supabase's built-in mailer here can
