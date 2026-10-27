@@ -1,4 +1,3 @@
-Attempting to perform the InitializeDefaultDrives operation on the 'FileSystem' provider failed.
 # Estado de planejamento — CapacitaGov
 
 Atualizado: 27/10/2026, America/Sao_Paulo.
@@ -164,6 +163,8 @@ Teste de regressão do logout — 27/10/2026: adicionado `tests/integration/sign
 Validação pública — `POST https://capacita-o-x5hg.vercel.app/auth/signout` retornou **404** no deployment antigo; o endpoint corrigido só poderá ser confirmado após novo deployment Vercel.
 
 Rechecagem Vercel — 27/10/2026 07:06: o alias `capacita-o-x5hg.vercel.app` aponta para `dpl_3ck2DvwQZQ8uoKNisi3CymyZco2S`, commit `db81004f3392d85524f066a5a1701854787bcbc9` (TOTP). O HEAD com logout, recuperação e idempotência permanece fora da produção; as tentativas de deployment manual continuam sujeitas à cota `api-deployments-free-per-day`.
+
+Suíte pública Playwright — 27/10/2026 07:11: **5 passed, 22 skipped**. Passaram login/recuperação, callback sem código, landing híbrida e navegação responsiva em 360px; os skips exigem ambiente Supabase público, conta, matrícula ou organização de homologação. Nenhum cenário público falhou.
 
 Correção do reset de senha — 27/10/2026: `recuperar-senha` agora aponta diretamente para `/redefinir-senha`; a página consome `code`, `token_hash` ou a sessão entregue no fragmento antes de habilitar a nova senha. Typecheck, lint, build e suíte Vitest **28 arquivos/67 testes PASS**. A confirmação pública e o recebimento real do e-mail continuam dependentes do novo deployment/SMTP.
 
