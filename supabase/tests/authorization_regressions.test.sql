@@ -1,5 +1,5 @@
 begin;
-select plan(15);
+select plan(16);
 
 select ok(exists (select 1 from pg_trigger where tgname = 'offerings_scope'), 'offering scope trigger exists');
 select ok(pg_get_functiondef('public.enroll_member(uuid,uuid)'::regprocedure) like '%manager_assigned%', 'enrollment policy is enforced inside RPC');
@@ -7,6 +7,7 @@ select ok(pg_get_functiondef('public.evaluate_completion(uuid)'::regprocedure) l
 select ok(pg_get_functiondef('public.start_attempt(uuid,uuid)'::regprocedure) like '%m.status = ''active''%', 'assessment start requires active membership');
 select ok(exists (select 1 from pg_policies where schemaname = 'public' and tablename = 'course_versions' and policyname = 'versions_select_scoped'), 'course version policy is scoped');
 select ok((select qual from pg_policies where schemaname = 'public' and tablename = 'courses' and policyname = 'courses_select_scoped') like '%can_access_course_metadata%', 'central course metadata requires a granted version');
+select ok(not has_function_privilege('anon', 'public.can_access_course_metadata(uuid,uuid)', 'execute'), 'central course metadata helper is not public');
 select ok(pg_get_functiondef('public.can_access_course_version(uuid,uuid)'::regprocedure) like '%course_grants%', 'central content requires an active grant');
 select ok(pg_get_functiondef('public.publish_offering(uuid)'::regprocedure) like '%owner_type = ''organization''%', 'organization-owned offerings do not require a central grant');
 select ok(pg_get_functiondef('public.confirm_attendance(uuid,text)'::regprocedure) like '%m.status = ''active''%', 'attendance requires active membership');
