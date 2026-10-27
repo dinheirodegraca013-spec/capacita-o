@@ -126,3 +126,5 @@ T06 complemento 27/10: gestão institucional ganhou formulário de edição de n
 
 T07 complemento 27/10: o importador passou a ter duas etapas reais na UI: validação/preview via `/api/v1/imports`, exibição de erros por linha e confirmação explícita via `/api/v1/imports/commit`; o servidor revalida o lote antes da transação. Testes de importação `3/3`, suíte web `26/53`, typecheck, lint e build PASS. Convites pós-importação e E2E autenticado permanecem pendentes.
 
+Correção de sincronização remota 27/10: a primeira atualização via API do GitHub gravou texto de erro em dois caminhos `[orgId]`; o CI detectou a falha de typecheck. Reenvio literal corrigiu os arquivos. Head `04919470b8eeae84bb8a6f20660bdd88780280f7`: web run `40471248105` e SQL/pgTAP `40471248124` concluíram `success`.
+
