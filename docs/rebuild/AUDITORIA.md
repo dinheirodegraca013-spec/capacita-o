@@ -112,6 +112,8 @@ Achado T04: a página MFA existia, mas a proteção de gestão não exigia AAL2 
 
 Auditoria de dependências: `npm audit --audit-level=high` sem vulnerabilidades high/critical; não há correção de pacote pendente neste ciclo.
 
+Foi criada regressão Playwright de convite (`invitation.spec.ts`) para ativação e bloqueio de destino externo; os dois casos foram omitidos localmente por falta de ambiente público Supabase, portanto a evidência permanece insuficiente até executar com conta/ambiente de homologação.
+
 ### T30 — liberação — 27/10/2026
 
 Correção auditável: recuperação não monta mais callback com localhost configurado em produção; o host HTTPS do navegador é usado como fallback e destinos externos continuam rejeitados. A eficácia em produção aguarda novo deployment e e-mail real.
