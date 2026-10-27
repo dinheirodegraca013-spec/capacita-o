@@ -178,3 +178,5 @@ CI remoto do head documental `c4b7bfdfd2c3aa4eebc82d3c6b3880915e2610d9`: web run
 
 O player passou a carregar e exibir o conteúdo textual da aula, permitir salvar posição em segundos e marcar a aula como concluída sem perder a retomada. O RPC existente mantém monotonicidade/idempotência e rejeita posições impossíveis. Foi criado `tests/e2e/learning.spec.ts`, condicionado a matrícula de homologação. A jornada autenticada real continua pendente.
 
+CI remoto do head documental `83ae989c390ff7568b3507a6ca041850ab68dc27`: web run `40475154744` e SQL/pgTAP run `40475154694`, ambos `success`.
+
