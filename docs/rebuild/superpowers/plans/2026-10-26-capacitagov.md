@@ -165,6 +165,8 @@ Status único: PENDING → RUNNING → REVIEW → DONE; BLOCKED somente para dep
 
 - [ ] Executar ciclo da task e anexar evidência; revisar antes de marcar DONE.
 
+- [x] Hardening de entrada: `PATCH /api/v1/organizations/[orgId]` usa normalizador compartilhado, valida enum de tipo e slug seguro. Testes de organização **3/3 PASS**, suíte web **27/65**, typecheck/lint/build PASS; E2E de tenant real continua pendente.
+
 ### T07 — Pessoas e importação transacional
 
 **Meta/prioridade:** M2/P0. **Status:** RUNNING. **Depende:** T05,T06. **Requisitos:** R08,R09.
