@@ -168,6 +168,8 @@ Suíte pública Playwright — 27/10/2026 07:11: **5 passed, 22 skipped**. Passa
 
 Auditoria Supabase somente leitura — 27/10/2026: **34/35** tabelas públicas estão com RLS habilitado; a exceção é `notification_outbox`, deliberadamente service-only e sem grants para `anon`/`authenticated`. O bucket `course-assets` está privado. O conjunto público possui políticas RLS nas tabelas de domínio; jornadas cross-tenant autenticadas continuam pendentes por ausência de fixtures não produtivas.
 
+Hardening de convite — 27/10/2026: `/ativar-conta` captura o token uma única vez e o remove da barra de endereço via `history.replaceState`, mantendo-o somente em memória até a chamada de aceitação. A regressão Playwright foi ajustada para confirmar a URL limpa; typecheck e lint PASS. A entrega real continua dependente do deployment atualizado.
+
 Correção do reset de senha — 27/10/2026: `recuperar-senha` agora aponta diretamente para `/redefinir-senha`; a página consome `code`, `token_hash` ou a sessão entregue no fragmento antes de habilitar a nova senha. Typecheck, lint, build e suíte Vitest **28 arquivos/67 testes PASS**. A confirmação pública e o recebimento real do e-mail continuam dependentes do novo deployment/SMTP.
 
 T09/T11 complemento — o formulário de criação de curso próprio agora permite escolher `self_paced` (autoinstrucional, sem professor) ou `instructor_led` (jornada híbrida). O backend já persistia o modo; a UI deixou de forçar somente autoinstrucional. Typecheck, Vitest (**26 arquivos/53 testes**) e build passaram localmente.
