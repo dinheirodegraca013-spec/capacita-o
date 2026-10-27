@@ -72,3 +72,9 @@ Não marcar a meta final como PASS enquanto SMTP, recuperação/rollback, previe
 - `npm run build`: PASS; a rota `/api/v1/invitations` foi compilada.
 - Não foi executado envio real para Gmail; requer conta de homologação e deployment atualizado.
 
+### T11 — editor de cursos — 27/10/2026
+
+- `npm run test:e2e -- tests/e2e/course-authoring.spec.ts`: execução correta, **1 teste skipped** por ausência de `E2E_USER_EMAIL`, `E2E_USER_PASSWORD` e `E2E_ORG_ID` não produtivos.
+- O teste cobre login de gestor, entrada na gestão de cursos, formulário de criação e modo `self_paced`.
+- A cobertura autenticada de criação, conteúdo e publicação permanece pendente.
+
