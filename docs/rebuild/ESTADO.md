@@ -264,3 +264,5 @@ O fluxo `/recuperar-senha` agora resolve a origem canônica com fallback para o 
 
 Após a correção, a suíte web completa foi executada novamente: **27 arquivos/63 testes PASS**, com typecheck e lint PASS; nenhum arquivo gerado permaneceu modificado.
 
+Build de produção pós-correção: `npm run build` PASS, com 30 rotas geradas e nenhum arquivo gerado pendente.
+
