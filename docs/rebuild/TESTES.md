@@ -122,3 +122,9 @@ Não marcar a meta final como PASS enquanto SMTP, recuperação/rollback, previe
 - `tests/e2e/feedback.spec.ts` criado; execução autenticada está **skipped** sem conta não produtiva.
 - pgTAP existente cobre concluinte autorizado e repetição rejeitada; tenant alheio depende da execução SQL/CI.
 
+### T26 — relatórios — 27/10/2026
+
+- Migration `reports_breakdown` aplicada no Supabase; `get_organization_report(uuid,timestamptz,timestamptz)` executável por `authenticated`.
+- Typecheck e lint PASS; `tests/integration/reports.test.ts`: **3/3 PASS**.
+- Cobertura local inclui range invertido e neutralização de fórmula CSV; dataset de dois tenants e E2E de gestor ainda pendentes.
+
