@@ -1,0 +1,11 @@
+begin;
+select plan(5);
+select has_function('public', 'create_platform_organization', array['uuid','text','text','text','text'], 'platform bootstrap function should exist');
+select ok(has_function_privilege('service_role', 'public.create_platform_organization(uuid,text,text,text,text)', 'execute'), 'only service_role can execute platform bootstrap');
+select ok(not has_function_privilege('authenticated', 'public.create_platform_organization(uuid,text,text,text,text)', 'execute'), 'authenticated cannot execute platform bootstrap');
+insert into auth.users(id, email) values ('00000000-0000-0000-0000-000000000199', 'bootstrap-199@example.invalid');
+insert into public.platform_admins(user_id) values ('00000000-0000-0000-0000-000000000199');
+select ok(public.create_platform_organization('00000000-0000-0000-0000-000000000199', 'Bootstrap Org', 'bootstrap-org', 'company', 'UTC') is not null, 'platform admin can bootstrap an organization');
+select is((select count(*)::int from public.memberships where user_id = '00000000-0000-0000-0000-000000000199' and status = 'active'), 1, 'bootstrap creates active manager membership');
+select * from finish();
+rollback;
