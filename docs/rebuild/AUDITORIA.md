@@ -108,6 +108,10 @@ O escopo do projeto Vercel e o root `apps/web` estão documentados, mas o deploy
 
 O convite redirecionava para callback server-side, incompatível com o fragmento de sessão (`#access_token`) que o Supabase pode devolver após `generateLink`; o usuário via um botão sem destino útil. Corrigido para `/ativar-conta` client-side, com token interno preservado. Evidência local: teste direcionado 4/4, typecheck/lint PASS. Risco remanescente: confirmar no próximo deployment e entrega Resend real.
 
+Achado T04: a página MFA existia, mas a proteção de gestão não exigia AAL2 no servidor. Corrigido no layout institucional com `getAuthenticatorAssuranceLevel()` e retorno interno; evidência 3/3 testes, typecheck/lint/build PASS. E2E de gestor com fator real permanece pendente.
+
+Auditoria de dependências: `npm audit --audit-level=high` sem vulnerabilidades high/critical; não há correção de pacote pendente neste ciclo.
+
 ### T30 — liberação — 27/10/2026
 
 Correção auditável: recuperação não monta mais callback com localhost configurado em produção; o host HTTPS do navegador é usado como fallback e destinos externos continuam rejeitados. A eficácia em produção aguarda novo deployment e e-mail real.
