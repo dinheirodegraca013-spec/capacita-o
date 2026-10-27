@@ -222,3 +222,7 @@ O PDF usa snapshot imutável do certificado, sem dados pessoais desnecessários,
 
 Logs do Supabase mostraram links de convite com `redirect_to=http://localhost:3000`, causando botão sem destino útil. A rota agora ignora origem local configurada em produção e usa o host HTTPS da requisição; cobertura de convite: **6/6 PASS**. A publicação produtiva permanece dependente da autorização de deploy do projeto Vercel.
 
+## T12 — catálogo central e ofertas — 27/10/2026
+
+O GET de ofertas foi centralizado em `listCatalog`, com organização e estado de publicação aplicados no serviço antes da consulta. O isolamento final continua delegado ao RLS já aplicado no Supabase; integração de catálogo ficou **2/2 PASS**, typecheck e lint PASS. Jornada autenticada de curso central concedido para uma organização e curso próprio permanece pendente.
+
