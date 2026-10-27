@@ -1,6 +1,7 @@
 begin;
 select plan(7);
 select has_table('public', 'notification_outbox', 'notification outbox should exist');
+select ok((select relrowsecurity from pg_class where oid = 'public.notification_outbox'::regclass), 'notification outbox must have RLS enabled');
 select has_function('public', 'enqueue_notification', array['text','uuid','text','jsonb'], 'enqueue notification should be idempotent');
 select ok(exists (select 1 from pg_constraint where conrelid = 'public.notification_outbox'::regclass and contype = 'u'), 'outbox has idempotency constraint');
 select ok(has_function_privilege('authenticated', 'public.enqueue_notification(text,uuid,text,jsonb)', 'execute'), 'authenticated can enqueue notifications');
