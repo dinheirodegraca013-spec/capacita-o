@@ -116,3 +116,9 @@ Não marcar a meta final como PASS enquanto SMTP, recuperação/rollback, previe
 - `tests/e2e/enrollment.spec.ts`: **1 skipped** sem conta de aluno não produtiva.
 - pgTAP amplia cobertura de capacidade, idempotência, snapshot e oferta retirada; execução remota aguarda CI.
 
+### T24 — feedback — 27/10/2026
+
+- `tests/integration/feedback.test.ts`: **2/2 PASS**.
+- `tests/e2e/feedback.spec.ts` criado; execução autenticada está **skipped** sem conta não produtiva.
+- pgTAP existente cobre concluinte autorizado e repetição rejeitada; tenant alheio depende da execução SQL/CI.
+
