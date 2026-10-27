@@ -303,7 +303,7 @@ Status único: PENDING → RUNNING → REVIEW → DONE; BLOCKED somente para dep
 
 ### T17 — Banco de questões e regras de prova
 
-**Meta/prioridade:** M5/P0. **Status:** PENDING. **Depende:** T09. **Requisitos:** R05.
+**Meta/prioridade:** M5/P0. **Status:** RUNNING. **Depende:** T09. **Requisitos:** R05.
 
 **Criar/alterar:** `src/modules/assessments/authoring.ts`, `src/app/(portal)/o/[orgId]/gestao/avaliacoes/page.tsx`, `supabase/migrations/<gerado>_assessments.sql`.
 
@@ -313,7 +313,8 @@ Status único: PENDING → RUNNING → REVIEW → DONE; BLOCKED somente para dep
 
 **Aceite verificável:** Publicação exige questões válidas e resposta correta; professor não atribuído não edita; DTO do aluno não contém is_correct/explanation antes da correção; limites de tempo/tentativas validados.
 
-- [ ] Executar ciclo da task e anexar evidência; revisar antes de marcar DONE.
+- [x] Editor aceita múltiplas questões/opções, nota mínima, limite de tempo, tentativas e publicação explícita; E2E de autoria criado.
+- [ ] Executar jornada autenticada e anexar evidência; revisar antes de marcar DONE.
 
 ### T18 — Tentativa, relógio e correção atômica
 
