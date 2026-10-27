@@ -10,5 +10,10 @@ describe('organization management', () => {
     expect(() => normalizeOrganizationInput({ name: ' ', kind: 'company', timezone: 'UTC' })).toThrow('Invalid organization name');
     expect(() => normalizeOrganizationInput({ name: 'x'.repeat(181), kind: 'company', timezone: 'UTC' })).toThrow('Invalid organization name');
   });
+
+  it('rejects unsupported kinds and unsafe slugs', () => {
+    expect(() => normalizeOrganizationInput({ name: 'Org', kind: 'invalid' as never, timezone: 'UTC' })).toThrow('Invalid organization kind');
+    expect(() => normalizeOrganizationInput({ name: 'Org', kind: 'company', timezone: 'UTC', slug: 'Org Name' })).toThrow('Invalid organization slug');
+  });
 });
 
