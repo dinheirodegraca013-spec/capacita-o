@@ -34,6 +34,8 @@ Reauditoria remota somente leitura confirmou bucket `course-assets` privado, pol
 
 O procedimento operacional de e-mail foi documentado em `docs/rebuild/operations/email.md`: fila idempotente, endpoint interno protegido, retry/backoff e variáveis server-only. SMTP/provedor real continua pendente de credenciais e domínio remetente.
 
+O worker de notificações foi endurecido: `claim_pending_notifications` usa `FOR UPDATE SKIP LOCKED` e move itens para `processing` antes do envio, impedindo que dois workers entreguem o mesmo item. A função é executável somente por `service_role`; a verificação remota confirmou `service_role=true`, `authenticated=false` e `anon=false`. Testes web: 24 arquivos, 47 testes PASS.
+
 Revisão independente apontou uma lacuna real no ciclo de tentativas: matrícula cancelada ainda podia manter resposta/finalização. A migration `20261027060000_harden_attempt_enrollment_status.sql` foi aplicada no Supabase e as três funções (`save_attempt_answer`, `finish_attempt`, `get_attempt_delivery`) agora exigem `enrollments.status = 'active'`; consulta remota confirmou os três guards.
 
 ## Próxima ação
@@ -74,4 +76,3 @@ Provedor SMTP/serviço de envio e observabilidade; preview Vercel com dados não
 - Nova proteção de rota: `/gestao/*` exige papel `manager` no servidor e `/professor` exige `instructor` ou `manager`; typecheck, lint e build passaram. A publicação correspondente ficou READY em `dpl_7KE9Cje9s6YFSVBbXYEZt8VYsj6w`. A tentativa de criar uma segunda conta de teste para provar o bloqueio foi impedida pelo limite de envio de e-mail do Supabase; nenhum dado temporário permaneceu.
 - Otimização de banco aplicada: `20261027040000_rls_initplan_optimization`, `20261027041000_fk_indexes` e `20261027042000_fk_indexes_remaining`. `pg_prove` local continua 28/199 PASS; advisor remoto confirmou zero `auth_rls_initplan` e zero FK sem índice. Permanecem somente avisos INFO de índices não utilizados, esperados antes de carga real.
 - Procedimento de Vercel formalizado em `docs/rebuild/operations/deploy.md`; preview isolado continua pendente porque o único Supabase autorizado é o projeto remoto de produção.
-

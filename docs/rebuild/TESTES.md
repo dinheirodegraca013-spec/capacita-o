@@ -41,4 +41,4 @@ Não marcar a meta final como PASS enquanto SMTP, recuperação/rollback, previe
 - E2E público contra produção: **3 PASS, 2 skipped**; landing, login e as rotas de upload/acesso Storage retornaram os estados esperados (401 sem sessão). Jornadas autenticadas continuam condicionadas a credenciais temporárias explícitas.
 - Dependências: `npm audit --audit-level=high` PASS em `apps/web` (`found 0 vulnerabilities`).
 - Regressão de matrícula cancelada: migration `20261027060000_harden_attempt_enrollment_status` aplicada remotamente; consulta de `pg_get_functiondef` confirmou guards ativos em resposta, finalização e entrega de tentativas. O arquivo pgTAP passou a 14 assertions nessa regressão; execução local completa depende do próximo cluster temporário.
-
+- Concorrência do outbox: `claim_pending_notifications` aplicado remotamente com `FOR UPDATE SKIP LOCKED`; privilégios verificados (`service_role` permitido; `authenticated`/`anon` negados). Suíte web após a alteração: **24 arquivos, 47 testes PASS**.
