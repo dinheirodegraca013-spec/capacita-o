@@ -110,6 +110,8 @@ O convite redirecionava para callback server-side, incompatível com o fragmento
 
 Achado T04: a página MFA existia, mas a proteção de gestão não exigia AAL2 no servidor. Corrigido no layout institucional com `getAuthenticatorAssuranceLevel()` e retorno interno; evidência 3/3 testes, typecheck/lint/build PASS. E2E de gestor com fator real permanece pendente.
 
+Complemento: `/mfa` deixou de ser uma tela sem saída; quando necessário, cria fator TOTP, mostra QR/segredo e verifica o primeiro código. A exigência AAL2 permanece no servidor. Homologação real ainda pendente.
+
 Auditoria de dependências: `npm audit --audit-level=high` sem vulnerabilidades high/critical; não há correção de pacote pendente neste ciclo.
 
 Foi criada regressão Playwright de convite (`invitation.spec.ts`) para ativação e bloqueio de destino externo; os dois casos foram omitidos localmente por falta de ambiente público Supabase, portanto a evidência permanece insuficiente até executar com conta/ambiente de homologação.
