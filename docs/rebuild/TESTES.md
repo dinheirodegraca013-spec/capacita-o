@@ -1,6 +1,6 @@
 # Homologação e evidências
 
-## Executado
+## Evidências históricas preservadas
 
 - PostgreSQL 18 local temporário no WSL com pgTAP: 27 arquivos, 188 testes, todos PASS. A migration legada `20261007_init.legacy.sql` foi isolada fora da cadeia executável; a cadeia nova começa em `20261026212248_identity.sql`.
 - Aplicação web: `npm test -- --run` com `46/46`, `npm run typecheck`, `npm run lint` e `npm run build` verdes no SHA registrado no Git.
@@ -16,10 +16,10 @@
 - Dependências: `npm audit --audit-level=high` terminou com `found 0 vulnerabilities` após atualizar Playwright para `1.55.1` e Vite para `7.3.7`.
 - Suíte SQL completa: os 28 arquivos em `supabase/tests/` foram executados sequencialmente no PostgreSQL 18 local, todos com as asserções pgTAP aprovadas.
 
-## Ainda não executado
+## Estado atual e pendências
 
 - `supabase test db` via wrapper oficial: ambiente Docker indisponível; os scripts SQL foram executados diretamente no PostgreSQL local.
-- Playwright local: `1 passed, 2 skipped` no baseline. Após corrigir a rota raiz da organização e os seletores do roteiro, Playwright contra a produção `https://capacita-o-x5hg.vercel.app/`: **3/3 PASS** (login público, jornada autoinstrucional e jornada híbrida com conta temporária real). A conta/organização de teste foi removida após a execução; contagem remanescente no Supabase: 0/0.
+- Playwright histórico: `1 passed, 2 skipped` no baseline. A validação vigente está registrada em “Evidência adicional” abaixo e deve prevalecer sobre esse snapshot.
 - Supabase remoto: migrations funcionais/hardening/otimização aplicadas e advisors rechecados; Vercel produção validada no deployment `dpl_7KE9Cje9s6YFSVBbXYEZt8VYsj6w` após as correções de rota e autorização.
 - As migrations `20261026220900_import_commit.sql`, `20261026221000_assessment_authoring_atomic.sql` e `20261026221100_notifications_grant.sql` foram aplicadas remotamente e passaram no conjunto pgTAP; seguem pendentes somente as validações operacionais de SMTP/worker.
 - O workflow `.github/workflows/sql-regression.yml` foi preparado para executar a mesma sequência em PostgreSQL 16 + pgTAP no GitHub Actions, usando `pg_prove` para falhar corretamente em qualquer asserção `not ok`; ele ainda depende de uma execução do CI após o push/autorização correspondente.
