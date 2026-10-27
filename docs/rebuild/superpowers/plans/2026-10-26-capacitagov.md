@@ -245,7 +245,7 @@ Status único: PENDING → RUNNING → REVIEW → DONE; BLOCKED somente para dep
 
 ### T13 — Matrícula, prazo e capacidade
 
-**Meta/prioridade:** M4/P0. **Status:** PENDING. **Depende:** T07,T12. **Requisitos:** R03,R05,R09.
+**Meta/prioridade:** M4/P0. **Status:** RUNNING. **Depende:** T07,T12. **Requisitos:** R03,R05,R09.
 
 **Criar/alterar:** `src/modules/enrollments/service.ts`, `src/app/api/v1/enrollments/route.ts`, `supabase/migrations/<gerado>_enrollments.sql`.
 
@@ -255,7 +255,8 @@ Status único: PENDING → RUNNING → REVIEW → DONE; BLOCKED somente para dep
 
 **Aceite verificável:** Dois pedidos para última vaga não ultrapassam capacidade; reenvio não duplica; oferta suspensa/tenant divergente bloqueados; turma de outra oferta recusada; recursar em nova oferta permite nova matrícula; alteração futura de regra não muda matrícula existente.
 
-- [ ] Executar ciclo da task e anexar evidência; revisar antes de marcar DONE.
+- [x] RPC de matrícula mantém capacidade transacional, idempotência e snapshots; rota traduz ofertas indisponíveis para conflito e teste pgTAP ampliado.
+- [ ] Executar jornada autenticada e anexar evidência; revisar antes de marcar DONE.
 
 ### T14 — Catálogo e biblioteca do aluno
 
