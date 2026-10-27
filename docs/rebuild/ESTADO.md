@@ -452,4 +452,7 @@ Foi executado um teste controlado para a conta administrativa autorizada. O endp
 ### Regressão pós-deploy — 27/10/2026 14:47 BRT
 
 Preview, navegação e recuperação foram reexecutados no alias público: **2 PASS / 3 SKIP**, sem falhas; os skips dependem de sessão/fixture autenticada.
+### Plano Supabase e gates operacionais — 27/10/2026 14:48 BRT
+
+Consulta autoritativa da organização Supabase `hcmpjnzsocjsjujrffwe` retornou plano `free`/`tier_free`. Nesse plano, a proteção contra senhas vazadas não está disponível conforme a documentação oficial; backup/PITR gerenciado também não pode ser usado como evidência de release. Upgrade para Pro ou política operacional alternativa são decisões externas, não correções de código.
 
