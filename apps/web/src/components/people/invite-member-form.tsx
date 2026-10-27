@@ -14,7 +14,8 @@ export function InviteMemberForm({ organizationId }: { organizationId: string })
     setMessage('');
     try {
       const response = await fetch('/api/v1/invitations', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ organizationId, email, roles: [role] }) });
-      setMessage(response.ok ? 'Convite enviado. O destinatário receberá o link de ativação.' : 'Não foi possível enviar o convite.');
+      const payload = await response.json().catch(() => null) as { error?: string } | null;
+      setMessage(response.ok ? 'Convite enviado. O destinatário receberá o link de ativação.' : payload?.error === 'CONFLICT' ? 'Já existe um convite pendente para este e-mail.' : 'Não foi possível enviar o convite. Verifique o e-mail e tente novamente.');
       if (response.ok) setEmail('');
     } catch {
       setMessage('Não foi possível conectar ao servidor. Tente novamente.');
