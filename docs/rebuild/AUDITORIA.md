@@ -82,3 +82,7 @@ O servidor mantém a matrícula em RPC com lock, unicidade e snapshots; a interf
 
 A avaliação está vinculada à matrícula concluída e protegida por unicidade/RPC; a tela só a expõe junto a certificados válidos. Falta comprovar a média agregada e a tentativa cross-tenant em execução autenticada.
 
+### T26 — relatórios — 27/10/2026
+
+O relatório mantém autorização por gestor e organização, e a exportação neutraliza valores iniciados por `=`, `+`, `-` ou `@`. A migration de breakdown foi aplicada e a prova restante é um dataset controlado com dois tenants, incluindo matrícula cancelada.
+
