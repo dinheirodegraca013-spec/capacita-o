@@ -228,4 +228,7 @@ Bootstrap de organização: migration remota e função transacional verificadas
 ### Recuperação de senha — 27/10/2026
 
 Teste de integração de geração de link e template Resend: **6/6 PASS**. Suíte web completa: **29 arquivos/73 testes PASS**; typecheck, lint e build PASS. Clique no e-mail em produção permanece pendente de novo deployment.
+### Endpoint de recuperação — 27/10/2026 13:28 BRT
+
+Novo `auth-recover-route.test.ts`: **3/3 PASS**, cobrindo validação de e-mail, origem pública configurada mesmo com request localhost, chamada Admin API, idempotência por OTP e resposta indistinguível para conta inexistente. Suíte completa: **30 arquivos/76 testes PASS**; typecheck e lint PASS.
 
