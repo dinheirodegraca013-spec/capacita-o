@@ -112,5 +112,7 @@ Build Next de produção também passou e enumerou 30 rotas; isso não substitui
 
 A falha anterior do SQL/pgTAP foi reproduzida no run `40481533748`: `enqueue_notification` rejeitava o teste por ausência de `auth.uid()`. O teste foi corrigido com claim JWT autenticada; o run `40481748186` passou integralmente, sem relaxar a proteção da função.
 
+Como a migration original já estava aplicada, o reclaim foi entregue por migration incremental `20261027082000` e verificado diretamente no banco autorizado; não foi feita alteração retroativa dependente de reexecução.
+
 Os critérios de liberação estão documentados, mas não há evidência suficiente para aprovação final. Pendências P0 operacionais permanecem abertas; não declarar produção pronta.
 
