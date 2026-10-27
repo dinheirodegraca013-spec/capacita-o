@@ -144,3 +144,7 @@ O callback agora aceita tanto `code` quanto `token_hash` (`invite`, `magiclink` 
 
 Adicionado `tests/e2e/navigation.spec.ts` cobrindo login em viewport de 360px, foco via teclado, ausência de overflow horizontal e fronteira de rota institucional sem sessão. Localmente: 1 teste passou e 1 foi omitido por ausência das variáveis públicas do Supabase. CI remoto no head `c74018dcd4e4507dd974e02245d791a93ecdc2b3`: web run `40472324677` e SQL/pgTAP run `40472324553` concluíram `success`. O teste autenticado de navegação multi-organização continua pendente.
 
+## T12 — ofertas para todas as versões disponíveis — 27/10/2026
+
+Corrigida a tela de catálogo institucional: o gestor agora recebe uma forma de criar oferta para cada versão publicada disponível (catálogo central concedido e cursos próprios), com rótulos/IDs acessíveis únicos. Antes, somente a primeira versão podia ser ofertada. Typecheck, Vitest (**26 arquivos/53 testes**) e build passaram localmente; CI remoto no head `48e3c69b3ae44c4c3964a66f12caf8e818d49692` (web `40472604392`, SQL/pgTAP `40472604390`) concluiu `success`. A homologação autenticada de concessão/oferta ainda está pendente.
+
