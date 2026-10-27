@@ -98,3 +98,7 @@ As fronteiras públicas passaram sem sessão; não há evidência suficiente par
 
 O escopo do projeto Vercel e o root `apps/web` estão documentados, mas o deployment atual não foi atualizado: a API retornou cota diária esgotada. Não marcar preview como verificado.
 
+### T30 — liberação — 27/10/2026
+
+Os critérios de liberação estão documentados, mas não há evidência suficiente para aprovação final. Pendências P0 operacionais permanecem abertas; não declarar produção pronta.
+
