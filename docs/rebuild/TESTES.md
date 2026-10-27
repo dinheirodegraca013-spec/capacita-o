@@ -97,3 +97,8 @@ Não marcar a meta final como PASS enquanto SMTP, recuperação/rollback, previe
 - O teste requer conta e organização não produtivas; a atribuição real pelo gestor ainda precisa de homologação autenticada.
 - CI remoto no head documental `3eb1d0f4aa30852c794130001c531f66eaabbf4f`: web `40475613669` e SQL/pgTAP `40475613670`, ambos `success`.
 
+### T17 — avaliações — 27/10/2026
+
+- Criado `tests/e2e/assessment-authoring.spec.ts` para a tela de autoria e publicação.
+- Requer conta de gestor e organização não produtivas; o teste autenticado ainda não foi executado.
+
