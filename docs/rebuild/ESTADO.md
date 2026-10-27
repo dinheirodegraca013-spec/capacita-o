@@ -170,6 +170,8 @@ Auditoria Supabase somente leitura — 27/10/2026: **34/35** tabelas públicas e
 
 Hardening de convite — 27/10/2026: `/ativar-conta` captura o token uma única vez e o remove da barra de endereço via `history.replaceState`, mantendo-o somente em memória até a chamada de aceitação. A regressão Playwright foi ajustada para confirmar a URL limpa; typecheck e lint PASS. A entrega real continua dependente do deployment atualizado.
 
+RLS cross-tenant real — 27/10/2026: em transação temporária no Supabase autorizado foram criados dois usuários, duas organizações e dois memberships; sob o papel `authenticated`, cada claim JWT consultou exatamente **1 organização e 1 membership**. A transação terminou com `ROLLBACK`, sem dados persistentes. Esta evidência cobre leitura tenant-scoped; jornadas browser autenticadas e Storage ainda dependem de contas de homologação.
+
 Correção do reset de senha — 27/10/2026: `recuperar-senha` agora aponta diretamente para `/redefinir-senha`; a página consome `code`, `token_hash` ou a sessão entregue no fragmento antes de habilitar a nova senha. Typecheck, lint, build e suíte Vitest **28 arquivos/67 testes PASS**. A confirmação pública e o recebimento real do e-mail continuam dependentes do novo deployment/SMTP.
 
 T09/T11 complemento — o formulário de criação de curso próprio agora permite escolher `self_paced` (autoinstrucional, sem professor) ou `instructor_led` (jornada híbrida). O backend já persistia o modo; a UI deixou de forçar somente autoinstrucional. Typecheck, Vitest (**26 arquivos/53 testes**) e build passaram localmente.
