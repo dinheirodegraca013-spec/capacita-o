@@ -484,7 +484,7 @@ Status único: PENDING → RUNNING → REVIEW → DONE; BLOCKED somente para dep
 
 ### T29 — Ambiente remoto e preview Vercel
 
-**Meta/prioridade:** M9/P0. **Status:** PENDING. **Depende:** T28. **Requisitos:** R10.
+**Meta/prioridade:** M9/P0. **Status:** RUNNING. **Depende:** T28. **Requisitos:** R10.
 
 **Criar/alterar:** `docs/rebuild/operations/deploy.md`, `apps/web/.env.example`, `apps/web/next.config.ts`, `.github/workflows/web.yml`.
 
@@ -494,7 +494,8 @@ Status único: PENDING → RUNNING → REVIEW → DONE; BLOCKED somente para dep
 
 **Aceite verificável:** Preview protegido abre todas as rotas profundas; auth callback, RLS e arquivos funcionam; nenhum dado/segredo de outro projeto; build e E2E do SHA implantado registrados. Não criar serviço pago sem autorização.
 
-- [ ] Executar ciclo da task e anexar evidência; revisar antes de marcar DONE.
+- [x] Root `apps/web`, projeto `capacita-o-x5hg`, callbacks e preview spec registrados; Vercel respondeu `402 api-deployments-free-per-day` ao tentar publicar o HEAD.
+- [ ] Criar/validar preview do SHA atual após a cota liberar; revisar antes de marcar DONE.
 
 ### T30 — Liberação e operação verificadas
 
