@@ -149,6 +149,8 @@ Status único: PENDING → RUNNING → REVIEW → DONE; BLOCKED somente para dep
 
 - [x] Regressão E2E adicionada em `tests/e2e/invitation.spec.ts` para ativação e callback seguro; execução local: **2 skipped** por ausência das variáveis públicas Supabase. Entrega real por Resend/Auth continua pendente.
 
+- [x] Reenvio implementado em `GET /api/v1/invitations` e `POST /api/v1/invitations/resend`, com listagem tenant-scoped, rate limit de 15 minutos, rotação de token e botão na gestão. Typecheck/lint/build PASS; E2E real continua pendente.
+
 ### T06 — Gestão de organização e unidades
 
 **Meta/prioridade:** M2/P0. **Status:** RUNNING. **Depende:** T03. **Requisitos:** R01,R08.
