@@ -218,3 +218,7 @@ Consulta remota confirmou que `evaluate_completion` exige matrícula e vínculo 
 
 O PDF usa snapshot imutável do certificado, sem dados pessoais desnecessários, e a rota privada agora impede cache compartilhado. A página pública exibe somente titular, curso, instituição, status e código; foi criado `tests/e2e/certificate.spec.ts` para PDF/validação com fixture autenticada. Typecheck, lint e `tests/integration/certificate-verification.test.ts` **2/2 PASS**; renderização visual A4 e certificado revogado ainda exigem homologação.
 
+## Correção de convite — 27/10/2026
+
+Logs do Supabase mostraram links de convite com `redirect_to=http://localhost:3000`, causando botão sem destino útil. A rota agora ignora origem local configurada em produção e usa o host HTTPS da requisição; cobertura de convite: **6/6 PASS**. A publicação produtiva permanece dependente da autorização de deploy do projeto Vercel.
+
