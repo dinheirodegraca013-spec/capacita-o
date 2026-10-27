@@ -159,5 +159,7 @@ CI remoto pós-correção: web `40481748235` e SQL/pgTAP `40481748186`, ambos co
 
 Reclaim de jobs legados verificado no Supabase após migration incremental `20261027082000`: função disponível para `service_role`, negada a `authenticated`, e linhas `processing` sem `processing_at` usam `created_at` como fallback.
 
+Estado de homologação de entrega: outbox remoto vazio e nenhum convite CapacitaGov recente identificado no Resend; não há teste de entrega real para aprovar T27.
+
 - Runbooks revisados; checklist final não pode ser aprovado enquanto backup/restauração, SMTP/worker, E2E autenticado e preview atual estiverem ausentes.
 
