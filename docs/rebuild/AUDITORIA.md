@@ -104,5 +104,7 @@ O escopo do projeto Vercel e o root `apps/web` estão documentados, mas o deploy
 
 ### T30 — liberação — 27/10/2026
 
+Correção auditável: recuperação não monta mais callback com localhost configurado em produção; o host HTTPS do navegador é usado como fallback e destinos externos continuam rejeitados. A eficácia em produção aguarda novo deployment e e-mail real.
+
 Os critérios de liberação estão documentados, mas não há evidência suficiente para aprovação final. Pendências P0 operacionais permanecem abertas; não declarar produção pronta.
 
