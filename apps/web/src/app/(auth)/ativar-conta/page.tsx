@@ -16,7 +16,10 @@ export default function ActivateAccountPage() {
     const token = new URLSearchParams(window.location.search).get('token');
     if (token) {
       invitationToken.current = token;
-      window.history.replaceState({}, '', '/ativar-conta');
+      // Keep Supabase's auth hash intact.  Replacing the URL without the hash
+      // can erase the access token before the browser client consumes it,
+      // making the invitation button appear to lead nowhere.
+      window.history.replaceState({}, '', `/ativar-conta${window.location.hash}`);
     }
     const loadSession = async () => {
       // Invite links may deliver the session in the URL hash. The browser
