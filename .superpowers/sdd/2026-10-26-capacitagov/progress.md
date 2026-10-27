@@ -82,7 +82,19 @@ Task 29: running — runbook de release, recuperação e gates remotos documenta
 
 Task 30: running — inventário LGPD, operação de conteúdo e critérios de liberação documentados. Falta revisão jurídica/independente, backup remoto ensaiado, homologação real e aprovação de release.
 
+Task 4 complemento 27/10: criada a rota `/redefinir-senha`; recuperação agora trata erro do Supabase sem enumeração e permite atualizar senha após callback. Build local expõe a rota; E2E real permanece pendente por SMTP/Auth e deployment.
+
+Task 5 complemento 27/10: formulário de convite adicionado à gestão da organização; endpoint agora usa `inviteUserByEmail` com callback interno para `/ativar-conta`, preservando o token somente no servidor. Teste de redirect `3/3`, suíte web `51/51`, typecheck e build PASS. E2E SMTP/Auth permanece pendente por configuração externa.
+
 Retomada 27/10 — revisão independente: foram corrigidos os riscos de integridade cross-tenant em turmas/encontros/instrutores/memberships com a migration `20261027062000_tenant_composite_fks.sql`, aplicada remotamente e confirmada por consulta dos quatro constraints. `confirm_attendance` agora exige matrícula e membership ativos no mesmo tenant. A UI de catálogo de gestão também inclui cursos próprios da organização, além do catálogo central concedido. Ainda não há evidência suficiente para fechar T03/T28–T30: autenticação real de duas organizações, SMTP/worker, backup/rollback e auditoria final continuam pendentes.
+
+Retomada 27/10 — performance/CI: o advisor remoto identificou uma FK composta sem índice em `instructor_assignments`; a migration `20261027063000_instructor_tenant_fk_index.sql` foi aplicada no Supabase e o alerta `unindexed_foreign_keys` desapareceu. CI remoto no commit `d5fed8d08c869e2952106c14b72f71ce76a30cec`: SQL run `40453740988` e web run `40453741060` concluíram com sucesso.
+
+Retomada 27/10 — T29: adicionado `apps/web/tests/e2e/preview.spec.ts`; contra o domínio de produção, rota profunda e fronteira de contexto passaram **2/2**. O teste confirma ausência de 404 e rejeição anônima sem cache compartilhado, sem criar preview com dados de produção.
+
+Verificação posterior: typecheck, lint e Vitest web passaram localmente (25 arquivos/49 testes); CI remoto do commit `197306016ddc93a12e2532635739cb68886e5952` concluiu web run `40454007152` e SQL run `40454007330` com `success`.
+
+Configuração operacional: `.env.example` passou a marcar variáveis server-only; no commit remoto `a99883adeb331c4c1c5d6ab113ad1c09b7a8a657`, web job `122023657349` e pgTAP job `122023657846` concluíram com sucesso.
 
 Segurança de dependências: `npm audit --audit-level=high` está limpo após Playwright `1.55.1` e Vite `7.3.7`; testes web `46/46`, typecheck, lint e build continuam verdes.
 

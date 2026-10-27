@@ -106,3 +106,7 @@ Adicionada ilustração hero responsiva em `apps/web/public/images/capacitagov-h
 
 Domínio Resend `gestio.dev.br` confirmado como verificado e habilitado para envio. Foi criada uma chave restrita de `sending_access` para CapacitaGov e configuradas no projeto Vercel `capacita-o-x5hg` as variáveis server-only `EMAIL_PROVIDER_URL`, `EMAIL_PROVIDER_KEY` e `EMAIL_FROM` nos três ambientes. O worker passou a transformar notificações no contrato `/emails` da API Resend e resolver o e-mail do destinatário via Supabase Auth Admin. A chave não foi registrada em arquivos ou logs.
 
+## Fluxos de autenticação e convite — 27/10/2026
+
+Corrigida a recuperação: `/redefinir-senha` agora existe, valida confirmação, atualiza a senha após callback e trata falhas sem enumeração. O convite institucional ganhou formulário de gestão, criação de usuário via Supabase Auth Invite e callback interno para `/ativar-conta`, mantendo o token fora da resposta do navegador. Suíte web: **26 arquivos/51 testes PASS**, typecheck e build PASS. E2E real depende de SMTP/Auth configurado e novo deployment; a Vercel ainda reporta limite diário de deploys.
+
