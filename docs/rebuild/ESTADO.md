@@ -120,3 +120,7 @@ T04 complemento — 27/10/2026: criada `apps/web/tests/e2e/auth.spec.ts`; no ser
 
 T05 complemento — 27/10/2026: convites para e-mails já existentes agora usam `auth.admin.generateLink({ type: 'magiclink' })` e envio Resend server-only quando o convite padrão retorna usuário já registrado. A ativação detecta conta já confirmada e não força troca de senha. Suíte web completa: **26 arquivos/52 testes PASS**, typecheck e build PASS; E2E real de SMTP/Auth continua pendente.
 
+## CI e revisão remota — 27/10/2026
+
+PR draft [#2](https://github.com/dinheirodegraca013-spec/capacita-o/pull/2) aberto contra `main`. No head `54505b239f164626596edefa6709de25b8413a02`, web run `40470454999` e SQL/pgTAP run `40470455090` concluíram `success`; o web job executou typecheck, lint, 52 testes e build, e o job SQL aplicou migrations e executou a regressão. A Vercel tentou criar preview, mas bloqueou por `api-deployments-free-per-day` (mais de 100 deploys); produção não foi alterada.
+
