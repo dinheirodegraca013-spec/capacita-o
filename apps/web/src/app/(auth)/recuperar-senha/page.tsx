@@ -10,7 +10,8 @@ export default function RecoverPasswordPage() {
     event.preventDefault();
     setError(false);
     const email = String(new FormData(event.currentTarget).get('email'));
-    const { error } = await createSupabaseBrowserClient().auth.resetPasswordForEmail(email, { redirectTo: `${window.location.origin}/auth/callback?next=/redefinir-senha` });
+    const appOrigin = process.env.NEXT_PUBLIC_APP_URL || window.location.origin;
+    const { error } = await createSupabaseBrowserClient().auth.resetPasswordForEmail(email, { redirectTo: `${appOrigin}/auth/callback?next=/redefinir-senha` });
     if (error) { setError(true); return; }
     setSent(true);
   }
