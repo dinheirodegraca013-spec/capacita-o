@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
-import { inviteMember } from '@/modules/invitations/service';
+import { buildInvitationRedirect, inviteMember } from '@/modules/invitations/service';
 import type { OrganizationRole } from '@/modules/identity/model';
 
 export async function POST(request: NextRequest) {
@@ -17,8 +17,7 @@ export async function POST(request: NextRequest) {
   try {
     const admin = createSupabaseAdminClient();
     const invitation = await inviteMember({ userId: user.id, organizationId: body.organizationId, membershipId: membership.id, roles }, { email: body.email, roles: body.roles }, admin as never);
-    const activationPath = `/ativar-conta?token=${encodeURIComponent(invitation.rawToken ?? '')}`;
-    const { error: inviteError } = await admin.auth.admin.inviteUserByEmail(invitation.email, { redirectTo: `${request.nextUrl.origin}/auth/callback?next=${encodeURIComponent(activationPath)}` });
+    const { error: inviteError } = await admin.auth.admin.inviteUserByEmail(invitation.email, { redirectTo: buildInvitationRedirect(request.nextUrl.origin, invitation.rawToken ?? '') });
     if (inviteError) return NextResponse.json({ error: 'INVITE_DELIVERY_FAILED' }, { status: 503 });
     return NextResponse.json({ invitation: { id: invitation.id, email: invitation.email, roles: invitation.roles, status: invitation.status, expiresAt: invitation.expiresAt } }, { status: 201 });
   } catch (error) {

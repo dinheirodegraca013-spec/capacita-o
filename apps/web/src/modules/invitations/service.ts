@@ -17,6 +17,11 @@ export function canResendInvitation(lastSentAt: Date | null, now = new Date()) {
   return !lastSentAt || now.getTime() - lastSentAt.getTime() >= 15 * 60 * 1000;
 }
 
+export function buildInvitationRedirect(origin: string, rawToken: string) {
+  const activationPath = `/ativar-conta?token=${encodeURIComponent(rawToken)}`;
+  return `${origin}/auth/callback?next=${encodeURIComponent(activationPath)}`;
+}
+
 export async function inviteMember(actor: Actor, input: { email: string; roles: OrganizationRole[] }, client: InvitationClient): Promise<Invitation> {
   if (!actor.roles.includes('manager')) throw new Error('Only managers can invite members');
   const email = normalizeInvitationEmail(input.email);

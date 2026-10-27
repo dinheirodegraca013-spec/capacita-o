@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { canResendInvitation, normalizeInvitationEmail } from '../../src/modules/invitations/service';
+import { buildInvitationRedirect, canResendInvitation, normalizeInvitationEmail } from '../../src/modules/invitations/service';
 
 describe('recoverable institutional invitations', () => {
   it('normalizes email without revealing another tenant', () => {
@@ -11,4 +11,9 @@ describe('recoverable institutional invitations', () => {
     expect(canResendInvitation(new Date('2026-10-26T20:46:00.000Z'), now)).toBe(false);
     expect(canResendInvitation(new Date('2026-10-26T20:44:59.000Z'), now)).toBe(true);
   });
+
+  it('keeps the activation token inside an internal callback redirect', () => {
+    expect(buildInvitationRedirect('https://capacita-o-x5hg.vercel.app', 'abc/123')).toBe('https://capacita-o-x5hg.vercel.app/auth/callback?next=%2Fativar-conta%3Ftoken%3Dabc%252F123');
+  });
 });
+
