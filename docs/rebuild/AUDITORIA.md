@@ -114,6 +114,8 @@ Complemento: `/mfa` deixou de ser uma tela sem saída; quando necessário, cria 
 
 Regressão local completa: Vitest **27/27 arquivos, 64/64 testes PASS**; isso não substitui o E2E autenticado.
 
+T05 hardening: reenvio agora exige gestor no tenant, filtra o convite por organização, impõe rate limit de 15 minutos e faz rotação do token antes do envio. A UI não expõe convites de outro tenant. Falta provar concorrência/entrega com Supabase/Auth/Resend reais.
+
 Auditoria de dependências: `npm audit --audit-level=high` sem vulnerabilidades high/critical; não há correção de pacote pendente neste ciclo.
 
 Foi criada regressão Playwright de convite (`invitation.spec.ts`) para ativação e bloqueio de destino externo; os dois casos foram omitidos localmente por falta de ambiente público Supabase, portanto a evidência permanece insuficiente até executar com conta/ambiente de homologação.
