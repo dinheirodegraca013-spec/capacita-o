@@ -22,7 +22,7 @@
 - Playwright histórico: `1 passed, 2 skipped` no baseline. A validação vigente está registrada em “Evidência adicional” abaixo e deve prevalecer sobre esse snapshot.
 - Supabase remoto: migrations funcionais/hardening/otimização aplicadas e advisors rechecados; Vercel produção validada no deployment `dpl_7KE9Cje9s6YFSVBbXYEZt8VYsj6w` após as correções de rota e autorização.
 - As migrations `20261026220900_import_commit.sql`, `20261026221000_assessment_authoring_atomic.sql` e `20261026221100_notifications_grant.sql` foram aplicadas remotamente e passaram no conjunto pgTAP; seguem pendentes somente as validações operacionais de SMTP/worker.
-- O workflow `.github/workflows/sql-regression.yml` foi preparado para executar a mesma sequência em PostgreSQL 16 + pgTAP no GitHub Actions, usando `pg_prove` para falhar corretamente em qualquer asserção `not ok`; ele ainda depende de uma execução do CI após o push/autorização correspondente.
+- O workflow `.github/workflows/sql-regression.yml` já executa no GitHub Actions em PostgreSQL 16 + pgTAP: instalação do cliente, bootstrap e aplicação das migrations passaram no run `40451582948`; o passo `pg_prove` ainda falha no ambiente CI, enquanto a suíte local permanece 28/199 PASS. O bloqueio é de harness CI e não foi mascarado.
 
 Não marcar a meta final como PASS enquanto SMTP, recuperação/rollback, preview isolado e revisão independente final não forem executados.
 ## Evidência adicional — 27/10/2026
@@ -43,3 +43,4 @@ Não marcar a meta final como PASS enquanto SMTP, recuperação/rollback, previe
 - Regressão de matrícula cancelada: migration `20261027060000_harden_attempt_enrollment_status` aplicada remotamente; consulta de `pg_get_functiondef` confirmou guards ativos em resposta, finalização e entrega de tentativas. O arquivo pgTAP passou a 14 assertions nessa regressão; execução local completa depende do próximo cluster temporário.
 - Concorrência do outbox: `claim_pending_notifications` aplicado remotamente com `FOR UPDATE SKIP LOCKED`; privilégios verificados (`service_role` permitido; `authenticated`/`anon` negados). Suíte web após a alteração: **24 arquivos, 47 testes PASS**.
 - Deploy de produção da correção: `dpl_CouoDxCq4WCmGvXkrLGRYBkvgAzo` READY, alias `capacita-o-x5hg.vercel.app`; `/` e `/login` HTTP 200, título `CapacitaGov`, e endpoint interno sem segredo HTTP 401.
+
