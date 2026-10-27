@@ -326,3 +326,7 @@ Resend rechecado: o domínio remetente `gestio.dev.br` está `verified` e com `S
 
 Correção do botão de convite — 27/10/2026: a tela `/ativar-conta` agora aguarda e confirma a sessão entregue pelo link do Supabase antes de habilitar o formulário, escuta a chegada assíncrona da sessão no fragmento da URL e exibe orientação quando o convite expirou. Typecheck, lint e suíte web **27 arquivos/66 testes PASS**. Commit local `1a12c21`; sincronizado no `main` como `aeb2d82`. A validação pública depende de novo deployment Vercel.
 
+## Rechecagem de produção — 27/10/2026 07:23
+
+O deploy automático do GitHub concluiu `READY` no projeto `capacita-o-x5hg`, deployment `dpl_5SpMeb6u658UAADLp1ZmByTDFEkL`, associado ao commit `5fdd925fc3242fa9ed85c9da2dbaf74a37a85a0a`. O alias `capacita-o-x5hg.vercel.app` passou a apontar para esse deployment Next atualizado. Verificação pública: `/ativar-conta` respondeu **200**; `GET /api/v1/invitations` respondeu **401** (rota presente, sessão obrigatória); `GET /auth/signout` respondeu **405** (rota presente, método POST obrigatório). O envio real autenticado por Resend e as jornadas E2E com organizações continuam pendentes.
+
