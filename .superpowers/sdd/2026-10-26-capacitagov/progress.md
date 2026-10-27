@@ -116,3 +116,5 @@ Correção do botão de convite 27/10: o formulário agora trata falhas de rede 
 
 T04 complemento 27/10: criada `tests/e2e/auth.spec.ts`; contra servidor local sem credenciais, login/recuperação pública e callback sem código passaram `2/2`, e o cenário de senha inválida foi marcado `skip` por ausência das variáveis públicas do Supabase. A aceitação de login real, logout e MFA permanece pendente de ambiente autenticado.
 
+T05 complemento 27/10: convites para e-mails já existentes agora usam `auth.admin.generateLink({type:'magiclink'})` e envio Resend server-only quando o convite padrão retorna usuário já registrado; o fluxo de ativação detecta conta já confirmada e não força troca de senha. Helper de e-mail cobre escape HTML. Suíte web completa: **26 arquivos/52 testes PASS**, typecheck e build PASS. E2E real de SMTP/Auth continua pendente.
+
