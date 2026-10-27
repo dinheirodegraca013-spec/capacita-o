@@ -108,5 +108,7 @@ Correção auditável: recuperação não monta mais callback com localhost conf
 
 Regressão pós-correção: suíte Vitest completa **27/27 arquivos, 63/63 testes**, além de typecheck e lint, sem alterações geradas pendentes.
 
+Build Next de produção também passou e enumerou 30 rotas; isso não substitui o deployment público do HEAD.
+
 Os critérios de liberação estão documentados, mas não há evidência suficiente para aprovação final. Pendências P0 operacionais permanecem abertas; não declarar produção pronta.
 
