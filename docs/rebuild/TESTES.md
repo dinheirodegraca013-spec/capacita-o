@@ -138,3 +138,8 @@ Não marcar a meta final como PASS enquanto SMTP, recuperação/rollback, previe
 - E2E público/auth/institucional: **4 passed, 5 skipped**; os skips exigem Supabase público ou conta não produtiva.
 - `supabase/tests/isolation.test.sql` permanece pronto para pgTAP; execução de banco real local/CI e jornadas autenticadas completas pendentes.
 
+### T29 — preview — 27/10/2026
+
+- `tests/e2e/preview.spec.ts` foi ajustado para exigir ambiente público Supabase antes de validar rotas profundas.
+- Vercel confirmou o projeto e recusou novo deployment por `api-deployments-free-per-day`; não há evidência de preview do SHA atual.
+
