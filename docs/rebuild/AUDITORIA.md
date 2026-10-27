@@ -110,5 +110,7 @@ Regressão pós-correção: suíte Vitest completa **27/27 arquivos, 63/63 teste
 
 Build Next de produção também passou e enumerou 30 rotas; isso não substitui o deployment público do HEAD.
 
+A falha anterior do SQL/pgTAP foi reproduzida no run `40481533748`: `enqueue_notification` rejeitava o teste por ausência de `auth.uid()`. O teste foi corrigido com claim JWT autenticada; o run `40481748186` passou integralmente, sem relaxar a proteção da função.
+
 Os critérios de liberação estão documentados, mas não há evidência suficiente para aprovação final. Pendências P0 operacionais permanecem abertas; não declarar produção pronta.
 
