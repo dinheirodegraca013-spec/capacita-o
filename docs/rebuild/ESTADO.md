@@ -437,4 +437,7 @@ Leitura sem descriptografia confirmou `NEXT_PUBLIC_APP_URL` correto em produçã
 ### Sincronização documental remota — 27/10/2026 13:28 BRT
 
 O Git CLI local não possui credencial autorizada para push (`403`); a integração GitHub sincronizou os documentos de estado, testes, auditoria, operações e plano diretamente no `main`. Nenhum segredo foi incluído.
+### Cobertura do endpoint de recuperação — 27/10/2026 13:28 BRT
+
+Foi adicionada cobertura de rota para o incidente de links localhost: **3/3 testes** verificam origem canônica, OTP/idempotência, validação e não enumeração. Suíte web: **30 arquivos/76 testes PASS**; typecheck e lint PASS. Teste sincronizado no GitHub (`1717abb`).
 
