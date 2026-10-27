@@ -1,5 +1,5 @@
 begin;
-select plan(7);
+select plan(8);
 select has_table('public', 'notification_outbox', 'notification outbox should exist');
 select ok((select relrowsecurity from pg_class where oid = 'public.notification_outbox'::regclass), 'notification outbox must have RLS enabled');
 select has_function('public', 'enqueue_notification', array['text','uuid','text','jsonb'], 'enqueue notification should be idempotent');
@@ -13,4 +13,3 @@ update public.notification_outbox set status = 'processing', processing_at = nul
 select ok(exists (select 1 from public.claim_pending_notifications(50) where idempotency_key = 'welcome-151'), 'stale processing notification is reclaimed');
 select * from finish();
 rollback;
-
