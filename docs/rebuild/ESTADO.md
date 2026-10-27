@@ -266,6 +266,8 @@ Rotas `/o/[orgId]/gestao/*` agora consultam o nível de garantia Supabase no ser
 
 Auditoria de dependências local: `npm audit --audit-level=high --json` retornou **0 vulnerabilidades** (27 dependências de produção, 426 de desenvolvimento, 493 totais).
 
+Regressão E2E de convite criada em `apps/web/tests/e2e/invitation.spec.ts`, cobrindo tela de ativação e callback com destino externo; execução local: **2 skipped** por ausência de variáveis públicas Supabase. Nova tentativa de preview Vercel para `c2c69da` retornou novamente `402 api-deployments-free-per-day` (retry 24h); não há deployment novo.
+
 ## T30 — liberação e operação — 27/10/2026
 
 Runbooks de release, conteúdo e recuperação estão revisados e mantêm rollback, outbox, certificados, auditoria, backup e critérios de aprovação. T30 permanece RUNNING: faltam backup/restauração ensaiados, SMTP/worker real, conta E2E, preview do SHA atual e auditoria independente final.
