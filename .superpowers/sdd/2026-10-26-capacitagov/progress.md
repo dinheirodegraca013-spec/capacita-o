@@ -120,3 +120,5 @@ T05 complemento 27/10: convites para e-mails já existentes agora usam `auth.adm
 
 CI/PR 27/10: PR draft #2 aberto contra `main` para revisão. No commit `54505b239f164626596edefa6709de25b8413a02`, web run `40470454999` e SQL/pgTAP run `40470455090` concluíram `success`; web executou typecheck, lint, 52 testes e build, e pgTAP aplicou migrations e executou a regressão. Vercel comentou que o preview falhou por `api-deployments-free-per-day` (mais de 100 deploys), sem alteração de produção.
 
+Revalidação CI 27/10: o head `b871f7c98b3e7a2d8dec8558f4823b48390a71b4` também passou web run `40470617197` e SQL/pgTAP run `40470617027`, ambos `success`, incluindo build e aplicação completa das migrations.
+
