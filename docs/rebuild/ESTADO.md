@@ -348,7 +348,90 @@ Auditoria Storage remota: o bucket `course-assets` está `public=false`; as úni
 
 Nota de segurança: `anon`/`authenticated` mantêm grants de tabela necessários ao mecanismo Storage, mas esses grants não bypassam RLS; a autorização efetiva continua nas duas políticas tenant-scoped acima. A auditoria não trata `has_table_privilege=true` como evidência de leitura pública.
 
+## Correção do botão de convite — 27/10/2026 07:38
+
+Corrigida a tela `/ativar-conta` para preservar o fragmento `#access_token` ao limpar o parâmetro interno do convite. Antes, `history.replaceState` removia também o hash antes de o cliente Supabase consumir a sessão; isso fazia o botão do e-mail parecer sem destino ou abrir uma ativação sem sessão. Typecheck, lint, suíte web (**29 arquivos/70 testes**) e build Next passaram. A publicação do commit continua aguardando o limite diário do Vercel.
+
+## Backup e restauração local — 27/10/2026 07:45
+
+Em PostgreSQL 18.6 temporário e isolado, a cadeia completa de migrations foi aplicada no banco de origem, exportada com `pg_dump --format=custom`, restaurada com `pg_restore --exit-on-error` em banco descartável e validada com cinco tabelas críticas (`organizations`, `courses`, `invitations`, `certificates`, `audit_events`). Os dois bancos e o arquivo temporário foram removidos após a validação (`cleanup=ok`). Esta evidência cobre o ensaio local; backup remoto/PITR e RTO/RPO aprovados continuam pendentes.
+
+## Idempotência do envio de convites — 27/10/2026 07:41
+
+As rotas de criação e reenvio de convite passaram a enviar `idempotency-key` determinística ao Resend (`invitation:<id>` e `invitation:<id>:<timestamp>`), alinhando o fluxo direto ao worker de notificações. Suíte web **29 arquivos/70 testes PASS**, typecheck, lint e build PASS. A entrega real em caixa autorizada e a publicação Vercel permanecem pendentes.
+
+Rechecagem do repositório remoto — 27/10/2026 07:43: `main` está no commit `1f1f36c0f3685b04ab9ef6d06fc3fef176f3d20a`, contendo a correção de idempotência dos endpoints. O status Vercel continua `Deployment rate limited — retry in 24 hours`; o alias público permanece no deployment anterior `dpl_5SpMeb6u658UAADLp1ZmByTDFEkL`.
+
+## T07 — escopo de metadados do catálogo central — 27/10/2026 07:52
+
+Auditoria remota confirmou que `courses_select_scoped` expunha metadados de cursos centrais publicados sem concessão. A migration incremental `20261027120000_harden_course_metadata_scope.sql` criou `can_access_course_metadata` (`security definer`, `row_security=off`) e restringiu a política a versões publicadas com concessão ativa, preservando cursos próprios tenant-scoped. A primeira regressão local revelou recursão RLS; a implementação foi ajustada e a suíte final passou **29 arquivos/225 asserções**. Migration aplicada e política remota verificada no Supabase autorizado.
+
+Prova comportamental remota transacional: com usuário autenticado e organização temporários, a consulta ao curso central retornou `before_grant=0`; após concessão ativa retornou `after_grant=1`. A transação terminou com `ROLLBACK`, sem dados persistentes.
+
+## Produção atualizada — 27/10/2026 12:02
+
+Após a liberação da cota, o Vercel publicou o `main` atualizado no deployment `dpl_CyaBdVz13vJ2Wp7kovUndqrEX9Dt`, commit `f99a35a0335a2a96f118a3d5cb51d391ddecbf77`, estado `READY`, com alias `capacita-o-x5hg.vercel.app`. Verificação pública: `/ativar-conta?token=test-token` respondeu 200 e `/api/v1/invitations?organizationId=test` respondeu 401 `UNAUTHENTICATED`, confirmando rota e proteção. Ainda faltam clique real de convite, jornadas autenticadas de duas organizações e auditoria final.
+
+## Reforço da ativação de convite — 27/10/2026 12:50
+
+A tela `/ativar-conta` passou a consumir explicitamente os formatos de sessão Supabase por fragmento (`access_token`/`refresh_token`), `code` e `token_hash`, além de preservar o token institucional. Isso elimina a condição de corrida em que o cliente não consumia o hash a tempo e o botão do e-mail parecia não fazer nada. `npm test` (**29 arquivos/70 testes**), typecheck, lint, build e E2E público de autenticação (**2 passados; 2 skips condicionados a credenciais**) passaram. A correção foi publicada no Vercel em `dpl_3Uhb8bLT8etyW7s4Fy1TBGHZWbqr`, commit `2783be1b`, alias `capacita-o-x5hg.vercel.app`; o clique real em caixa autorizada continua pendente.
+
+## Hardening do outbox e helper de catálogo — 27/10/2026 12:55
+
+O advisor remoto identificou `notification_outbox` sem RLS explícito, apesar de não haver grants para `anon`/`authenticated`. A migration `20261027130000_enable_notification_outbox_rls.sql` habilitou RLS e revogou privilégios diretos; a verificação confirmou `relrowsecurity=true`, `anon_select=false`, `auth_select=false` e `service_role_select=true`. O helper interno `can_access_course_metadata` deixou de ser executável por `anon` via `20261027131000_scope_course_metadata_helper.sql`; `authenticated` mantém somente o execute necessário às policies. A suíte web permaneceu **29 arquivos/70 testes PASS**; pgTAP/CI remoto da nova cadeia ainda precisa concluir.
+
 T27 cobertura de rota — 27/10/2026 07:34: criado `tests/integration/notification-worker.test.ts`, verificando rejeição sem segredo e envio do `idempotency-key` do outbox ao provedor. Teste focado **2/2 PASS**; suíte web completa **29 arquivos/70 testes PASS**, typecheck e lint PASS. Commit `25a927c` sincronizado no `main`.
 
 Rechecagem Vercel — 27/10/2026 07:34: o alias permanece em `dpl_5SpMeb6u658UAADLp1ZmByTDFEkL`; o commit do novo teste recebeu status `Deployment rate limited — retry in 24 hours`. Nenhum deploy adicional foi tentado.
+
+## T04 — MFA autenticado — 27/10/2026
+
+Homologação Playwright contra `https://capacita-o-x5hg.vercel.app` concluiu login real do gestor, seleção da organização, enrollment TOTP, desafio com código RFC 6238 e acesso à gestão: **1/1 PASS**. T04 foi promovida a DONE no plano.
+
+## T05 — segunda condição de corrida no convite — 27/10/2026
+
+O e-mail real entregue pelo Resend continha link de produção com `token`, `email` e `otp`, mas o clique em produção ainda exibiu convite expirado. A causa reproduzida é a concorrência entre o listener automático do Supabase e `verifyOtp` explícito: uma sessão válida era encontrada junto com erro de segunda verificação e o formulário era desabilitado. A tela foi corrigida localmente para considerar a sessão válida como autoridade e manter a validação do token institucional no endpoint de aceitação. `npm test` **29 arquivos/71 testes PASS**, typecheck e lint PASS. O commit remoto `faff903` aguarda publicação; o Vercel informou limite de mais de 100 deployments gratuitos por dia, com retry em 24h. T05 permanece RUNNING até repetir o clique após o deployment.
+
+## T28 — rechecagem E2E e limpeza de homologação — 27/10/2026
+
+Com contas temporárias autorizadas, a suíte pública de catálogo, navegação, preview e organização executou **3 PASS / 3 SKIP** (os skips exigem fixtures adicionais). O teste de catálogo foi estabilizado aguardando a navegação pós-login antes da rota profunda. Depois da evidência, as duas organizações sintéticas, convites e seis usuários temporários foram removidos; verificações remotas confirmaram `temp_orgs=0` e `temp_invites=0`.
+
+O patch da condição de corrida do convite permanece aguardando a cota de deployments Vercel.
+
+Build local pós-patch: `npm run build` PASS, 32 páginas/rotas geradas; typecheck embutido concluído sem erros. O commit `faff903` tem checks Vercel `failure` exclusivamente por `build-rate-limit`, não por falha de compilação.
+
+## Auditoria independente local — 27/10/2026
+
+`npm audit --prefix apps/web --audit-level=high` retornou **0 vulnerabilidades**; a busca de segredos versionados encontrou apenas referências esperadas a variáveis server-only e migrations. Parecer: **BLOCKED para liberação integral**, pois o patch final do convite não está publicado (cota Vercel) e a base autorizada não possui organização persistente para a jornada real; backup remoto/PITR e E2E final de dois tenants também continuam sem evidência.
+
+## T06 — bootstrap seguro da primeira organização — 27/10/2026
+
+Foi criado o endpoint protegido `POST /api/v1/organizations` para `platform_admins`, com slug derivado de forma segura e RPC transacional `create_platform_organization`. A função remota foi aplicada no Supabase e verificada: `service_role_execute=true`, `authenticated_execute=false`, `anon_execute=false`; chamada válida em transação descartável criou organização e vínculo manager sem persistir dados. A suíte web passou **29 arquivos/72 testes**, typecheck, lint e build. A criação de uma organização real permanece deliberadamente aguardando o nome/tipo fornecidos pelo usuário.
+### Correção de recuperação de senha — 27/10/2026
+
+As capturas confirmaram que o Supabase Auth ainda gerava links nativos com `localhost`. Foi implementado `/api/v1/auth/recover`: gera OTP pelo Admin API e envia link público para `/redefinir-senha` pelo Resend, com resposta genérica e idempotência por OTP. A tela de recuperação passou a usar a rota própria. Suíte: **29 arquivos/73 testes PASS**, typecheck, lint e build PASS. Código sincronizado no GitHub; aguarda deployment Vercel READY para validação real do e-mail.
+### Advisor Supabase — 27/10/2026
+
+Rechecagem remota do projeto `zykfvzvydvifuzepujvv`: RLS da `notification_outbox` sem policy é esperado para tabela exclusiva do worker `service_role`; `verify_certificate(text)` permanece executável por `anon` por ser a verificação pública exigida. Os RPCs `SECURITY DEFINER` autenticados foram revisados como superfície prevista e dependem de suas validações internas. O advisor também reporta proteção contra senhas vazadas desativada; habilitação requer configuração do Supabase Auth no painel/management API e permanece gate operacional, sem alteração destrutiva automática.
+### Verificação pública do patch de recuperação — 27/10/2026 13:24 BRT
+
+`GET https://capacita-o-x5hg.vercel.app/api/v1/auth/recover` retornou **404** no deployment atualmente publicado, confirmando que o endpoint novo ainda não chegou à produção. O código local/GitHub está validado; não enviar novo deployment até a janela de retry da Vercel.
+### Rechecagem de RLS — 27/10/2026 13:25 BRT
+
+Consulta remota ao PostgreSQL confirmou **35/35 tabelas públicas com RLS habilitado**, **0 tabelas sem RLS** e **71 policies**. A verificação complementa os testes transacionais anteriores; não houve mutação de dados.
+### Paridade de migrations — 27/10/2026 13:26 BRT
+
+O Supabase remoto lista **56 migrations** e o checkout local contém as mesmas **56 versões/nomeações** (incluindo `platform_organization_bootstrap`); não há migration local ausente no remoto após normalização dos timestamps.
+### Sincronização GitHub do endpoint de recuperação — 27/10/2026 13:28 BRT
+
+Leitura autoritativa do `main` confirmou `apps/web/src/app/api/v1/auth/recover/route.ts` no GitHub (blob `7d81f848289ab36af56f946ee71145cb589e2e58`), incluindo idempotência por OTP. A divergência atual é exclusivamente entre GitHub e o deployment público antigo.
+### Rechecagem de ofertas e matrículas — 27/10/2026 13:26 BRT
+
+As policies remotas efetivas exigem vínculo ativo para leitura; matrículas exigem gestor da mesma organização na criação e limitam leitura ao próprio vínculo ou gestor; ofertas exigem gestor da organização e, para cursos centrais, concessão ativa correspondente. Não foram detectadas condições de autorização cross-tenant nessa inspeção; a homologação autenticada de duas organizações continua necessária para fechar T12/T13/T28.
+### Configuração Auth pendente — 27/10/2026 13:29 BRT
+
+A documentação oficial confirma que a proteção contra senhas vazadas é uma opção do **Auth settings** e está disponível no plano Pro ou superior. O conector não fornece mutação dessa configuração; permanece ação operacional no painel Supabase antes da liberação integral: [Password security](https://supabase.com/docs/guides/auth/password-security).
+### Variáveis Vercel — 27/10/2026 13:30 BRT
+
+Leitura sem descriptografia confirmou `NEXT_PUBLIC_APP_URL` correto em produção/preview/desenvolvimento, `NEXT_PUBLIC_SUPABASE_URL`, `EMAIL_PROVIDER_URL`, `EMAIL_FROM` e as chaves server-only (`SUPABASE_SERVICE_ROLE_KEY`, `EMAIL_PROVIDER_KEY`, `NOTIFICATION_JOB_SECRET`) presentes como variáveis sensíveis. Nenhum valor secreto foi lido ou registrado.
 
