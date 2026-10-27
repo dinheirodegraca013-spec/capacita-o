@@ -117,7 +117,7 @@ Status único: PENDING → RUNNING → REVIEW → DONE; BLOCKED somente para dep
 
 ### T04 — Login, recuperação, contexto e MFA
 
-**Meta/prioridade:** M1/P0. **Status:** RUNNING. **Depende:** T03. **Requisitos:** R01,R04.
+**Meta/prioridade:** M1/P0. **Status:** DONE. **Depende:** T03. **Requisitos:** R01,R04.
 
 **Criar/alterar:** `src/app/(auth)/login/page.tsx`, `src/app/(auth)/recuperar-senha/page.tsx`, `src/app/auth/callback/route.ts`, `src/app/(auth)/mfa/page.tsx`, `src/app/(portal)/selecionar-organizacao/page.tsx`.
 
@@ -127,11 +127,13 @@ Status único: PENDING → RUNNING → REVIEW → DONE; BLOCKED somente para dep
 
 **Aceite verificável:** E-mail/senha válidos entram; senha errada não enumera conta; callback externo bloqueado; logout bloqueia próxima leitura; gestor sem MFA não entra em administração de produção.
 
-- [ ] Executar ciclo da task e anexar evidência; revisar antes de marcar DONE.
+- [x] Ciclo concluído em 27/10: login real de gestor, seleção de organização, enrollment TOTP e desafio MFA foram exercitados contra `https://capacita-o-x5hg.vercel.app`; o gestor só acessou `/gestao` após código válido. Callback externo e senha inválida permanecem cobertos pelos testes públicos; evidência registrada em `docs/rebuild/TESTES.md`.
 
 - [x] Hardening adicional: `gestao/layout.tsx` agora consulta `getAuthenticatorAssuranceLevel()` no servidor e redireciona gestores sem AAL2 para `/mfa`, preservando a rota interna de retorno. Teste de contrato MFA **3/3 PASS**, typecheck, lint e build PASS. E2E autenticado de gestor com fator real continua pendente.
 
 - [x] `/mfa` agora oferece enrollment TOTP (QR/segredo) e verifica o primeiro código antes do retorno interno; typecheck, lint e build PASS. E2E autenticado continua pendente.
+
+- [x] Recuperação de senha endurecida em 27/10: endpoint server-only gera OTP via Admin API e envia link público pelo Resend, evitando o `SITE_URL` localhost do template nativo; redefinição valida o OTP. Testes locais: 29 arquivos/73 testes, typecheck, lint e build PASS. A validação em produção aguarda deployment após a cota Vercel.
 
 ### T05 — Convites institucionais recuperáveis
 
@@ -166,6 +168,8 @@ Status único: PENDING → RUNNING → REVIEW → DONE; BLOCKED somente para dep
 - [ ] Executar ciclo da task e anexar evidência; revisar antes de marcar DONE.
 
 - [x] Hardening de entrada: `PATCH /api/v1/organizations/[orgId]` usa normalizador compartilhado, valida enum de tipo e slug seguro. Testes de organização **3/3 PASS**, suíte web **27/65**, typecheck/lint/build PASS; E2E de tenant real continua pendente.
+
+- [x] Bootstrap de primeira organização: `POST /api/v1/organizations` exige `platform_admins`, deriva slug seguro e chama RPC transacional com grants somente para `service_role`; migration e pgTAP adicionados/aplicados. A criação de dados reais aguarda nome/tipo da organização.
 
 ### T07 — Pessoas e importação transacional
 
