@@ -2,7 +2,7 @@ import { createHash, randomBytes } from 'node:crypto';
 import { NextRequest, NextResponse } from 'next/server';
 import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
-import { buildInvitationRedirect, canResendInvitation, resolveInvitationOrigin } from '@/modules/invitations/service';
+import { buildInvitationActivationLink, buildInvitationRedirect, canResendInvitation, resolveInvitationOrigin } from '@/modules/invitations/service';
 import { buildInvitationEmail, buildProviderHeaders } from '@/modules/notifications/resend';
 import type { OrganizationRole } from '@/modules/identity/model';
 
@@ -46,7 +46,9 @@ export async function POST(request: NextRequest) {
     await admin.from('invitations').update({ status: 'failed' }).eq('id', invitation.id);
     return NextResponse.json({ error: 'INVITE_DELIVERY_FAILED' }, { status: 503 });
   }
-  const response = await fetch(providerUrl, { method: 'POST', headers: buildProviderHeaders(providerKey, `invitation:${invitation.id}:${sentAt}`), body: JSON.stringify(buildInvitationEmail({ from, to: invitation.email, actionLink: generated.data.properties.action_link })) });
+  const emailOtp = (generated.data.properties as { email_otp?: string }).email_otp;
+  const actionLink = emailOtp ? buildInvitationActivationLink(publicOrigin, rawToken, invitation.email, emailOtp) : generated.data.properties.action_link;
+  const response = await fetch(providerUrl, { method: 'POST', headers: buildProviderHeaders(providerKey, `invitation:${invitation.id}:${sentAt}`), body: JSON.stringify(buildInvitationEmail({ from, to: invitation.email, actionLink })) });
   if (!response.ok) {
     await admin.from('invitations').update({ status: 'failed' }).eq('id', invitation.id);
     return NextResponse.json({ error: 'INVITE_DELIVERY_FAILED' }, { status: 503 });
