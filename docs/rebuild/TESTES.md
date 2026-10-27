@@ -185,6 +185,20 @@ Estado de homologação de entrega: outbox remoto vazio e nenhum convite Capacit
 
 Pré-requisito do provedor confirmado: `gestio.dev.br` verificado e envio habilitado no Resend.
 
+## Regressão do convite — 27/10/2026 07:38
+
+Após a correção de preservação do hash de autenticação em `/ativar-conta`: `npm test` **29/29 arquivos, 70/70 testes PASS**; `npm run typecheck` PASS; `npm run lint` PASS; `npm run build` PASS. O teste E2E autenticado do clique real permanece pendente por falta de caixa/conta de homologação autorizada.
+
+Ensaio de recuperação local: `pg_dump --format=custom` + `pg_restore --exit-on-error` da cadeia completa de migrations em banco PostgreSQL temporário; cinco tabelas críticas encontradas e limpeza confirmada (`cleanup=ok`). Não substitui ensaio remoto/PITR.
+
+Após a idempotência nos endpoints de convite: `npm test` **29/29 arquivos, 70/70 testes PASS**; `npm run typecheck` PASS; `npm run lint` PASS; `npm run build` PASS.
+
+Regressão de escopo do catálogo: a primeira versão falhou por recursão RLS; após substituir pelo helper `can_access_course_metadata`, a cadeia completa de **29 arquivos/225 asserções pgTAP passou**. O banco temporário foi removido. A migration foi aplicada no Supabase e a policy remota confirmou a exigência do helper.
+
+Teste remoto transacional do catálogo central: sessão `authenticated` temporária observou `0` cursos sem concessão e `1` após concessão; rollback confirmado.
+
+Produção Vercel atualizada para o commit `f99a35a0335a2a96f118a3d5cb51d391ddecbf77`: deployment `READY`; `/ativar-conta` 200 e `/api/v1/invitations` sem sessão 401. O clique de e-mail permanece não exercitado em caixa autorizada.
+
 - Runbooks revisados; checklist final não pode ser aprovado enquanto backup/restauração, SMTP/worker, E2E autenticado e preview atual estiverem ausentes.
 
 ### Evidência autoritativa mais recente — 27/10/2026 07:35
@@ -192,4 +206,26 @@ Pré-requisito do provedor confirmado: `gestio.dev.br` verificado e envio habili
 - PostgreSQL 18.6 temporário: **29 migrations, 29 arquivos/224 asserções pgTAP, PASS**.
 - Correção incremental `20261027110000_fix_import_idempotency_portability.sql` aplicada no Supabase; `extensions.digest(text,text)` remoto confirmado e chave SHA-256 válida.
 - Build Next local: PASS; Vercel rejeitou somente a publicação posterior por limite diário, sem erro de compilação.
+
+### Reforço da ativação do convite — 27/10/2026 12:50
+
+- `npm test`: **29 arquivos/70 testes PASS**.
+- `npm run typecheck`, `npm run lint` e `npm run build`: **PASS**.
+- E2E público em produção (`tests/e2e/auth.spec.ts`): **2 passed/2 skipped**; skips exigem credenciais reais.
+- `/ativar-conta` agora consome explicitamente fragmento OAuth, `code` e `token_hash`; clique real em caixa autorizada continua pendente.
+
+Hardening remoto de segurança: `notification_outbox` agora possui RLS habilitado e nenhum grant direto para `anon`/`authenticated`; `service_role` mantém acesso do worker. O helper `can_access_course_metadata` não é mais executável por `anon`. A suíte web pós-mudança permaneceu **29 arquivos/70 testes PASS**; o pgTAP remoto será validado pelo CI após sincronização da migration.
+### Homologação autenticada de MFA — 27/10/2026
+
+Com `E2E_BASE_URL=https://capacita-o-x5hg.vercel.app`, o cenário Playwright real de gestor concluiu login, seleção da organização, enrollment TOTP, geração de código RFC 6238 e acesso à rota protegida de gestão: **1/1 PASS**. Nenhuma chave de serviço foi exposta ao navegador.
+
+### Auditoria independente local — 27/10/2026
+
+`npm audit --prefix apps/web --audit-level=high` retornou **0 vulnerabilidades**. Busca de segredos versionados não encontrou credenciais; somente referências esperadas a variáveis server-only e migrations. O bloqueio restante é operacional: deployment Vercel do commit `faff903` rejeitado por limite diário, e a homologação de convite precisa de organização/conta não sintética.
+
+Bootstrap de organização: migration remota e função transacional verificadas com rollback; privilégios ficaram restritos a `service_role`. Suíte web pós-endpoint: **29 arquivos/72 testes PASS**, typecheck, lint e build PASS.
+
+### Recuperação de senha — 27/10/2026
+
+Teste de integração de geração de link e template Resend: **6/6 PASS**. Suíte web completa: **29 arquivos/73 testes PASS**; typecheck, lint e build PASS. Clique no e-mail em produção permanece pendente de novo deployment.
 
