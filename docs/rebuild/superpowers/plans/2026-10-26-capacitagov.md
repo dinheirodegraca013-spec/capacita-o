@@ -215,7 +215,7 @@ Status único: PENDING → RUNNING → REVIEW → DONE; BLOCKED somente para dep
 
 ### T11 — Editor de cursos e publicação
 
-**Meta/prioridade:** M3/P1. **Status:** PENDING. **Depende:** T08,T09,T10. **Requisitos:** R03,R04.
+**Meta/prioridade:** M3/P1. **Status:** RUNNING. **Depende:** T08,T09,T10. **Requisitos:** R03,R04.
 
 **Criar/alterar:** `src/app/(portal)/o/[orgId]/gestao/cursos/page.tsx`, `src/app/(portal)/o/[orgId]/gestao/cursos/[courseId]/page.tsx`, `src/components/courses/course-editor.tsx`.
 
@@ -225,7 +225,8 @@ Status único: PENDING → RUNNING → REVIEW → DONE; BLOCKED somente para dep
 
 **Aceite verificável:** Gestor cria e publica curso próprio; curador publica central; modo sem professor salvo sem campo obrigatório indevido; erros de upload/publicação preservam rascunho.
 
-- [ ] Executar ciclo da task e anexar evidência; revisar antes de marcar DONE.
+- [x] Implementado editor com conteúdo de aula, módulos persistidos visíveis, validação de títulos e bloqueio de publicação sem conteúdo; `course-authoring.spec.ts` criado para homologação autenticada.
+- [ ] Executar jornada autenticada e anexar evidência; revisar antes de marcar DONE.
 
 ### T12 — Concessões centrais e ofertas
 
