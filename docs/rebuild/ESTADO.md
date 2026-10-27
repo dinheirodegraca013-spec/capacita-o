@@ -440,4 +440,7 @@ O Git CLI local não possui credencial autorizada para push (`403`); a integraç
 ### Cobertura do endpoint de recuperação — 27/10/2026 13:28 BRT
 
 Foi adicionada cobertura de rota para o incidente de links localhost: **3/3 testes** verificam origem canônica, OTP/idempotência, validação e não enumeração. Suíte web: **30 arquivos/76 testes PASS**; typecheck e lint PASS. Teste sincronizado no GitHub (`1717abb`).
+### E2E de recuperação local — 27/10/2026 14:42 BRT
+
+Novo Playwright `recovery.spec.ts` passou **1/1** no Next local: `/api/v1/auth/recover` responde 422 para e-mail inválido. A prova pública continua pendente porque o deployment atual ainda retorna 404.
 
