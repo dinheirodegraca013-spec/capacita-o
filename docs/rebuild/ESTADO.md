@@ -156,6 +156,8 @@ T07 complemento — o pós-commit da importação agora dispara convites de alun
 
 T07 idempotência — 27/10/2026: a confirmação agora deriva uma chave SHA-256 estável do lote e do tamanho, com índice único por organização. A RPC de quatro argumentos retorna o lote existente em repetição e, após migration incremental `20261027091000_import_idempotency_concurrency.sql`, evita reprocessamento/auditoria duplicados em concorrência. A rota e o wrapper legado permanecem compatíveis. Suíte web **27 arquivos/66 testes PASS**, typecheck e lint PASS; Supabase confirmou a função SECURITY DEFINER, execução negada a `anon`, permitida a `authenticated` e conflito seguro.
 
+T08 correção de sessão — 27/10/2026: o botão “Sair” apontava para `/auth/signout`, mas a rota não existia. Criada rota POST server-side que chama `supabase.auth.signOut()` e responde 303 para `/login`. Suíte web **27 arquivos/66 testes PASS**, typecheck, lint e build PASS; build expõe `/auth/signout` como rota dinâmica.
+
 T09/T11 complemento — o formulário de criação de curso próprio agora permite escolher `self_paced` (autoinstrucional, sem professor) ou `instructor_led` (jornada híbrida). O backend já persistia o modo; a UI deixou de forçar somente autoinstrucional. Typecheck, Vitest (**26 arquivos/53 testes**) e build passaram localmente.
 
 T10 complemento — adicionada `POST /api/v1/assets/[id]/complete`: somente gestor do tenant pode confirmar o upload, e o servidor consulta o bucket privado `course-assets` antes de alterar o asset de `pending` para `ready`. Sem objeto confirmado, a API retorna conflito e não libera URL assinada. Typecheck, Vitest (**26 arquivos/53 testes**) e build passaram; teste operacional com arquivo real permanece pendente.
