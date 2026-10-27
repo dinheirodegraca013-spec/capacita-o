@@ -129,6 +129,8 @@ Status único: PENDING → RUNNING → REVIEW → DONE; BLOCKED somente para dep
 
 - [ ] Executar ciclo da task e anexar evidência; revisar antes de marcar DONE.
 
+- [x] Hardening adicional: `gestao/layout.tsx` agora consulta `getAuthenticatorAssuranceLevel()` no servidor e redireciona gestores sem AAL2 para `/mfa`, preservando a rota interna de retorno. Teste de contrato MFA **3/3 PASS**, typecheck, lint e build PASS. E2E autenticado de gestor com fator real continua pendente.
+
 ### T05 — Convites institucionais recuperáveis
 
 **Meta/prioridade:** M1/P0. **Status:** RUNNING. **Depende:** T04. **Requisitos:** R01,R08.
