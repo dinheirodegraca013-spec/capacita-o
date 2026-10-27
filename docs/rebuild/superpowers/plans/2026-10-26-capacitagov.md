@@ -465,6 +465,7 @@ Status único: PENDING → RUNNING → REVIEW → DONE; BLOCKED somente para dep
 **Aceite verificável:** Falha não desfaz matrícula válida; retry não cria outro vínculo; job público negado; mensagem sem PII desnecessária; entrega real testada só em caixa e remetente autorizados.
 
 - [x] Outbox restringe payload sensível, usa chave idempotente, retry até cinco tentativas e recuperação de itens `processing` abandonados; endpoint interno exige segredo.
+- [x] Depois de corrigir o contexto JWT do teste, o CI SQL/pgTAP passou no run `40481748186` (29 arquivos/217 assertions); o envio real pelo Resend em caixa autorizada ainda é pendência operacional.
 - [ ] Executar envio real em caixa autorizada e anexar evidência; revisar antes de marcar DONE.
 
 ### T28 — Homologação SQL e duas jornadas completas
