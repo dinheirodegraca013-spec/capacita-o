@@ -32,6 +32,8 @@ O `POST /api/v1/assets` agora também gera `createSignedUploadUrl` para o bucket
 
 Reauditoria remota somente leitura confirmou bucket `course-assets` privado, policy de INSERT limitada a `is_org_manager(foldername(name)[1])` e SELECT limitada a `is_active_member(foldername(name)[1])`. As funções RPC `SECURITY DEFINER` continuam concedidas somente aos papéis necessários; `verify_certificate` permanece público por desenho para validação de certificados.
 
+O procedimento operacional de e-mail foi documentado em `docs/rebuild/operations/email.md`: fila idempotente, endpoint interno protegido, retry/backoff e variáveis server-only. SMTP/provedor real continua pendente de credenciais e domínio remetente.
+
 ## Próxima ação
 
 Fechar as pendências operacionais: SMTP/Auth de convite, observabilidade, preview com dados isolados, CI remoto, recuperação/rollback e auditoria independente final. O plano técnico continua sujeito a evidências, não a aprovação implícita.
