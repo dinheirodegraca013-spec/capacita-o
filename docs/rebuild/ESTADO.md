@@ -264,6 +264,8 @@ Consulta somente leitura no Supabase autorizado (27/10/2026) retornou `auth.user
 
 Rotas `/o/[orgId]/gestao/*` agora consultam o nível de garantia Supabase no servidor e redirecionam gestores sem `aal2` para `/mfa`, mantendo apenas destinos internos. `tests/integration/auth.test.ts`: **3/3 PASS**; typecheck, lint e build PASS. A task continua RUNNING até haver jornada autenticada com fator real.
 
+A tela `/mfa` agora inicia cadastro TOTP quando não há fator, exibe QR/segredo e valida o primeiro código antes de retornar à rota interna. Typecheck, lint e build PASS; execução real depende de conta de homologação.
+
 Auditoria de dependências local: `npm audit --audit-level=high --json` retornou **0 vulnerabilidades** (27 dependências de produção, 426 de desenvolvimento, 493 totais).
 
 Regressão E2E de convite criada em `apps/web/tests/e2e/invitation.spec.ts`, cobrindo tela de ativação e callback com destino externo; execução local: **2 skipped** por ausência de variáveis públicas Supabase. Nova tentativa de preview Vercel para `c2c69da` retornou novamente `402 api-deployments-free-per-day` (retry 24h); não há deployment novo.
