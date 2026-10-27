@@ -234,4 +234,7 @@ Novo `auth-recover-route.test.ts`: **3/3 PASS**, cobrindo validação de e-mail,
 ### E2E de recuperação — 27/10/2026 14:42 BRT
 
 `tests/e2e/recovery.spec.ts`: **1/1 PASS** em servidor Next local, confirmando que a rota existe e rejeita entrada inválida sem acionar o provedor de e-mail. O mesmo teste deve ser repetido no alias Vercel após a publicação; no alias atual ele falha por 404, conforme evidência registrada.
+### Recuperação em produção — 27/10/2026 14:45 BRT
+
+Deployment `dpl_5iptvUbq4mSb9aQn9UDp6CuSKYRJ` READY no alias público. `GET /api/v1/auth/recover` retornou 405 com `x-matched-path` correto; E2E Playwright com `E2E_BASE_URL=https://capacita-o-x5hg.vercel.app`: **1/1 PASS**.
 
