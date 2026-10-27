@@ -140,6 +140,8 @@ Não marcar a meta final como PASS enquanto SMTP, recuperação/rollback, previe
 
 ### T29 — preview — 27/10/2026
 
+Produção permanece no deployment `dpl_AFpdc7tcRRiqv99Hk4Cd7Q7EMyRH`/commit `92caa2f`; preview do HEAD atual segue pendente por `api-deployments-free-per-day`.
+
 - `tests/e2e/preview.spec.ts` foi ajustado para exigir ambiente público Supabase antes de validar rotas profundas.
 - Vercel confirmou o projeto e recusou novo deployment por `api-deployments-free-per-day`; não há evidência de preview do SHA atual.
 
