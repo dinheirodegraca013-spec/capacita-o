@@ -242,3 +242,7 @@ O relatório institucional passou a retornar totais e breakdowns por status/curs
 
 Aplicada a migration `notifications_recovery` no Supabase: `processing_at` permite recuperar jobs abandonados após 15 minutos; enqueue exige usuário autenticado e gerente do mesmo tenant para destinatários de terceiros; claim permanece exclusivo de `service_role`. Verificação remota confirmou `enqueue_notification` para authenticated e `claim_pending_notifications` somente para service role. Envio real pelo Resend ainda pendente.
 
+## T28 — homologação SQL e jornadas completas — 27/10/2026
+
+O conjunto E2E público/auth foi executado: **4 passaram, 5 omitidos** por ausência de Supabase público e conta não produtiva; o teste de Storage agora omite corretamente sem ambiente Supabase. O teste SQL `isolation.test.sql` continua preparado para pgTAP em banco temporário/CI; jornadas autenticadas sem professor e híbrida ainda pendentes.
+
