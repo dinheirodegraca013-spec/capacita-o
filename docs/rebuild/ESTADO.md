@@ -330,3 +330,7 @@ Correção do botão de convite — 27/10/2026: a tela `/ativar-conta` agora agu
 
 O deploy automático do GitHub concluiu `READY` no projeto `capacita-o-x5hg`, deployment `dpl_5SpMeb6u658UAADLp1ZmByTDFEkL`, associado ao commit `5fdd925fc3242fa9ed85c9da2dbaf74a37a85a0a`. O alias `capacita-o-x5hg.vercel.app` passou a apontar para esse deployment Next atualizado. Verificação pública: `/ativar-conta` respondeu **200**; `GET /api/v1/invitations` respondeu **401** (rota presente, sessão obrigatória); `GET /auth/signout` respondeu **405** (rota presente, método POST obrigatório). O envio real autenticado por Resend e as jornadas E2E com organizações continuam pendentes.
 
+## T27 — idempotência no provedor — 27/10/2026 07:26
+
+O worker interno agora envia o `idempotency-key` do registro de outbox ao Resend (com fallback ao ID da notificação), evitando duplicidade quando uma entrega é confirmada pelo provedor e a resposta se perde antes da atualização do banco. A cobertura foi ampliada para **28 arquivos/68 testes PASS**, typecheck e lint PASS. O commit `c421d1d` foi sincronizado no `main`; a entrega real autenticada ainda requer caixa de homologação.
+
