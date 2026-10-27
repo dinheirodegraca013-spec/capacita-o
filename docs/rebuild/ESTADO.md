@@ -449,4 +449,7 @@ O deployment `dpl_5iptvUbq4mSb9aQn9UDp6CuSKYRJ` concluiu **READY** e assumiu `ca
 ### Entrega real de recuperação — 27/10/2026 14:45 BRT
 
 Foi executado um teste controlado para a conta administrativa autorizada. O endpoint retornou 202; o Resend registrou o e-mail `01a17e77-c92e-7386-9ad3-f4ecda780b63` como **delivered**. A inspeção do corpo confirmou link `https://capacita-o-x5hg.vercel.app/redefinir-senha` e ausência de `localhost`; tokens não foram registrados.
+### Regressão pós-deploy — 27/10/2026 14:47 BRT
+
+Preview, navegação e recuperação foram reexecutados no alias público: **2 PASS / 3 SKIP**, sem falhas; os skips dependem de sessão/fixture autenticada.
 
