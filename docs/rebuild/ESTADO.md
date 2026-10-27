@@ -260,6 +260,12 @@ Consulta somente leitura no Supabase autorizado (27/10/2026) retornou `auth.user
 
 `buildInvitationRedirect` agora aponta diretamente para `/ativar-conta?token=...`. Isso evita perder o `#access_token` devolvido pelo Supabase em uma rota exclusivamente server-side; a página cliente de ativação consome a sessão no navegador. Teste direcionado, typecheck e lint passaram; deployment público ainda pendente.
 
+## Hardening T04/MFA — 27/10/2026
+
+Rotas `/o/[orgId]/gestao/*` agora consultam o nível de garantia Supabase no servidor e redirecionam gestores sem `aal2` para `/mfa`, mantendo apenas destinos internos. `tests/integration/auth.test.ts`: **3/3 PASS**; typecheck, lint e build PASS. A task continua RUNNING até haver jornada autenticada com fator real.
+
+Auditoria de dependências local: `npm audit --audit-level=high --json` retornou **0 vulnerabilidades** (27 dependências de produção, 426 de desenvolvimento, 493 totais).
+
 ## T30 — liberação e operação — 27/10/2026
 
 Runbooks de release, conteúdo e recuperação estão revisados e mantêm rollback, outbox, certificados, auditoria, backup e critérios de aprovação. T30 permanece RUNNING: faltam backup/restauração ensaiados, SMTP/worker real, conta E2E, preview do SHA atual e auditoria independente final.
