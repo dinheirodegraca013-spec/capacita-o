@@ -91,3 +91,8 @@ Não marcar a meta final como PASS enquanto SMTP, recuperação/rollback, previe
 - O teste requer `E2E_USER_EMAIL`, `E2E_USER_PASSWORD`, `E2E_ORG_ID` e `E2E_ENROLLMENT_ID` não produtivos.
 - CI remoto no head documental `83ae989c390ff7568b3507a6ca041850ab68dc27`: web `40475154744` e SQL/pgTAP `40475154694`, ambos `success`.
 
+### T16 — trilhas — 27/10/2026
+
+- Criado `tests/e2e/paths.spec.ts` para a tela de trilhas atribuídas do aluno.
+- O teste requer conta e organização não produtivas; a atribuição real pelo gestor ainda precisa de homologação autenticada.
+
