@@ -19,3 +19,8 @@ export function buildResendNotification(input: { from: string; to: string; templ
   return { from: input.from, to: input.to, subject, text, html: `<p>${escapeHtml(text).replace(/\n/g, '<br />')}</p>` };
 }
 
+export function buildInvitationEmail(input: { from: string; to: string; actionLink: string }): ResendNotification {
+  const text = `Você foi convidado para uma organização no CapacitaGov. Ative sua conta: ${input.actionLink}`;
+  return { from: input.from, to: input.to, subject: 'CapacitaGov — convite para ativar sua conta', text, html: `<p>Você foi convidado para uma organização no CapacitaGov.</p><p><a href="${escapeHtml(input.actionLink)}">Ativar minha conta</a></p>` };
+}
+
