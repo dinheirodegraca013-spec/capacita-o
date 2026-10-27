@@ -130,3 +130,7 @@ Após os registros finais no branch, o head `b871f7c98b3e7a2d8dec8558f4823b48390
 
 A gestão ganhou formulário de edição de nome/fuso e cadastro de unidades. `PATCH`/`POST /api/v1/organizations/[orgId]` exigem membership ativo com papel `manager` antes da operação, além do RLS. Suíte web: **26 arquivos/53 testes PASS**, typecheck, lint e build PASS. E2E cross-tenant continua pendente.
 
+## T07 — importação transacional — 27/10/2026
+
+O importador passou a ter duas etapas reais: validação/preview via `/api/v1/imports`, erros por linha e confirmação explícita via `/api/v1/imports/commit`; o servidor revalida o lote antes da transação. Testes de importação `3/3`, suíte web **26 arquivos/53 testes PASS**, typecheck, lint e build PASS. Convites pós-importação e E2E autenticado permanecem pendentes.
+
