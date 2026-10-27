@@ -74,3 +74,7 @@ CI remoto confirmou web e SQL/pgTAP verdes no head documental `027822949a56e0605
 
 O serviço passou a impor `organizationId` e estado de publicação no caminho de leitura. O RLS remoto continua sendo a barreira de isolamento; falta somente comprovar a jornada autenticada de concessão central, curso próprio e tenant vizinho.
 
+### T13 — matrícula — 27/10/2026
+
+O servidor mantém a matrícula em RPC com lock, unicidade e snapshots; a interface de erro não trata oferta retirada como sucesso. A prova restante é executar duas contas reais contra uma última vaga e confirmar tenant divergente no Supabase/CI.
+
