@@ -147,3 +147,7 @@ Os critérios de liberação estão documentados, mas não há evidência sufici
 - RLS remoto: 34/35 tabelas públicas habilitadas, `notification_outbox` service-only sem grants públicos, `course-assets` privado. Testes transacionais cross-tenant de leitura e escrita passaram com rollback.
 - Playwright público mais recente: 5 passed/22 skipped; os skips exigem contas e fixtures autenticadas. O bloqueio de liberação permanece deployment atualizado, E2E autenticado de dois tenants, worker/SMTP operacional, backup/restauração e auditoria independente.
 
+### Correção de estado — 27/10/2026 07:35
+
+O bloco histórico acima foi superseded por rechecagem posterior: o alias público passou a apontar para `dpl_5SpMeb6u658UAADLp1ZmByTDFEkL`, deployment Next READY. As rotas públicas `/ativar-conta`, `/api/v1/invitations` e `/auth/signout` responderam, respectivamente, 200, 401 e 405 nos métodos sem sessão. O HEAD posterior inclui hardening de idempotência do worker e da importação; a Vercel voltou a rejeitar novos commits por `Deployment rate limited — retry in 24 hours`. A liberação integral continua não aprovada por ausência de E2E autenticado de dois tenants, entrega Resend em caixa autorizada, backup/restauração e auditoria final independente.
+
