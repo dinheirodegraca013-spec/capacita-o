@@ -26,6 +26,11 @@ export function buildInvitationRedirect(origin: string, rawToken: string) {
   return `${origin}${activationPath}`;
 }
 
+export function buildInvitationActivationLink(origin: string, rawToken: string, email: string, otp: string) {
+  const params = new URLSearchParams({ token: rawToken, email: normalizeInvitationEmail(email), otp });
+  return `${origin.replace(/\/$/, '')}/ativar-conta?${params.toString()}`;
+}
+
 export function resolveInvitationOrigin(configuredOrigin: string | undefined, requestOrigin: string, environment = process.env.NODE_ENV) {
   const configured = configuredOrigin?.trim().replace(/\/$/, '');
   // A localhost value left in a production Vercel environment makes the
