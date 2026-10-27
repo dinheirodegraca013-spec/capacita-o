@@ -346,5 +346,7 @@ Homologação remota transacional da importação: sob `authenticated` com gesto
 
 Auditoria Storage remota: o bucket `course-assets` está `public=false`; as únicas políticas observadas são `course_assets_insert_manager` (INSERT condicionado a gestor da organização) e `course_assets_select_member` (SELECT condicionado a vínculo ativo). Não existe política pública de leitura irrestrita; o teste HTTP anônimo anterior retornou 400 para objeto inexistente.
 
+Nota de segurança: `anon`/`authenticated` mantêm grants de tabela necessários ao mecanismo Storage, mas esses grants não bypassam RLS; a autorização efetiva continua nas duas políticas tenant-scoped acima. A auditoria não trata `has_table_privilege=true` como evidência de leitura pública.
+
 T27 cobertura de rota — 27/10/2026 07:34: criado `tests/integration/notification-worker.test.ts`, verificando rejeição sem segredo e envio do `idempotency-key` do outbox ao provedor. Teste focado **2/2 PASS**; suíte web completa **29 arquivos/70 testes PASS**, typecheck e lint PASS. Commit `25a927c` sincronizado no `main`.
 
