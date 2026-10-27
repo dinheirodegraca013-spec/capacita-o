@@ -23,3 +23,16 @@ export async function createOffering(actor: Actor, input: OfferingInput & { cour
   if (error || !data) throw new Error(error?.message ?? 'Offering was not created');
   return data;
 }
+
+export async function listCatalog(actor: Actor, client: CatalogClient, status: 'published' | 'draft' | 'retired' = 'published') {
+  if (!actor.roles.length) throw new Error('Membership required');
+  const { data, error } = await client
+    .from('offerings')
+    .select('id, organization_id, course_version_id, title, mandatory, capacity, enrollment_policy, starts_at, ends_at, status')
+    .eq('organization_id', actor.organizationId)
+    .eq('status', status)
+    .order('starts_at', { ascending: true });
+  if (error) throw new Error(error.message);
+  return data ?? [];
+}
+
