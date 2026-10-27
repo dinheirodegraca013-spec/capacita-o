@@ -333,7 +333,7 @@ Status único: PENDING → RUNNING → REVIEW → DONE; BLOCKED somente para dep
 
 ### T19 — Sala de avaliação retomável
 
-**Meta/prioridade:** M5/P1. **Status:** PENDING. **Depende:** T08,T18. **Requisitos:** R04,R05.
+**Meta/prioridade:** M5/P1. **Status:** RUNNING. **Depende:** T08,T18. **Requisitos:** R04,R05.
 
 **Criar/alterar:** `src/app/(portal)/o/[orgId]/aluno/avaliacoes/[attemptId]/page.tsx`, `src/components/assessments/exam-room.tsx`.
 
@@ -343,7 +343,8 @@ Status único: PENDING → RUNNING → REVIEW → DONE; BLOCKED somente para dep
 
 **Aceite verificável:** F5 não reinicia tempo; perda de rede indica não salvo e permite retomar; expiração finaliza pelo servidor; teclado utilizável; troca de aba não reprova automaticamente.
 
-- [ ] Executar ciclo da task e anexar evidência; revisar antes de marcar DONE.
+- [x] Sala consome a entrega server-side, retoma respostas, confirma autosave, exibe relógio e solicita finalização automática quando expira; teste E2E condicionado a attempt autenticada criado.
+- [ ] Executar jornada autenticada com perda de rede/expiração e anexar evidência; revisar antes de marcar DONE.
 
 ### T20 — Turmas, professores e encontros
 
