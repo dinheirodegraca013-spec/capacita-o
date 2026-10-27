@@ -231,4 +231,7 @@ Teste de integração de geração de link e template Resend: **6/6 PASS**. Suí
 ### Endpoint de recuperação — 27/10/2026 13:28 BRT
 
 Novo `auth-recover-route.test.ts`: **3/3 PASS**, cobrindo validação de e-mail, origem pública configurada mesmo com request localhost, chamada Admin API, idempotência por OTP e resposta indistinguível para conta inexistente. Suíte completa: **30 arquivos/76 testes PASS**; typecheck e lint PASS.
+### E2E de recuperação — 27/10/2026 14:42 BRT
+
+`tests/e2e/recovery.spec.ts`: **1/1 PASS** em servidor Next local, confirmando que a rota existe e rejeita entrada inválida sem acionar o provedor de e-mail. O mesmo teste deve ser repetido no alias Vercel após a publicação; no alias atual ele falha por 404, conforme evidência registrada.
 
