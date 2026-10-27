@@ -103,3 +103,9 @@ Não marcar a meta final como PASS enquanto SMTP, recuperação/rollback, previe
 - Requer conta de gestor e organização não produtivas; o teste autenticado ainda não foi executado.
 - CI remoto no head documental `027822949a56e0605f24bb1935cb2fd2d60e8ed2`: web `40476060359` e SQL/pgTAP `40476060282`, ambos `success`.
 
+### T12 — catálogo — 27/10/2026
+
+- `npm run typecheck`: PASS; `npm run lint`: PASS.
+- `tests/integration/catalog.test.ts`: **2/2 PASS**, incluindo escopo da organização e estado publicado.
+- E2E autenticado central/próprio ainda pendente.
+
