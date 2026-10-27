@@ -38,4 +38,5 @@ Não marcar a meta final como PASS enquanto SMTP, recuperação/rollback, previe
 - UX/UI e produção: `npm run typecheck`, `npm run lint` e `npm run build` PASS após o redesign institucional. Playwright contra `https://capacita-o-x5hg.vercel.app/`: **2 PASS, 2 skipped** (landing e login públicos PASS; jornadas autenticadas exigem conta temporária explícita). Deployment `dpl_Hr2oQj3oXtdoot42uFnT5b9L9q4J` READY com `rootDirectory=apps/web`; projeto Vercel corrigido para `framework=nextjs`.
 - Storage multi-tenant: rota de URL assinada agora resolve o tenant pelo asset antes do vínculo ativo; `npm test -- --run` (**24 arquivos/46 testes PASS**), typecheck, lint e build PASS.
 - Upload Storage: `POST /api/v1/assets` retorna URL/token assinado para `course-assets`; teste de integração de capacidade assinada PASS. O processamento que promove `pending` para `ready` continua pendente de worker/observabilidade.
+- E2E público contra produção: **3 PASS, 2 skipped**; landing, login e as rotas de upload/acesso Storage retornaram os estados esperados (401 sem sessão). Jornadas autenticadas continuam condicionadas a credenciais temporárias explícitas.
 
