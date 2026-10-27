@@ -52,3 +52,7 @@ Implementação parcial verificada: o cartão de oferta exibe janela/capacidade 
 
 CI remoto confirmou web e SQL/pgTAP verdes no head documental `c4b7bfdfd2c3aa4eebc82d3c6b3880915e2610d9` (runs `40474826961` e `40474826848`).
 
+### T15 — player e progresso — 27/10/2026
+
+Implementação parcial verificada: conteúdo da aula e posição persistida estão disponíveis no player, com RPC idempotente já coberto por pgTAP. O E2E autenticado foi criado, mas ainda não há matrícula de homologação para executá-lo; T15 permanece RUNNING.
+
