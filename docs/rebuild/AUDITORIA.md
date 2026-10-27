@@ -106,5 +106,7 @@ O escopo do projeto Vercel e o root `apps/web` estão documentados, mas o deploy
 
 Correção auditável: recuperação não monta mais callback com localhost configurado em produção; o host HTTPS do navegador é usado como fallback e destinos externos continuam rejeitados. A eficácia em produção aguarda novo deployment e e-mail real.
 
+Regressão pós-correção: suíte Vitest completa **27/27 arquivos, 63/63 testes**, além de typecheck e lint, sem alterações geradas pendentes.
+
 Os critérios de liberação estão documentados, mas não há evidência suficiente para aprovação final. Pendências P0 operacionais permanecem abertas; não declarar produção pronta.
 
