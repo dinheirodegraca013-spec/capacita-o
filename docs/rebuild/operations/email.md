@@ -13,6 +13,8 @@ Para Resend, use `EMAIL_PROVIDER_URL=https://api.resend.com/emails` e uma chave 
 
 O scheduler deve chamar o endpoint em intervalo curto e registrar respostas 2xx/5xx. Falhas ficam como `pending` até cinco tentativas; depois passam a `failed` para reprocessamento administrativo. Payloads com senha, token, CPF ou e-mail são rejeitados antes da fila.
 
+O domínio `gestio.dev.br` foi confirmado como verificado e com envio habilitado no Resend. A pendência operacional é executar o worker/fluxo autenticado com uma caixa de homologação autorizada; não há evidência de envio de convite real nesta rodada.
+
 ## Estado da homologação
 
 O contrato, a idempotência e o retry estão cobertos por testes locais. A entrega SMTP/provedor real permanece pendente de credenciais e domínio remetente verificados; não usar conta pessoal nem inserir segredos no Git.
