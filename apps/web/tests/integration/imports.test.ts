@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { validateImportRows } from '../../src/modules/imports/service';
+import { buildImportIdempotencyKey, validateImportRows } from '../../src/modules/imports/service';
 import { parsePeopleCsv } from '../../src/modules/imports/csv';
 
 describe('transactional people imports', () => {
@@ -20,4 +20,11 @@ describe('transactional people imports', () => {
       { name: 'João "J"', email: 'joao@example.com' },
     ]);
   });
+
+  it('builds a stable idempotency key for the normalized batch', () => {
+    const rows = [{ name: 'Ana', email: 'ana@example.com' }];
+    expect(buildImportIdempotencyKey(rows, 42)).toBe(buildImportIdempotencyKey(rows, 42));
+    expect(buildImportIdempotencyKey(rows, 42)).not.toBe(buildImportIdempotencyKey(rows, 43));
+  });
 });
+
