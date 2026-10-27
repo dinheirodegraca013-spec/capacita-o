@@ -27,7 +27,7 @@ export function buildInvitationEmail(input: { from: string; to: string; actionLi
     to: input.to,
     subject: 'CapacitaGov — convite para ativar sua conta',
     text,
-    html: `<p>Você foi convidado para uma organização no CapacitaGov.</p><p><a href="${link}" style="display:inline-block;padding:12px 18px;border-radius:8px;background:#0f766e;color:#fff;text-decoration:none;font-weight:600">Ativar minha conta</a></p><p>Se o botão não abrir, copie este endereço:</p><p><a href="${link}">${link}</a></p>`,
+    html: `<p>Você foi convidado para uma organização no CapacitaGov.</p><p><a href="${link}" target="_blank" rel="noopener noreferrer" style="display:inline-block;padding:12px 18px;border-radius:8px;background:#0f766e;color:#fff;text-decoration:none;font-weight:600">Ativar minha conta</a></p><p>Se o botão não abrir, copie este endereço:</p><p><a href="${link}" target="_blank" rel="noopener noreferrer">${link}</a></p>`,
   };
 }
 
