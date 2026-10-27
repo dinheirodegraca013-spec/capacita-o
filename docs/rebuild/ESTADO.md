@@ -154,3 +154,5 @@ Parecer **BLOCKED para liberação integral**, sem marcar a meta como concluída
 
 T07 complemento — o pós-commit da importação agora dispara convites de aluno pelo endpoint institucional em lotes de cinco, contabilizando falhas sem desfazer a importação já confirmada. Typecheck, Vitest (**26 arquivos/53 testes**) e build passaram; o teste operacional de e-mail continua pendente.
 
+T09/T11 complemento — o formulário de criação de curso próprio agora permite escolher `self_paced` (autoinstrucional, sem professor) ou `instructor_led` (jornada híbrida). O backend já persistia o modo; a UI deixou de forçar somente autoinstrucional. Typecheck, Vitest (**26 arquivos/53 testes**) e build passaram localmente.
+
