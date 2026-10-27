@@ -160,6 +160,8 @@ T08 correção de sessão — 27/10/2026: o botão “Sair” apontava para `/au
 
 Teste de regressão do logout — 27/10/2026: adicionado `tests/integration/signout.test.ts`, com mock do cliente server-side, verificando `signOut()` e redirecionamento 303. O Vitest passou **28 arquivos/67 testes**, com typecheck e lint PASS.
 
+Validação pública — `POST https://capacita-o-x5hg.vercel.app/auth/signout` retornou **404** no deployment antigo; o endpoint corrigido só poderá ser confirmado após novo deployment Vercel.
+
 T09/T11 complemento — o formulário de criação de curso próprio agora permite escolher `self_paced` (autoinstrucional, sem professor) ou `instructor_led` (jornada híbrida). O backend já persistia o modo; a UI deixou de forçar somente autoinstrucional. Typecheck, Vitest (**26 arquivos/53 testes**) e build passaram localmente.
 
 T10 complemento — adicionada `POST /api/v1/assets/[id]/complete`: somente gestor do tenant pode confirmar o upload, e o servidor consulta o bucket privado `course-assets` antes de alterar o asset de `pending` para `ready`. Sem objeto confirmado, a API retorna conflito e não libera URL assinada. Typecheck, Vitest (**26 arquivos/53 testes**) e build passaram; teste operacional com arquivo real permanece pendente.
