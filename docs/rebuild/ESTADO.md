@@ -202,3 +202,7 @@ Verificação local: `npm run typecheck` PASS; `npm test -- --run tests/integrat
 
 `ExamRoom` passou a usar a entrega server-side para retomar respostas, reverter seleção quando o autosave falha, impedir dupla finalização e solicitar a finalização no servidor ao zerar o relógio. O teste `tests/e2e/exam.spec.ts` cobre relógio e botão de finalização quando executado com attempt autenticada; execução local ficou **1 skipped** sem credenciais de homologação. Perda de rede, expiração real e duas abas ainda exigem homologação autenticada.
 
+## T20 — turmas, professores e encontros — 27/10/2026
+
+O serviço de turmas mantém abertura e atribuição de instrutor tenant-scoped; a validação de encontros rejeita janela inválida, título vazio e fuso ausente. O agendamento já está exposto em `/api/v1/meetings` e a tela de gestão permite criar turma e encontro; criado `tests/e2e/classes.spec.ts` para homologação autenticada. Verificação local: typecheck, lint e `tests/integration/classes.test.ts` **3/3 PASS**. A jornada híbrida real com professor e turma ainda está pendente.
+
