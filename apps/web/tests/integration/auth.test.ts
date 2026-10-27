@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { safeRedirectPath, requiresAdministrativeMfa } from '../../src/modules/auth/redirect';
+import { safeRedirectPath, requiresAdministrativeMfa, requiresMfaForAssurance } from '../../src/modules/auth/redirect';
 
 describe('authentication boundaries', () => {
   it('allows only internal callback paths', () => {
@@ -12,4 +12,11 @@ describe('authentication boundaries', () => {
     expect(requiresAdministrativeMfa(['manager'])).toBe(true);
     expect(requiresAdministrativeMfa(['instructor', 'student'])).toBe(false);
   });
+
+  it('requires AAL2 before administrative routes', () => {
+    expect(requiresMfaForAssurance(['manager'], 'aal1')).toBe(true);
+    expect(requiresMfaForAssurance(['manager'], 'aal2')).toBe(false);
+    expect(requiresMfaForAssurance(['student'], 'aal1')).toBe(false);
+  });
 });
+
