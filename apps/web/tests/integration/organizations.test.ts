@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { normalizeOrganizationInput } from '../../src/modules/organizations/service';
+import { buildOrganizationSlug, normalizeOrganizationInput } from '../../src/modules/organizations/service';
 
 describe('organization management', () => {
   it('normalizes organization labels and preserves the selected kind', () => {
@@ -15,5 +15,8 @@ describe('organization management', () => {
     expect(() => normalizeOrganizationInput({ name: 'Org', kind: 'invalid' as never, timezone: 'UTC' })).toThrow('Invalid organization kind');
     expect(() => normalizeOrganizationInput({ name: 'Org', kind: 'company', timezone: 'UTC', slug: 'Org Name' })).toThrow('Invalid organization slug');
   });
-});
 
+  it('builds a safe default slug for platform bootstrap', () => {
+    expect(buildOrganizationSlug(' Prefeitura de São Paulo ')).toBe('prefeitura-de-sao-paulo');
+  });
+});
