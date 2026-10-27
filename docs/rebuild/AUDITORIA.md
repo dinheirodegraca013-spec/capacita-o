@@ -62,3 +62,5 @@ CI remoto confirmou web e SQL/pgTAP verdes no head documental `83ae989c390ff7568
 
 Implementação parcial: atribuição com prazo e tela do aluno foram adicionadas, mantendo RLS e a prevenção SQL de ciclos. O E2E autenticado ainda não pode ser executado sem conta de homologação; T16 permanece RUNNING.
 
+CI remoto confirmou web e SQL/pgTAP verdes no head documental `3eb1d0f4aa30852c794130001c531f66eaabbf4f` (runs `40475613669` e `40475613670`).
+
