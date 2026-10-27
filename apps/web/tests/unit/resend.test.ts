@@ -1,11 +1,18 @@
 import { describe, expect, it } from 'vitest';
-import { buildResendNotification } from '../../src/modules/notifications/resend';
+import { buildInvitationEmail, buildResendNotification } from '../../src/modules/notifications/resend';
 
 describe('Resend notification payload', () => {
   it('builds a safe provider payload and escapes HTML', () => {
     const result = buildResendNotification({ from: 'CapacitaGov <noreply@gestio.dev.br>', to: 'user@example.com', template: 'welcome', payload: { name: '<Aluno>' } });
     expect(result).toMatchObject({ from: 'CapacitaGov <noreply@gestio.dev.br>', to: 'user@example.com', subject: 'CapacitaGov — welcome' });
     expect(result.html).toContain('&lt;Aluno&gt;');
+  });
+
+  it('builds an escaped invitation email', () => {
+    const result = buildInvitationEmail({ from: 'CapacitaGov <noreply@example.com>', to: 'user@example.com', actionLink: 'https://example.com/auth?token=<unsafe>' });
+    expect(result.subject).toMatch(/convite/i);
+    expect(result.text).toContain('https://example.com/auth?token=<unsafe>');
+    expect(result.html).toContain('&lt;unsafe&gt;');
   });
 });
 
