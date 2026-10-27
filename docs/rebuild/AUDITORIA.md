@@ -36,3 +36,7 @@ Evidências novas: callback de convite com `code`/`token_hash`, navegação resp
 
 Pendências que impedem PASS: E2E autenticado de duas organizações com contas de homologação explícitas; teste operacional de convite/SMTP e worker; backup, restauração e rollback ensaiados; preview Vercel do HEAD atual. A criação do preview foi tentada com o repositório correto e está bloqueada pela cota `api-deployments-free-per-day` (HTTP 402). Produção não foi alterada nesta auditoria.
 
+### Correção do envio do convite — 27/10/2026
+
+Diagnóstico: novos convites usavam `inviteUserByEmail`, deixando a entrega dependente do SMTP nativo do Supabase; o Resend era acionado apenas quando o usuário já existia. Correção: gerar o link no Supabase e enviar sempre pelo Resend server-only, com fallback para `magiclink` em contas existentes e marcação `failed` em erro de geração/entrega. Verificações locais passaram; o teste de caixa de entrada e a validação em produção continuam pendentes por falta de conta de homologação e novo deployment.
+
