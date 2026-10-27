@@ -136,3 +136,7 @@ O importador passou a ter duas etapas reais: validação/preview via `/api/v1/im
 
 Correção de sincronização remota — 27/10/2026: uma atualização via API do GitHub gravou a mensagem de erro do PowerShell em dois caminhos contendo `[orgId]`; o CI detectou a falha de typecheck. Os arquivos foram reenviados com leitura literal. No head `04919470b8eeae84bb8a6f20660bdd88780280f7`, web run `40471248105` e SQL/pgTAP run `40471248124` concluíram `success`.
 
+## Correção do callback de convite — 27/10/2026
+
+O callback agora aceita tanto `code` quanto `token_hash` (`invite`, `magiclink` e `recovery`), evitando que o botão do e-mail termine em `/login?error=callback` sem processar o convite. A rota de convite usa `NEXT_PUBLIC_APP_URL` como origem canônica, e o formulário mostra conflitos/erros retornados pela API. Typecheck, suíte Vitest (**26 arquivos/53 testes**) e E2E público (**2 pass, 2 skip por ausência de Supabase público**) passaram localmente. No head remoto `0079bb4ded96cfc5806ec300cc993077a1d78923`, web run `40471969023` e SQL/pgTAP run `40471968979` concluíram `success`. A produção ainda não recebeu o código por limite diário de deployments da Vercel.
+
