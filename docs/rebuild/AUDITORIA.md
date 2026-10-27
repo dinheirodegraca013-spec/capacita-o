@@ -32,6 +32,8 @@ Atualização: o deployment `dpl_54N1x6Pydz8YTPd3BMMYrhwFkq38` foi criado explic
 
 Rechecagem de publicação: o domínio de produção está em `dpl_AFpdc7tcRRiqv99Hk4Cd7Q7EMyRH` (commit `92caa2f`), enquanto o checkout e os registros avançaram além desse SHA. A liberação integral segue não aprovada até existir preview/deployment do HEAD e homologação autenticada.
 
+O limite diário não deve ser reavaliado por novas tentativas antes de `2026-10-28T09:21:01Z`; até lá a divergência entre produção e HEAD é um bloqueio externo conhecido.
+
 O banco autorizado não possui organizações nem memberships ativos (`auth.users=1`, `organizations=0`, `active_memberships=0`), logo não há evidência possível de isolamento/jornadas autenticadas de dois tenants neste ciclo.
 
 **Parecer: BLOCKED para liberação integral; implementação continua em andamento.**
