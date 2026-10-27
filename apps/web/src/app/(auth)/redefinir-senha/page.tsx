@@ -29,6 +29,7 @@ export default function ResetPasswordPage() {
       }
       const session = await supabase.auth.getSession();
       if (!active) return;
+      if (!sessionError && (code || tokenHash)) window.history.replaceState({}, '', '/redefinir-senha');
       setSessionReady(!sessionError && Boolean(session.data.session));
       if (sessionError || !session.data.session) setError('O link expirou ou já foi utilizado. Solicite uma nova recuperação.');
     }
