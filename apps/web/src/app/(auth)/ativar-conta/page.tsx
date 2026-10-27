@@ -50,9 +50,14 @@ export default function ActivateAccountPage() {
       }
       const { data, error: sessionError } = await supabase.auth.getSession();
       if (!active) return;
+      const hasSession = Boolean(data.session);
       setExistingAccount(Boolean(data.session?.user?.email_confirmed_at));
-      setAuthReady(!linkError && !sessionError && Boolean(data.session));
-      if (linkError || sessionError || !data.session) setError('Este convite expirou ou já foi utilizado. Solicite um novo convite.');
+      // The browser client may consume the OTP concurrently with the explicit
+      // verifyOtp call above. A valid session is authoritative in that case;
+      // the invitation token is still checked by the accept endpoint on submit.
+      setAuthReady(!sessionError && hasSession);
+      if (sessionError || !hasSession) setError('Este convite expirou ou já foi utilizado. Solicite um novo convite.');
+      else if (linkError) setError(null);
     };
     void loadSession();
     const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
@@ -77,4 +82,3 @@ export default function ActivateAccountPage() {
   }
   return <main><h1>Ativar conta</h1><p>{existingAccount ? 'Confirme o convite para adicionar esta organização à sua conta.' : 'Defina uma senha para concluir seu cadastro.'}</p>{!authReady && !error && <p role="status">Validando seu convite…</p>}<form onSubmit={submit}><label>Nova senha<input name="password" type="password" minLength={12} required={!existingAccount} disabled={!authReady} /></label>{error && <p role="alert">{error}</p>}<button disabled={!authReady}>Ativar</button></form></main>;
 }
-
