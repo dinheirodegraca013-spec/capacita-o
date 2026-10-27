@@ -77,4 +77,5 @@ Não marcar a meta final como PASS enquanto SMTP, recuperação/rollback, previe
 - `npm run test:e2e -- tests/e2e/course-authoring.spec.ts`: execução correta, **1 teste skipped** por ausência de `E2E_USER_EMAIL`, `E2E_USER_PASSWORD` e `E2E_ORG_ID` não produtivos.
 - O teste cobre login de gestor, entrada na gestão de cursos, formulário de criação e modo `self_paced`.
 - A cobertura autenticada de criação, conteúdo e publicação permanece pendente.
+- CI remoto no head `dbce0b205a2c3fd218985b7afb99802563e0fbdd`: web `40474451225` e SQL/pgTAP `40474451137`, ambos `success`.
 
