@@ -109,3 +109,10 @@ Não marcar a meta final como PASS enquanto SMTP, recuperação/rollback, previe
 - `tests/integration/catalog.test.ts`: **2/2 PASS**, incluindo escopo da organização e estado publicado.
 - E2E autenticado central/próprio ainda pendente.
 
+### T13 — matrícula — 27/10/2026
+
+- `npm run typecheck`: PASS; `npm run lint`: PASS.
+- `tests/integration/enrollments.test.ts` + `tests/integration/catalog.test.ts`: **4/4 PASS**.
+- `tests/e2e/enrollment.spec.ts`: **1 skipped** sem conta de aluno não produtiva.
+- pgTAP amplia cobertura de capacidade, idempotência, snapshot e oferta retirada; execução remota aguarda CI.
+
