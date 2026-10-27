@@ -116,3 +116,5 @@ Logs Auth consultados: recuperação e convite chegaram ao Supabase, mas ocorrer
 
 T03 foi revisada e marcada DONE no plano. Evidências: `tests/integration/session.test.ts` 3/3; `/api/v1/context` sem sessão no deployment público retorna 401 com `Cache-Control: private, no-store`; `SUPABASE_SERVICE_ROLE_KEY` aparece apenas no cliente administrativo server-only. T04/T05 continuam abertas por E2E autenticado, SMTP/Auth e novo deployment.
 
+T04 complemento — 27/10/2026: criada `apps/web/tests/e2e/auth.spec.ts`; no servidor local, login/recuperação pública e callback sem código passaram `2/2`. O cenário de senha inválida foi explicitamente `skip` por ausência de `NEXT_PUBLIC_SUPABASE_URL` e `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`; login real, logout e MFA continuam sem evidência autenticada.
+
