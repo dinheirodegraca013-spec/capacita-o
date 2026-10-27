@@ -226,3 +226,7 @@ Logs do Supabase mostraram links de convite com `redirect_to=http://localhost:30
 
 O GET de ofertas foi centralizado em `listCatalog`, com organização e estado de publicação aplicados no serviço antes da consulta. O isolamento final continua delegado ao RLS já aplicado no Supabase; integração de catálogo ficou **2/2 PASS**, typecheck e lint PASS. Jornada autenticada de curso central concedido para uma organização e curso próprio permanece pendente.
 
+## T13 — matrícula, prazo e capacidade — 27/10/2026
+
+O fluxo mantém a transação `enroll_member`, unicidade por oferta/aluno, limite de capacidade, rejeição de oferta retirada e snapshots de regra; a API agora responde conflito para oferta indisponível, futura, expirada ou cheia. Typecheck e lint PASS; integrações de matrícula/catalogo **4/4 PASS**; E2E criado e **1 skipped** sem conta não produtiva.
+
