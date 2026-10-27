@@ -288,7 +288,7 @@ Status único: PENDING → RUNNING → REVIEW → DONE; BLOCKED somente para dep
 
 ### T16 — Trilhas e obrigatoriedades
 
-**Meta/prioridade:** M4/P1. **Status:** PENDING. **Depende:** T13,T15. **Requisitos:** R03,R04.
+**Meta/prioridade:** M4/P1. **Status:** RUNNING. **Depende:** T13,T15. **Requisitos:** R03,R04.
 
 **Criar/alterar:** `src/modules/paths/service.ts`, `src/app/(portal)/o/[orgId]/gestao/trilhas/page.tsx`, `src/app/(portal)/o/[orgId]/aluno/trilhas/page.tsx`, `supabase/migrations/<gerado>_paths.sql`.
 
@@ -298,7 +298,8 @@ Status único: PENDING → RUNNING → REVIEW → DONE; BLOCKED somente para dep
 
 **Aceite verificável:** Etapa seguinte bloqueada até requisito completo; prazo corretamente convertido para fuso exibido; trilha não concede conteúdo que tenant não possui; repetição não duplica matrícula.
 
-- [ ] Executar ciclo da task e anexar evidência; revisar antes de marcar DONE.
+- [x] Gestão cria etapas, publica e atribui trilhas com prazo; aluno possui tela de trilhas atribuídas e estado vazio.
+- [ ] Executar jornada autenticada e anexar evidência; revisar antes de marcar DONE.
 
 ### T17 — Banco de questões e regras de prova
 
