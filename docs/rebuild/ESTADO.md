@@ -250,6 +250,8 @@ O conjunto E2E público/auth foi executado: **4 passaram, 5 omitidos** por ausê
 
 O projeto `capacita-o-x5hg` foi confirmado com root Next em `apps/web`; a tentativa de deployment do `main` foi rejeitada pela Vercel com `402 api-deployments-free-per-day` (retry informado: 24h). A spec de preview agora omite corretamente sem variáveis públicas Supabase; preview do SHA atual permanece pendente.
 
+Rechecagem posterior: o alias de produção continua no deployment READY `dpl_AFpdc7tcRRiqv99Hk4Cd7Q7EMyRH`, commit `92caa2f6698d3a612a7bbd8dfdc00552c5e47573`; ele não contém o HEAD documental atual nem as atualizações T30. Não foi feita nova tentativa enquanto a cota diária permanece bloqueada.
+
 ## T30 — liberação e operação — 27/10/2026
 
 Runbooks de release, conteúdo e recuperação estão revisados e mantêm rollback, outbox, certificados, auditoria, backup e critérios de aprovação. T30 permanece RUNNING: faltam backup/restauração ensaiados, SMTP/worker real, conta E2E, preview do SHA atual e auditoria independente final.
