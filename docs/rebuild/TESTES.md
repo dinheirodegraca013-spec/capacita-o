@@ -149,6 +149,10 @@ Consulta remota somente leitura: `auth.users=1`, `organizations=0`, `active_memb
 - `tests/e2e/preview.spec.ts` foi ajustado para exigir ambiente público Supabase antes de validar rotas profundas.
 - Vercel confirmou o projeto e recusou novo deployment por `api-deployments-free-per-day`; não há evidência de preview do SHA atual.
 
+### Regressão do botão de convite — 27/10/2026
+
+O redirect agora preserva o token na tela cliente de ativação, compatível com sessões Supabase retornadas em fragmento. `tests/integration/invitations.test.ts`: **4/4 PASS**; typecheck e lint PASS. Falta validar em deployment atualizado e com e-mail de homologação.
+
 ### T30 — liberação — 27/10/2026
 
 Regressão adicional de origem canônica de recuperação: `tests/integration/auth-redirect.test.ts` e convites **7/7 PASS**; typecheck/lint PASS. Validação por e-mail real continua pendente.
