@@ -162,3 +162,7 @@ T10 complemento — adicionada `POST /api/v1/assets/[id]/complete`: somente gest
 
 O endpoint de convite deixou de depender do remetente nativo do Supabase Auth, que podia criar o convite sem entregar um botão utilizável quando o SMTP/Auth estava indisponível ou limitado. Agora ele gera o action link do Supabase (`invite`, com fallback `magiclink` para contas existentes) e sempre o entrega pelo Resend configurado; falhas marcam o convite como `failed` e retornam erro explícito à interface. Typecheck, Vitest (**26 arquivos/53 testes**) e build passaram. Envio real e publicação do HEAD continuam pendentes por homologação SMTP e limite da Vercel.
 
+## T11 — editor de cursos e publicação — 27/10/2026
+
+O editor agora exibe módulos/aulas já persistidos, permite cadastrar conteúdo textual da aula, apresenta feedback de salvamento/publicação e impede publicação na interface sem módulo. A API rejeita aulas sem título antes de gravar. Foi criado `tests/e2e/course-authoring.spec.ts`, condicionado a uma conta de gestor e organização não produtivas. Typecheck, 53 testes Vitest, build e execução E2E (1 teste skipped por ausência de credenciais) passaram. A jornada autenticada real ainda é necessária para marcar T11 como DONE.
+
