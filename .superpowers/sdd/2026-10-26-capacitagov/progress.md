@@ -112,3 +112,7 @@ Push autorizado para disparar CI: falhou antes de enviar porque o credential Git
 
 Validação do deployment informado pelo usuário (`https://capacita-o-x5hg.vercel.app`): raiz HTTP 200 com título CapacitaGov, porém a jornada pública `/login` retorna `404: NOT_FOUND`; Playwright remoto resultou `1 failed, 2 skipped`. Evidência indica que a URL atual aponta para outro build/configuração, não para a reconstrução Next em `apps/web`.
 
+Correção do botão de convite 27/10: o formulário agora trata falhas de rede com mensagem visível e sempre libera o estado de envio no `finally`. Teste de convites `3/3`, typecheck e build PASS. O alias de produção ainda não contém esta alteração; deploy bloqueado pela cota diária gratuita da Vercel.
+
+T04 complemento 27/10: criada `tests/e2e/auth.spec.ts`; contra servidor local sem credenciais, login/recuperação pública e callback sem código passaram `2/2`, e o cenário de senha inválida foi marcado `skip` por ausência das variáveis públicas do Supabase. A aceitação de login real, logout e MFA permanece pendente de ambiente autenticado.
+
