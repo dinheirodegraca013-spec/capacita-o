@@ -230,7 +230,7 @@ Status único: PENDING → RUNNING → REVIEW → DONE; BLOCKED somente para dep
 
 ### T12 — Concessões centrais e ofertas
 
-**Meta/prioridade:** M3/P0. **Status:** PENDING. **Depende:** T09,T10. **Requisitos:** R02,R09.
+**Meta/prioridade:** M3/P0. **Status:** RUNNING. **Depende:** T09,T10. **Requisitos:** R02,R09.
 
 **Criar/alterar:** `src/modules/catalog/service.ts`, `src/app/api/v1/catalog/grants/route.ts`, `src/app/api/v1/offerings/route.ts`, `supabase/migrations/<gerado>_offerings.sql`.
 
@@ -240,7 +240,8 @@ Status único: PENDING → RUNNING → REVIEW → DONE; BLOCKED somente para dep
 
 **Aceite verificável:** Central concedido a A invisível para B; gestor não cria concessão global nem muda critérios pedagógicos da versão; retirada bloqueia novas matrículas e mantém antigas conforme regra; emergência bloqueia conteúdo e audita.
 
-- [ ] Executar ciclo da task e anexar evidência; revisar antes de marcar DONE.
+- [x] Serviço `listCatalog` e GET de ofertas agora impõem organização e estado de publicação; teste de integração incluído (**2/2 PASS** em catálogo).
+- [ ] Executar jornada autenticada central concedido/curso próprio e anexar evidência; revisar antes de marcar DONE.
 
 ### T13 — Matrícula, prazo e capacidade
 
