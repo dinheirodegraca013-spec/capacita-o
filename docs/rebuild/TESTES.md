@@ -155,6 +155,8 @@ O redirect agora preserva o token na tela cliente de ativação, compatível com
 
 Hardening MFA T04: rota de gestão exige `aal2` no servidor e preserva retorno interno. `tests/integration/auth.test.ts`: **3/3 PASS**; typecheck, lint e build PASS. `npm audit --audit-level=high`: **0 vulnerabilidades**.
 
+O onboarding TOTP foi implementado em `/mfa` (enrollment, QR/segredo e verificação), sem alterar a exigência server-side. Typecheck, lint e build PASS; falta executar com fator real.
+
 `tests/e2e/invitation.spec.ts` foi adicionado para ativação/callback seguro; execução local registrou **2 skipped** por ausência de `NEXT_PUBLIC_SUPABASE_URL` e chave pública. Não foi contado como aprovação E2E.
 
 ### T30 — liberação — 27/10/2026
