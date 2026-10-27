@@ -32,10 +32,11 @@ jobs:
           container=$(docker ps --filter 'ancestor=quay.io/abn/pgtap:1.3.1-pg16' --format '{{.ID}}' | head -n 1)
           test -n "$container"
       - name: Apply migrations
-        env:
-          PGPASSWORD: postgres
         run: |
-          psql --host=127.0.0.1 --port=5432 --username=postgres --dbname=capacitagov_test --set=ON_ERROR_STOP=1 <<'SQL'
+          container=$(docker ps --filter 'ancestor=quay.io/abn/pgtap:1.3.1-pg16' --format '{{.ID}}' | head -n 1)
+          test -n "$container"
+          docker cp "$GITHUB_WORKSPACE/supabase/migrations/." "$container:/tmp/capacitagov-migrations/"
+          docker exec -i "$container" psql --username=postgres --dbname=capacitagov_test --set=ON_ERROR_STOP=1 <<'SQL'
           create extension if not exists pgcrypto;
           create schema if not exists auth;
           create table if not exists auth.users (id uuid primary key, email text);
@@ -50,14 +51,11 @@ jobs:
           create table if not exists storage.objects (id uuid primary key default gen_random_uuid(), bucket_id text not null, name text not null);
           create or replace function storage.foldername(path text) returns text[] language sql immutable as $$ select string_to_array(path, '/') $$;
           SQL
-          for migration in $(find supabase/migrations -maxdepth 1 -type f -name '*.sql' | sort); do
-            echo "Applying $migration"
-            psql --host=127.0.0.1 --port=5432 --username=postgres --dbname=capacitagov_test --set=ON_ERROR_STOP=1 --file="$migration"
-          done
+          docker exec "$container" sh -lc 'for migration in $(find /tmp/capacitagov-migrations -maxdepth 1 -type f -name "*.sql" | sort); do echo "Applying $migration"; psql --username=postgres --dbname=capacitagov_test --set=ON_ERROR_STOP=1 --file="$migration"; done'
       - name: Run pgTAP regression
         run: |
           container=$(docker ps --filter 'ancestor=quay.io/abn/pgtap:1.3.1-pg16' --format '{{.ID}}' | head -n 1)
           test -n "$container"
           docker cp "$GITHUB_WORKSPACE/supabase/tests/." "$container:/tmp/capacitagov-tests/"
-          docker exec "$container" pg_prove --host=127.0.0.1 --port=5432 --username=postgres --dbname=capacitagov_test /tmp/capacitagov-tests/*.sql
+          docker exec "$container" pg_prove --username=postgres --dbname=capacitagov_test /tmp/capacitagov-tests/*.sql
 
