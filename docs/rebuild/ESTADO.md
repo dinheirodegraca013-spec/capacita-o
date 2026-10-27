@@ -172,3 +172,5 @@ CI remoto do head `dbce0b205a2c3fd218985b7afb99802563e0fbdd`: web run `404744512
 
 O cartão de oferta agora informa início, prazo e capacidade quando definidos, mantém a política de matrícula explícita e comunica falha de inscrição com alerta acessível. Foi criado `tests/e2e/student-catalog.spec.ts` para catálogo e biblioteca, condicionado a conta de aluno não produtiva. Typecheck, Vitest, build e execução E2E serão registrados após a validação deste ciclo; homologação autenticada continua pendente.
 
+CI remoto do head documental `c4b7bfdfd2c3aa4eebc82d3c6b3880915e2610d9`: web run `40474826961` e SQL/pgTAP run `40474826848`, ambos `success`.
+
