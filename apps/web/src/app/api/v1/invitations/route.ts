@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { buildInvitationRedirect, inviteMember } from '@/modules/invitations/service';
+import { buildInvitationEmail } from '@/modules/notifications/resend';
 import type { OrganizationRole } from '@/modules/identity/model';
 
 export async function POST(request: NextRequest) {
@@ -17,8 +18,19 @@ export async function POST(request: NextRequest) {
   try {
     const admin = createSupabaseAdminClient();
     const invitation = await inviteMember({ userId: user.id, organizationId: body.organizationId, membershipId: membership.id, roles }, { email: body.email, roles: body.roles }, admin as never);
-    const { error: inviteError } = await admin.auth.admin.inviteUserByEmail(invitation.email, { redirectTo: buildInvitationRedirect(request.nextUrl.origin, invitation.rawToken ?? '') });
-    if (inviteError) return NextResponse.json({ error: 'INVITE_DELIVERY_FAILED' }, { status: 503 });
+    const redirectTo = buildInvitationRedirect(request.nextUrl.origin, invitation.rawToken ?? '');
+    const { error: inviteError } = await admin.auth.admin.inviteUserByEmail(invitation.email, { redirectTo });
+    if (inviteError) {
+      if (!/already|registered|exists/i.test(inviteError.message)) return NextResponse.json({ error: 'INVITE_DELIVERY_FAILED' }, { status: 503 });
+      const providerUrl = process.env.EMAIL_PROVIDER_URL;
+      const providerKey = process.env.EMAIL_PROVIDER_KEY;
+      const from = process.env.EMAIL_FROM;
+      if (!providerUrl || !providerKey || !from) return NextResponse.json({ error: 'INVITE_DELIVERY_FAILED' }, { status: 503 });
+      const { data: generated, error: linkError } = await admin.auth.admin.generateLink({ type: 'magiclink', email: invitation.email, options: { redirectTo } });
+      if (linkError || !generated?.properties.action_link) return NextResponse.json({ error: 'INVITE_DELIVERY_FAILED' }, { status: 503 });
+      const response = await fetch(providerUrl, { method: 'POST', headers: { authorization: `Bearer ${providerKey}`, 'content-type': 'application/json' }, body: JSON.stringify(buildInvitationEmail({ from, to: invitation.email, actionLink: generated.properties.action_link })) });
+      if (!response.ok) return NextResponse.json({ error: 'INVITE_DELIVERY_FAILED' }, { status: 503 });
+    }
     const { error: statusError } = await admin.from('invitations').update({ status: 'sent', last_sent_at: new Date().toISOString() }).eq('id', invitation.id);
     if (statusError) return NextResponse.json({ error: 'INVITE_STATUS_FAILED' }, { status: 503 });
     return NextResponse.json({ invitation: { id: invitation.id, email: invitation.email, roles: invitation.roles, status: invitation.status, expiresAt: invitation.expiresAt } }, { status: 201 });
