@@ -434,4 +434,7 @@ A documentação oficial confirma que a proteção contra senhas vazadas é uma 
 ### Variáveis Vercel — 27/10/2026 13:30 BRT
 
 Leitura sem descriptografia confirmou `NEXT_PUBLIC_APP_URL` correto em produção/preview/desenvolvimento, `NEXT_PUBLIC_SUPABASE_URL`, `EMAIL_PROVIDER_URL`, `EMAIL_FROM` e as chaves server-only (`SUPABASE_SERVICE_ROLE_KEY`, `EMAIL_PROVIDER_KEY`, `NOTIFICATION_JOB_SECRET`) presentes como variáveis sensíveis. Nenhum valor secreto foi lido ou registrado.
+### Sincronização documental remota — 27/10/2026 13:28 BRT
+
+O Git CLI local não possui credencial autorizada para push (`403`); a integração GitHub sincronizou os documentos de estado, testes, auditoria, operações e plano diretamente no `main`. Nenhum segredo foi incluído.
 
