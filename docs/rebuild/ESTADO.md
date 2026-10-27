@@ -148,3 +148,7 @@ Adicionado `tests/e2e/navigation.spec.ts` cobrindo login em viewport de 360px, f
 
 Corrigida a tela de catálogo institucional: o gestor agora recebe uma forma de criar oferta para cada versão publicada disponível (catálogo central concedido e cursos próprios), com rótulos/IDs acessíveis únicos. Antes, somente a primeira versão podia ser ofertada. Typecheck, Vitest (**26 arquivos/53 testes**) e build passaram localmente; CI remoto no head `48e3c69b3ae44c4c3964a66f12caf8e818d49692` (web `40472604392`, SQL/pgTAP `40472604390`) concluiu `success`. A homologação autenticada de concessão/oferta ainda está pendente.
 
+## Auditoria intermediária — 27/10/2026
+
+Parecer **BLOCKED para liberação integral**, sem marcar a meta como concluída. O código e o CI permanecem verdes, mas continuam pendentes E2E autenticado de dois tenants, SMTP/worker real, backup/restauração/rollback e preview Vercel do HEAD. A cota `api-deployments-free-per-day` segue retornando HTTP 402; produção não foi alterada.
+
