@@ -439,7 +439,7 @@ Status único: PENDING → RUNNING → REVIEW → DONE; BLOCKED somente para dep
 
 ### T26 — Relatórios e exportação
 
-**Meta/prioridade:** M8/P1. **Status:** PENDING. **Depende:** T07,T13,T15,T22,T25. **Requisitos:** R08.
+**Meta/prioridade:** M8/P1. **Status:** RUNNING. **Depende:** T07,T13,T15,T22,T25. **Requisitos:** R08.
 
 **Criar/alterar:** `src/modules/reporting/service.ts`, `src/app/(portal)/o/[orgId]/gestao/relatorios/page.tsx`, `src/app/api/v1/reports/route.ts`.
 
@@ -449,7 +449,8 @@ Status único: PENDING → RUNNING → REVIEW → DONE; BLOCKED somente para dep
 
 **Aceite verificável:** Dataset conhecido de dois tenants produz totais exatos; cancelado não infla conclusão; dados vazios mostram zero; filtro não altera tenant; células iniciadas com fórmula são neutralizadas.
 
-- [ ] Executar ciclo da task e anexar evidência; revisar antes de marcar DONE.
+- [x] Relatório agora retorna totais, breakdown por status/curso e CSV com neutralização de fórmulas; migration aplicada e privilégio autenticado verificado.
+- [ ] Executar dataset autenticado de dois tenants e anexar evidência; revisar antes de marcar DONE.
 
 ### T27 — Notificações com outbox e recuperação
 
