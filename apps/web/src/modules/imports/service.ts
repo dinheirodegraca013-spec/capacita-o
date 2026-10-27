@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto';
 import type { Actor } from '@/modules/identity/model';
 
 export type ImportRow = { name: string; email: string; cpf?: string };
@@ -23,8 +24,13 @@ export function assertImportManager(actor: Actor) {
   if (!actor.roles.includes('manager')) throw new Error('Only managers can import people');
 }
 
+export function buildImportIdempotencyKey(rows: ImportRow[], sizeBytes = 0) {
+  return createHash('sha256').update(`${JSON.stringify(rows)}:${sizeBytes}`).digest('hex');
+}
+
 export function previewImport(actor: Actor, rows: ImportRow[], sizeBytes = 0) {
   assertImportManager(actor);
   const validation = validateImportRows(rows, sizeBytes);
   return { ...validation, organizationId: actor.organizationId };
 }
+
