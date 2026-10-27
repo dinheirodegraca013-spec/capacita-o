@@ -499,7 +499,7 @@ Status único: PENDING → RUNNING → REVIEW → DONE; BLOCKED somente para dep
 
 ### T30 — Liberação e operação verificadas
 
-**Meta/prioridade:** M9/P0. **Status:** PENDING. **Depende:** T29. **Requisitos:** R08,R10.
+**Meta/prioridade:** M9/P0. **Status:** RUNNING. **Depende:** T29. **Requisitos:** R08,R10.
 
 **Criar/alterar:** `docs/rebuild/operations/recovery.md`, `docs/rebuild/operations/content.md`, `docs/rebuild/ESTADO.md`, `docs/rebuild/AUDITORIA.md`.
 
@@ -509,7 +509,8 @@ Status único: PENDING → RUNNING → REVIEW → DONE; BLOCKED somente para dep
 
 **Aceite verificável:** Nenhuma pendência P0; responsáveis e suporte definidos; recuperação comprovada; publicar somente após revisão final concreta e autorização aplicável; status não muda para DONE com testes pendentes.
 
-- [ ] Executar ciclo da task e anexar evidência; revisar antes de marcar DONE.
+- [x] Runbooks de conteúdo, recuperação e release mantêm rollback, outbox, certificados, auditoria e critérios de aprovação explícitos.
+- [ ] Confirmar backup/restauração, SMTP/worker, contas E2E, preview do SHA atual e revisão independente; só então avaliar DONE.
 
 ## Transferência e limites
 
