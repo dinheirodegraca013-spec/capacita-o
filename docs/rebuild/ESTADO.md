@@ -178,6 +178,8 @@ Homologação real de recuperação — 27/10/2026 07:17: o endpoint Auth `/reco
 
 Storage privado — verificação direta em 27/10/2026: requisição anônima ao objeto inexistente em `course-assets` retornou HTTP **400**, sem entrega de conteúdo. O bucket permanece `public=false`; autorização de arquivo real para matrícula ainda requer fixture autenticada.
 
+Rechecagem de ambiente Vercel — `filter_project_envs` confirmou `SUPABASE_SERVICE_ROLE_KEY` como variável sensível nos três ambientes, além de `NEXT_PUBLIC_SUPABASE_URL`, chave publicável e variáveis Resend (`EMAIL_PROVIDER_URL`, `EMAIL_PROVIDER_KEY`, `EMAIL_FROM`). O conector não revela valores secretos; não há base para declarar a chave ausente. O deployment público continua defasado do HEAD.
+
 Correção do reset de senha — 27/10/2026: `recuperar-senha` agora aponta diretamente para `/redefinir-senha`; a página consome `code`, `token_hash` ou a sessão entregue no fragmento antes de habilitar a nova senha. Typecheck, lint, build e suíte Vitest **28 arquivos/67 testes PASS**. A confirmação pública e o recebimento real do e-mail continuam dependentes do novo deployment/SMTP.
 
 T09/T11 complemento — o formulário de criação de curso próprio agora permite escolher `self_paced` (autoinstrucional, sem professor) ou `instructor_led` (jornada híbrida). O backend já persistia o modo; a UI deixou de forçar somente autoinstrucional. Typecheck, Vitest (**26 arquivos/53 testes**) e build passaram localmente.
