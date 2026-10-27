@@ -159,6 +159,8 @@ O onboarding TOTP foi implementado em `/mfa` (enrollment, QR/segredo e verifica�
 
 Suíte Vitest completa: **27 arquivos/64 testes PASS**.
 
+T05: endpoints de listagem/reenvio e componente de gestão adicionados; typecheck, lint e build PASS. A restrição de 15 minutos é aplicada antes da rotação do token; não houve teste autenticado real por falta de conta de homologação.
+
 `tests/e2e/invitation.spec.ts` foi adicionado para ativação/callback seguro; execução local registrou **2 skipped** por ausência de `NEXT_PUBLIC_SUPABASE_URL` e chave pública. Não foi contado como aprovação E2E.
 
 ### T30 — liberação — 27/10/2026
