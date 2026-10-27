@@ -22,6 +22,15 @@ export function buildInvitationRedirect(origin: string, rawToken: string) {
   return `${origin}/auth/callback?next=${encodeURIComponent(activationPath)}`;
 }
 
+export function resolveInvitationOrigin(configuredOrigin: string | undefined, requestOrigin: string, environment = process.env.NODE_ENV) {
+  const configured = configuredOrigin?.trim().replace(/\/$/, '');
+  // A localhost value left in a production Vercel environment makes the
+  // e-mail button appear dead. In production, trust the actual request host
+  // when the configured value is a local development origin.
+  if (configured && !(environment === 'production' && /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/i.test(configured))) return configured;
+  return requestOrigin.replace(/\/$/, '');
+}
+
 export async function inviteMember(actor: Actor, input: { email: string; roles: OrganizationRole[] }, client: InvitationClient): Promise<Invitation> {
   if (!actor.roles.includes('manager')) throw new Error('Only managers can invite members');
   const email = normalizeInvitationEmail(input.email);
