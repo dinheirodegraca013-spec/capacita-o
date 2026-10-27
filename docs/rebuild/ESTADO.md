@@ -272,3 +272,5 @@ Hardening adicional: a migration incremental `20261027082000_reclaim_legacy_noti
 
 Rechecagem operacional somente leitura: `notification_outbox` está sem registros e a listagem recente do Resend não apresenta mensagem de convite CapacitaGov enviada pelo worker. O envio real continua sem evidência, sem gerar dados sintéticos no banco de produção.
 
+Resend rechecado: o domínio remetente `gestio.dev.br` está `verified` e com `Sending: enabled`; a pendência é exercitar o worker/aplicação com uma caixa de homologação, não DNS do provedor.
+
