@@ -124,3 +124,5 @@ Revalidação CI 27/10: o head `b871f7c98b3e7a2d8dec8558f4823b48390a71b4` també
 
 T06 complemento 27/10: gestão institucional ganhou formulário de edição de nome/fuso e cadastro de unidades; `PATCH`/`POST /api/v1/organizations/[orgId]` agora exigem membership ativo com papel `manager` antes da operação, além do RLS. Suíte web `26/53` testes PASS, typecheck, lint e build PASS. E2E cross-tenant continua pendente.
 
+T07 complemento 27/10: o importador passou a ter duas etapas reais na UI: validação/preview via `/api/v1/imports`, exibição de erros por linha e confirmação explícita via `/api/v1/imports/commit`; o servidor revalida o lote antes da transação. Testes de importação `3/3`, suíte web `26/53`, typecheck, lint e build PASS. Convites pós-importação e E2E autenticado permanecem pendentes.
+
