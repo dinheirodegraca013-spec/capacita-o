@@ -192,3 +192,9 @@ O editor de avaliações passou a aceitar múltiplas questões, opções com alt
 
 CI remoto do head documental `027822949a56e0605f24bb1935cb2fd2d60e8ed2`: web run `40476060359` e SQL/pgTAP run `40476060282`, ambos `success`.
 
+## T18 — tentativas, relógio e correção atômica — 27/10/2026
+
+As RPCs server-side existentes mantêm o relógio fora do cliente, serializam a criação de tentativas por assessment, validam questão/opção no mesmo assessment e retornam o mesmo resultado em finalizações repetidas. A sala agora finaliza automaticamente quando o relógio chega a zero, bloqueia duplicidade de finalização e restaura a alternativa anterior quando o autosave falha. Adicionado `tests/e2e/exam.spec.ts` condicionado a conta/attempt de homologação e cobertura de `saveAnswer` em `tests/integration/attempts.test.ts`.
+
+Verificação local: `npm run typecheck` PASS; `npm test -- --run tests/integration/attempts.test.ts` **3/3 PASS**; `npm run test:e2e -- tests/e2e/exam.spec.ts` **1 skipped** sem credenciais de tentativa autenticada. A jornada concorrente de duas abas e expiração real continuam pendentes para marcar T18 DONE.
+
