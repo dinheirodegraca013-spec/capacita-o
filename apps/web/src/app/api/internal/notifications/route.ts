@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 import { deliverPendingNotifications } from '@/modules/notifications/service';
-import { buildResendNotification } from '@/modules/notifications/resend';
+import { buildProviderHeaders, buildResendNotification } from '@/modules/notifications/resend';
 
 export async function POST(request: NextRequest) {
   const secret = process.env.NOTIFICATION_JOB_SECRET;
@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
       if (recipient.error || !email) throw new Error('recipient_email_unavailable');
       const response = await fetch(providerUrl, {
         method: 'POST',
-        headers: { authorization: `Bearer ${providerKey}`, 'content-type': 'application/json' },
+        headers: buildProviderHeaders(providerKey, item.idempotency_key ?? item.id),
         body: JSON.stringify(buildResendNotification({ from, to: email, template: item.template_key, payload: item.payload })),
       });
       if (!response.ok) throw new Error(`provider_${response.status}`);
