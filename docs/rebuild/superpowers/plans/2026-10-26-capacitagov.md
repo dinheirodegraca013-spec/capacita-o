@@ -348,7 +348,7 @@ Status único: PENDING → RUNNING → REVIEW → DONE; BLOCKED somente para dep
 
 ### T20 — Turmas, professores e encontros
 
-**Meta/prioridade:** M6/P1. **Status:** PENDING. **Depende:** T06,T09,T13. **Requisitos:** R03,R06.
+**Meta/prioridade:** M6/P1. **Status:** RUNNING. **Depende:** T06,T09,T13. **Requisitos:** R03,R06.
 
 **Criar/alterar:** `src/modules/classes/service.ts`, `src/app/(portal)/o/[orgId]/gestao/turmas/page.tsx`, `src/app/(portal)/o/[orgId]/professor/page.tsx`, `supabase/migrations/<gerado>_classes.sql`.
 
@@ -358,7 +358,8 @@ Status único: PENDING → RUNNING → REVIEW → DONE; BLOCKED somente para dep
 
 **Aceite verificável:** Curso acompanhado exige atribuição ativa; autoinstrucional não exige professor; híbrido/presencial exige encontros e responsável pela chamada; aluno/professor alheio não vê dados; fim anterior ao início recusado.
 
-- [ ] Executar ciclo da task e anexar evidência; revisar antes de marcar DONE.
+- [x] Turmas, atribuição de instrutor e agendamento de encontros já usam serviços/API tenant-scoped; validação exige janela e fuso explícitos; criado E2E condicionado a gestor.
+- [ ] Executar jornada autenticada de curso híbrido e anexar evidência; revisar antes de marcar DONE.
 
 ### T21 — Chamada e QR com prazo
 
