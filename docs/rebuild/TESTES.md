@@ -151,5 +151,7 @@ Consulta remota somente leitura: `auth.users=1`, `organizations=0`, `active_memb
 
 Regressão adicional de origem canônica de recuperação: `tests/integration/auth-redirect.test.ts` e convites **7/7 PASS**; typecheck/lint PASS. Validação por e-mail real continua pendente.
 
+Suíte web completa pós-correção: **27 arquivos/63 testes PASS**.
+
 - Runbooks revisados; checklist final não pode ser aprovado enquanto backup/restauração, SMTP/worker, E2E autenticado e preview atual estiverem ausentes.
 
