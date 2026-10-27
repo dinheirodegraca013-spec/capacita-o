@@ -30,6 +30,8 @@ Atualização: o deployment `dpl_54N1x6Pydz8YTPd3BMMYrhwFkq38` foi criado explic
 
 ## Auditoria intermediária — 27/10/2026
 
+Rechecagem de publicação: o domínio de produção está em `dpl_AFpdc7tcRRiqv99Hk4Cd7Q7EMyRH` (commit `92caa2f`), enquanto o checkout e os registros avançaram além desse SHA. A liberação integral segue não aprovada até existir preview/deployment do HEAD e homologação autenticada.
+
 **Parecer: BLOCKED para liberação integral; implementação continua em andamento.**
 
 Evidências novas: callback de convite com `code`/`token_hash`, navegação responsiva em 360px, ofertas para todas as versões publicadas, typecheck/testes/build locais e CI remoto web + pgTAP verdes. O branch `feat/capacitagov-rebuild` permanece limpo e o PR continua draft.
