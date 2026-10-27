@@ -78,3 +78,7 @@ O serviço passou a impor `organizationId` e estado de publicação no caminho d
 
 O servidor mantém a matrícula em RPC com lock, unicidade e snapshots; a interface de erro não trata oferta retirada como sucesso. A prova restante é executar duas contas reais contra uma última vaga e confirmar tenant divergente no Supabase/CI.
 
+### T24 — feedback — 27/10/2026
+
+A avaliação está vinculada à matrícula concluída e protegida por unicidade/RPC; a tela só a expõe junto a certificados válidos. Falta comprovar a média agregada e a tentativa cross-tenant em execução autenticada.
+
