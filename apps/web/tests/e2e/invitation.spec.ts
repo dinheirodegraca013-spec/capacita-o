@@ -7,7 +7,7 @@ test.describe('convite institucional', () => {
     await page.goto('/ativar-conta?token=test-token');
     await expect(page.getByRole('heading', { name: /ativar conta/i })).toBeVisible();
     await expect(page.getByLabel(/nova senha/i)).toBeVisible();
-    await expect(page).toHaveURL(/\/ativar-conta\?token=test-token$/);
+    await expect(page).toHaveURL(/\/ativar-conta$/);
   });
 
   test('callback de convite não aceita destino externo', async ({ page }) => {
