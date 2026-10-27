@@ -35,3 +35,19 @@ export function buildInvitationEmail(input: { from: string; to: string; actionLi
   };
 }
 
+export function buildRecoveryLink(origin: string, email: string, otp: string) {
+  const params = new URLSearchParams({ email: email.trim().toLowerCase(), otp });
+  return `${origin.replace(/\/$/, '')}/redefinir-senha?${params.toString()}`;
+}
+
+export function buildRecoveryEmail(input: { from: string; to: string; actionLink: string }): ResendNotification {
+  const link = escapeHtml(input.actionLink);
+  return {
+    from: input.from,
+    to: input.to,
+    subject: 'CapacitaGov — redefinição de senha',
+    text: `Recebemos um pedido para redefinir sua senha. Acesse: ${input.actionLink}`,
+    html: `<p>Recebemos um pedido para redefinir sua senha no CapacitaGov.</p><p><a href="${link}" target="_blank" rel="noopener noreferrer" style="display:inline-block;padding:12px 18px;border-radius:8px;background:#0f766e;color:#fff;text-decoration:none;font-weight:600">Redefinir minha senha</a></p><p>Se o botão não abrir, copie este endereço:</p><p><a href="${link}" target="_blank" rel="noopener noreferrer">${link}</a></p>`,
+  };
+}
+
