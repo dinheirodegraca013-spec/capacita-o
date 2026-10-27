@@ -180,3 +180,7 @@ O player passou a carregar e exibir o conteúdo textual da aula, permitir salvar
 
 CI remoto do head documental `83ae989c390ff7568b3507a6ca041850ab68dc27`: web run `40475154744` e SQL/pgTAP run `40475154694`, ambos `success`.
 
+## T16 — trilhas e obrigatoriedades — 27/10/2026
+
+Adicionada atribuição de trilha pelo gestor (`POST /api/v1/paths/[id]/assign`) com múltiplas matrículas e prazo; o aluno agora possui `/aluno/trilhas`, com estado vazio, descrição, status e prazo. Foi criado `tests/e2e/paths.spec.ts`; homologação autenticada continua pendente.
+
