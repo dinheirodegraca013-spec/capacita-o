@@ -50,3 +50,5 @@ CI remoto confirmou web e SQL/pgTAP verdes no head `dbce0b205a2c3fd218985b7afb99
 
 Implementação parcial verificada: o cartão de oferta exibe janela/capacidade e falha de matrícula com alerta; o E2E de catálogo/biblioteca foi criado. Sem conta não produtiva, a jornada autenticada ainda não pode ser considerada evidência de aceite.
 
+CI remoto confirmou web e SQL/pgTAP verdes no head documental `c4b7bfdfd2c3aa4eebc82d3c6b3880915e2610d9` (runs `40474826961` e `40474826848`).
+
