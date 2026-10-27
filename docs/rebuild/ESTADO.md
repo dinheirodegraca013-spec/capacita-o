@@ -230,3 +230,7 @@ O GET de ofertas foi centralizado em `listCatalog`, com organização e estado d
 
 O fluxo mantém a transação `enroll_member`, unicidade por oferta/aluno, limite de capacidade, rejeição de oferta retirada e snapshots de regra; a API agora responde conflito para oferta indisponível, futura, expirada ou cheia. Typecheck e lint PASS; integrações de matrícula/catalogo **4/4 PASS**; E2E criado e **1 skipped** sem conta não produtiva.
 
+## T24 — satisfação após conclusão — 27/10/2026
+
+O formulário de avaliação foi integrado à área de certificados válidos; a RPC já exige matrícula concluída, tenant correto e unicidade por matrícula. `tests/integration/feedback.test.ts`: **2/2 PASS**; E2E condicionado criado, pendente de conta não produtiva.
+
