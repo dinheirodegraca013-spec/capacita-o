@@ -112,3 +112,7 @@ Corrigida a recuperação: `/redefinir-senha` agora existe, valida confirmação
 
 Logs Auth consultados: recuperação e convite chegaram ao Supabase, mas ocorreram `over_email_send_rate_limit` (429) e links antigos com referer `localhost:3000`. Foi adicionada `NEXT_PUBLIC_APP_URL=https://capacita-o-x5hg.vercel.app` ao Vercel e o fluxo de recuperação passou a usar a URL canônica; o novo código ainda aguarda deployment por cota da Vercel.
 
+## Fechamento T03 — 27/10/2026
+
+T03 foi revisada e marcada DONE no plano. Evidências: `tests/integration/session.test.ts` 3/3; `/api/v1/context` sem sessão no deployment público retorna 401 com `Cache-Control: private, no-store`; `SUPABASE_SERVICE_ROLE_KEY` aparece apenas no cliente administrativo server-only. T04/T05 continuam abertas por E2E autenticado, SMTP/Auth e novo deployment.
+
