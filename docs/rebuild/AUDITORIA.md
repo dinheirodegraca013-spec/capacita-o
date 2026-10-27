@@ -64,3 +64,7 @@ Implementação parcial: atribuição com prazo e tela do aluno foram adicionada
 
 CI remoto confirmou web e SQL/pgTAP verdes no head documental `3eb1d0f4aa30852c794130001c531f66eaabbf4f` (runs `40475613669` e `40475613670`).
 
+### T17 — avaliações — 27/10/2026
+
+Implementação parcial verificada: autoria de múltiplas questões e publicação de rascunho foram adicionadas sobre RPCs transacionais existentes. O E2E autenticado ainda depende de conta não produtiva; T17 permanece RUNNING.
+
