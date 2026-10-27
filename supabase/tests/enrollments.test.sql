@@ -1,5 +1,5 @@
 begin;
-select plan(9);
+select plan(11);
 select has_table('public', 'enrollments', 'enrollments table should exist');
 select has_function('public', 'enroll_member', array['uuid','uuid'], 'enroll_member should be transactional');
 select ok(exists (select 1 from pg_policies where schemaname = 'public' and tablename = 'enrollments' and policyname = 'enrollments_select_member'), 'member can see own enrollment');
@@ -33,5 +33,10 @@ select lives_ok($$select public.enroll_member('00000000-0000-0000-0000-000000000
 select set_config('request.jwt.claim.sub', '00000000-0000-0000-0000-000000000052', true);
 select throws_ok($$select public.enroll_member('00000000-0000-0000-0000-000000000051', '00000000-0000-0000-0000-000000000052')$$, 'OFFERING_FULL', 'capacity blocks second student');
 select is((select count(*)::int from public.enrollments), 1, 'capacity was not exceeded');
+update public.offerings set mandatory = true where id = '00000000-0000-0000-0000-000000000051';
+select is((select mandatory_snapshot from public.enrollments limit 1), false, 'enrollment keeps the original rule snapshot');
+update public.offerings set status = 'retired' where id = '00000000-0000-0000-0000-000000000051';
+select throws_ok($$select public.enroll_member('00000000-0000-0000-0000-000000000051', '00000000-0000-0000-0000-000000000051')$$, 'OFFERING_UNAVAILABLE', 'retired offering blocks new enrollment');
 select * from finish();
 rollback;
+
