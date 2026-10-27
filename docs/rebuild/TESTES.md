@@ -143,3 +143,7 @@ Não marcar a meta final como PASS enquanto SMTP, recuperação/rollback, previe
 - `tests/e2e/preview.spec.ts` foi ajustado para exigir ambiente público Supabase antes de validar rotas profundas.
 - Vercel confirmou o projeto e recusou novo deployment por `api-deployments-free-per-day`; não há evidência de preview do SHA atual.
 
+### T30 — liberação — 27/10/2026
+
+- Runbooks revisados; checklist final não pode ser aprovado enquanto backup/restauração, SMTP/worker, E2E autenticado e preview atual estiverem ausentes.
+
