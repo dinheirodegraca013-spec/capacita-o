@@ -63,4 +63,5 @@ Não marcar a meta final como PASS enquanto SMTP, recuperação/rollback, previe
 - Não contar como PASS final: preview Vercel do HEAD, E2E autenticado de dois tenants, SMTP/worker real e backup/rollback continuam pendentes.
 - Importação: após confirmação, a UI envia convites de aluno em lotes de cinco e reporta sucessos/falhas sem reverter o lote persistido; typecheck, Vitest e build passaram. Não foi executado envio SMTP real.
 - Cursos próprios: a UI agora permite selecionar modo autoinstrucional ou híbrido (`instructor_led`); typecheck, Vitest e build passaram. Homologação autenticada de autoria/publicação continua pendente.
+- Storage: `POST /api/v1/assets/[id]/complete` confirma a existência do objeto no bucket privado antes de promover `pending` para `ready`; typecheck, Vitest e build passaram. Não foi executado upload real com conta de homologação.
 
