@@ -198,3 +198,7 @@ As RPCs server-side existentes mantêm o relógio fora do cliente, serializam a 
 
 Verificação local: `npm run typecheck` PASS; `npm test -- --run tests/integration/attempts.test.ts` **3/3 PASS**; `npm run test:e2e -- tests/e2e/exam.spec.ts` **1 skipped** sem credenciais de tentativa autenticada. A jornada concorrente de duas abas e expiração real continuam pendentes para marcar T18 DONE.
 
+## T19 — sala de avaliação retomável — 27/10/2026
+
+`ExamRoom` passou a usar a entrega server-side para retomar respostas, reverter seleção quando o autosave falha, impedir dupla finalização e solicitar a finalização no servidor ao zerar o relógio. O teste `tests/e2e/exam.spec.ts` cobre relógio e botão de finalização quando executado com attempt autenticada; execução local ficou **1 skipped** sem credenciais de homologação. Perda de rede, expiração real e duas abas ainda exigem homologação autenticada.
+
