@@ -518,3 +518,15 @@ Runbooks de release e deploy foram sincronizados com o estado real: branch de re
 ## Auditoria final preparatória — 02/11/2026
 
 A branch `feat/capacitagov-rebuild` está em PR draft #3 contra `main` (`https://github.com/dinheirodegraca013-spec/capacita-o/pull/3`), com head `2bff7e08374bf5265e0aa2af37afa0238738b07a`. O PR anterior foi mesclado antes dos últimos hardenings; por isso a promoção automática não é segura. CI web/pgTAP da branch está verde. O parecer permanece **não liberado** até revisão independente do PR, backup/PITR ensaiado, worker Resend institucional observado e decisão formal sobre proteção de senhas comprometidas.
+
+
+## Correções críticas pós-auditoria independente — 02/11/2026
+
+A revisão independente encontrou quatro P1 no HEAD anterior: adapter ausente no worker de notificações, MFA não exigido nas mutações administrativas de ofertas, e mutabilidade indevida de assessments/cursos publicados. Foram corrigidos na branch:
+
+- `f0261ff`: adapter explícito para `notification_outbox` no worker Resend;
+- `c354c36` e `2209f26`: exigência de AAL2/MFA nas rotas de criação e publicação de ofertas;
+- `fdf3fed`: correção do trigger de imutabilidade de questions/options;
+- `d792d7e` e commits de testes seguintes: congelamento de cursos, versões e conteúdo publicados e preparação dos fixtures antes da publicação.
+
+O HEAD remoto atual é `0d22339174203195c0c24fb77210e8a4bfc82699`; os runs web `41523139146` e pgTAP `41523139101` concluíram `success`. O gate continua aberto até o novo parecer independente e as evidências operacionais de backup/PITR, worker Resend institucional, proteção contra senhas comprometidas e E2E autenticado de duas organizações.
