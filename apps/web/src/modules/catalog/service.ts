@@ -19,7 +19,23 @@ export function validateOfferingInput(input: OfferingInput) {
   return { ok: true as const };
 }
 
-export type CatalogClient = { from(table: 'course_grants' | 'offerings'): { insert(values: Record<string, unknown>): { select(): { single(): Promise<{ data: Record<string, unknown> | null; error: { message: string } | null }> } }; select(columns: string): { eq(column: string, value: string): { eq(column: string, value: string): { order(column: string, options: { ascending: boolean }): Promise<{ data: Record<string, unknown>[] | null; error: { message: string } | null }> } } } };
+export type CatalogClient = {
+  from(table: 'course_grants' | 'offerings'): {
+    insert(values: Record<string, unknown>): {
+      select(): {
+        single(): Promise<{ data: Record<string, unknown> | null; error: { message: string } | null }>;
+      };
+    };
+    select(columns: string): {
+      eq(column: string, value: string): {
+        eq(column: string, value: string): {
+          order(column: string, options: { ascending: boolean }): Promise<{ data: Record<string, unknown>[] | null; error: { message: string } | null }>;
+        };
+      };
+    };
+  };
+};
+
 export async function grantCourse(actor: PlatformActor, input: { organizationId: string; courseVersionId: string }, client: CatalogClient) {
   if (!actor.platformAdmin) throw new Error('Platform admin required');
   const { data, error } = await client.from('course_grants').insert({ organization_id: input.organizationId, course_version_id: input.courseVersionId, granted_by: actor.userId, status: 'active' }).select().single();
