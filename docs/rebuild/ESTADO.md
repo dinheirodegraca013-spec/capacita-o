@@ -545,3 +545,12 @@ A camada de publicação passou a ler `auth.jwt()->>'aal'` (com fallback apenas 
 ## Auditoria independente — parecer favorável de código — 02/11/2026
 
 No HEAD `49cb304ffa1ab3aa6977131e67e63d0ea8534e04`, a revisão independente confirmou que os bypasses MFA de publicação foram fechados para ofertas, cursos e versões (INSERT/UPDATE), com claim canônica do Supabase; a publicação de v2 permanece corrigida. Não foram identificados P0/P1 nos caminhos de código reauditados. A liberação geral continua condicionada aos gates operacionais T28–T30.
+
+
+## Homologação remota — Supabase/Vercel/Resend — 02/11/2026
+
+O projeto Supabase `zykfvzvydvifuzepujvv` está `ACTIVE_HEALTHY` (Postgres 17.11). As 11 migrations de hardening (assessments, cursos publicados, AAL2 canônico e bloqueios de publicação direta) foram aplicadas remotamente com sucesso e os triggers/RPCs foram conferidos por SQL. Advisors: performance apenas informa 7 índices sem uso; segurança mantém avisos sobre funções `SECURITY DEFINER` deliberadamente expostas a RPC autenticado e `verify_certificate` público, pendência de revisão de desenho/escopo, sem falha de RLS reportada.
+
+O preview Vercel mais recente verificado (`dpl_E8Qy248cAzsHJxDbq2Rrq7oxe2ig`) está READY, com landing `/` e login `/login` retornando HTTP 200 e origem canônica `https://capacita-o-x5hg.vercel.app`. A API protegida `/api/v1/context` retorna 401 sem sessão, conforme esperado. O projeto Vercel está com SSO habilitado e `live=false`; não houve promoção para produção. A integração Vercel registrou limitação de mais de 100 deployments/dia, então o HEAD posterior ainda aguarda novo preview quando a cota liberar.
+
+Resend registrou POST `/emails` com status 200 em 02/11/2026, comprovando envio transacional real; ainda falta observar o worker institucional consumindo `notification_outbox` em execução agendada.
