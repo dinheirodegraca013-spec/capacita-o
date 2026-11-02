@@ -258,3 +258,8 @@ Supabase permanece sem alerta de RLS ausente; advisors continuam exibindo apenas
 ### Teste autorizado do worker — estado pendente — 02/11/2026
 
 Foi criada uma única notificação de homologação autorizada e idempotente para a caixa do proprietário. A fila confirmou o item pendente. Como a Vercel voltou a bloquear novos deployments por cota diária e não há ferramenta disponível para disparar o Cron manualmente com o segredo sem expô-lo, a entrega permanece aguardando a próxima execução agendada; não marcar como sucesso antecipadamente.
+
+
+### Correção UX/Auth: cadastro direto — 03/11/2026
+
+A experiência de primeiro acesso foi corrigida para não depender exclusivamente de recuperação de senha: cadastro público, confirmação de e-mail e login estão conectados. O desenho mantém o isolamento: cadastro não cria organização, membership ou superadmin. O estado vazio do seletor explica o próximo passo ao cliente. Requer validação E2E após deployment; não aprovar como concluído antes disso.
