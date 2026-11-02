@@ -263,3 +263,8 @@ Com fixtures sintéticas temporárias no Supabase autorizado e configuração Pl
 - Playwright remoto isolado: login real do tenant B → `/aluno/turmas` → encontro `Encontro presencial` e turma `Turma Híbrida 2026`: **1/1 PASS**.
 - Regressão local: `npm run typecheck` PASS, `npm run lint` PASS, `npm test` **30 arquivos/77 testes PASS**, `npm run build` PASS.
 - Limpeza pós-teste confirmada no Supabase: `orgs=0`, `users=0`, `enrollments=0` para as fixtures sintéticas.
+
+### Entrega Resend — 02/11/2026
+
+- Lista de e-mails: redefinição de senha recente do CapacitaGov com status **delivered**.
+- Corpo HTML/texto inspecionado: link canônico `https://capacita-o-x5hg.vercel.app/redefinir-senha?...`; nenhuma ocorrência de `localhost`.
