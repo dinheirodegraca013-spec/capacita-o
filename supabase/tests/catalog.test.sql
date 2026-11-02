@@ -13,6 +13,7 @@ insert into public.membership_roles(membership_id, role) values ('20000000-0000-
 insert into public.courses(id, owner_type, title, slug, status, license_confirmed) values ('40000000-0000-0000-0000-000000000033', 'central', 'Central Course', 'central-course', 'published', true);
 insert into public.course_versions(id, course_id, version_no, title, license_confirmed, status, learning_mode, published_at) values ('50000000-0000-0000-0000-000000000033', '40000000-0000-0000-0000-000000000033', 1, 'Central Course', true, 'published', 'self_paced', now());
 set local role authenticated;
+set local request.jwt.claim.aal = 'aal2';
 set local request.jwt.claim.sub = '00000000-0000-0000-0000-000000000033';
 insert into public.course_grants(organization_id, course_version_id, granted_by) values ('10000000-0000-0000-0000-000000000033', '50000000-0000-0000-0000-000000000033', '00000000-0000-0000-0000-000000000033');
 select is((select count(*)::integer from public.course_grants), 1, 'platform grant created');
