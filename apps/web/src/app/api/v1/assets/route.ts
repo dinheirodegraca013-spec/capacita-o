@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
     !body.mimeType.trim() ||
     !Number.isInteger(body.sizeBytes)
   ) return NextResponse.json({ error: 'VALIDATION' }, { status: 422 });
-  const sizeBytes = body.sizeBytes;
+  const sizeBytes = body.sizeBytes as number;
   const { data: membership } = await supabase.from('memberships').select('id, organization_id, membership_roles(role)').eq('user_id', user.id).eq('organization_id', body.organizationId).eq('status', 'active').maybeSingle();
   const roles = ((membership?.membership_roles ?? []) as Array<{ role: OrganizationRole }>).map((item) => item.role);
   if (!membership || !roles.includes('manager')) return NextResponse.json({ error: 'FORBIDDEN' }, { status: 403 });
