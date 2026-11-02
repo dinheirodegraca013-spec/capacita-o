@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
-import { validateAssessment } from '@/modules/assessments/authoring';
+import { validateAssessment, type AssessmentInput } from '@/modules/assessments/authoring';
 import type { OrganizationRole } from '@/modules/identity/model';
 
 export async function POST(request: NextRequest) {
@@ -47,7 +47,7 @@ export async function POST(request: NextRequest) {
       timeLimitSeconds: body.timeLimitSeconds === undefined ? null : body.timeLimitSeconds,
       maxAttempts: body.maxAttempts ?? 1,
       questions: body.questions,
-    };
+    } as AssessmentInput;
     const validation = validateAssessment(input);
     if (!validation.ok) return NextResponse.json({ error: validation.code }, { status: 422 });
     const { data, error } = await supabase.rpc('create_assessment_with_questions', {
