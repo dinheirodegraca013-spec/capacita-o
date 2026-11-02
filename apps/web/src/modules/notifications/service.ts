@@ -1,6 +1,36 @@
 export type NotificationClient = { rpc(name: 'enqueue_notification', args: { p_idempotency_key: string; p_recipient_user_id: string; p_template_key: string; p_payload: Record<string, unknown> }): Promise<{ data: string | null; error: { message: string } | null }> };
-export async function enqueueNotification(input: { idempotencyKey: string; recipientUserId: string; templateKey: string; payload: Record<string, unknown> }, client: NotificationClient) { if (!input.idempotencyKey.trim() || !input.templateKey.trim()) throw new Error('NOTIFICATION_INVALID'); if (Object.keys(input.payload).some((key) => ['password', 'token', 'cpf', 'email'].includes(key))) throw new Error('NOTIFICATION_SENSITIVE_PAYLOAD'); const { data, error } = await client.rpc('enqueue_notification', { p_idempotency_key: input.idempotencyKey, p_recipient_user_id: input.recipientUserId, p_template_key: input.templateKey, p_payload: input.payload }); if (error || !data) throw new Error(error?.message ?? 'Notification failed'); return data; }
+const sensitiveKeys = new Set(['password', 'token', 'token_hash', 'otp', 'cpf', 'email']);
+function containsSensitive(value: unknown, key = ''): boolean {
+  if (sensitiveKeys.has(key.toLowerCase())) return true;
+  if (Array.isArray(value)) return value.some((item) => containsSensitive(item));
+  if (value && typeof value === 'object') return Object.entries(value).some(([childKey, childValue]) => containsSensitive(childValue, childKey));
+  return false;
+}
+export async function enqueueNotification(input: { idempotencyKey: string; recipientUserId: string; templateKey: string; payload: Record<string, unknown> }, client: NotificationClient) {
+  if (typeof input.idempotencyKey !== 'string' || !input.idempotencyKey.trim() || typeof input.recipientUserId !== 'string' || !input.recipientUserId.trim() || typeof input.templateKey !== 'string' || !input.templateKey.trim() || input.templateKey.length > 120 || !input.payload || typeof input.payload !== 'object' || containsSensitive(input.payload) || JSON.stringify(input.payload).length > 16_000) throw new Error(containsSensitive(input.payload) ? 'NOTIFICATION_SENSITIVE_PAYLOAD' : 'NOTIFICATION_INVALID');
+  const { data, error } = await client.rpc('enqueue_notification', { p_idempotency_key: input.idempotencyKey.trim(), p_recipient_user_id: input.recipientUserId.trim(), p_template_key: input.templateKey.trim(), p_payload: input.payload });
+  if (error || !data) throw new Error(error?.message ?? 'Notification failed');
+  return data;
+}
 
 export type PendingNotification = { id: string; recipient_user_id: string; template_key: string; payload: Record<string, unknown>; attempts: number };
 export type DeliveryClient = { rpc(name: 'claim_pending_notifications', args: { p_limit: number }): Promise<{ data: PendingNotification[] | null; error: { message: string } | null }>; update(values: Record<string, unknown>): { eq(column: string, value: string): Promise<{ error: { message: string } | null }> } };
-export async function deliverPendingNotifications(client: DeliveryClient, send: (item: PendingNotification) => Promise<void>) { const { data, error } = await client.rpc('claim_pending_notifications', { p_limit: 50 }); if (error) throw new Error(error.message); const summary = { attempted: 0, sent: 0, failed: 0 }; for (const item of data ?? []) { summary.attempted += 1; try { await send(item); const result = await client.update({ status: 'sent', sent_at: new Date().toISOString() }).eq('id', item.id); if (result.error) throw new Error(result.error.message); summary.sent += 1; } catch (sendError) { const attempts = item.attempts + 1; await client.update({ status: attempts >= 5 ? 'failed' : 'pending', attempts, last_error: sendError instanceof Error ? sendError.message : 'delivery failed', next_attempt_at: new Date(Date.now() + Math.min(60 * 60_000, 2 ** attempts * 60_000)).toISOString() }).eq('id', item.id); summary.failed += 1; } } return summary; }
+export async function deliverPendingNotifications(client: DeliveryClient, send: (item: PendingNotification) => Promise<void>) {
+  const { data, error } = await client.rpc('claim_pending_notifications', { p_limit: 50 });
+  if (error) throw new Error(error.message);
+  const summary = { attempted: 0, sent: 0, failed: 0 };
+  for (const item of data ?? []) {
+    summary.attempted += 1;
+    try {
+      await send(item);
+      const result = await client.update({ status: 'sent', sent_at: new Date().toISOString() }).eq('id', item.id);
+      if (result.error) throw new Error(result.error.message);
+      summary.sent += 1;
+    } catch (sendError) {
+      const attempts = item.attempts + 1;
+      await client.update({ status: attempts >= 5 ? 'failed' : 'pending', attempts, last_error: sendError instanceof Error ? sendError.message : 'delivery failed', next_attempt_at: new Date(Date.now() + Math.min(60 * 60_000, 2 ** attempts * 60_000)).toISOString() }).eq('id', item.id);
+      summary.failed += 1;
+    }
+  }
+  return summary;
+}
