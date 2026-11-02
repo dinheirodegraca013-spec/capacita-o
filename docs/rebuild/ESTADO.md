@@ -535,3 +535,8 @@ O HEAD remoto atual é `0d22339174203195c0c24fb77210e8a4bfc82699`; os runs web `
 ## T31 — publicação segura e imutabilidade — 02/11/2026
 
 Após nova revisão, foram corrigidos os dois P1 remanescentes: AAL2 agora é exigido na rota e nos RPCs de publicação de ofertas/cursos; a publicação de versões novas não atualiza cursos já publicados. A regra de grants diferencia cursos centrais de cursos próprios da organização. O HEAD atual é `b55e03217d149500a493021fae9c846a3466da6a`; web `41524795771` e pgTAP `41524795594` concluíram `success`. Permanecem gates operacionais de backup/PITR, worker Resend observado, proteção contra senhas comprometidas, E2E autenticado e auditoria final.
+
+
+## T31 complemento — AAL2 canônico e mutações diretas — 02/11/2026
+
+A camada de publicação passou a ler `auth.jwt()->>'aal'` (com fallback apenas para testes locais), o CI ganhou stub compatível com `request.jwt.claims`, e triggers bloqueiam INSERT/UPDATE direto para status `published` sem AAL2. HEAD `0835a4913aaba038e9e6256284293e7fd52e707d`; web `41526354648` e pgTAP `41526354875` success. Aguardando parecer independente final; gates operacionais continuam abertos.
