@@ -17,15 +17,15 @@ export async function POST(request: NextRequest) {
 
   try {
     const admin = createSupabaseAdminClient();
-    const generated = await admin.auth.admin.generateLink({ type: 'recovery', email, options: { redirectTo: `${publicOrigin}/redefinir-senha` } });
+    const generated = await admin.auth.admin.generateLink({ type: 'recovery', email, options: { redirectTo: publicOrigin + '/redefinir-senha' } });
     const properties = generated.data?.properties as { email_otp?: string; hashed_token?: string } | undefined;
     if (generated.error || (!properties?.email_otp && !properties?.hashed_token)) return genericResponse;
-    const actionLink = properties.email_otp
-      ? buildRecoveryLink(publicOrigin, email, properties.email_otp)
-      : `${publicOrigin}/redefinir-senha?token_hash=${encodeURIComponent(properties.hashed_token!)}&type=recovery`;
+    const actionLink = properties.hashed_token
+      ? publicOrigin + '/redefinir-senha?token_hash=' + encodeURIComponent(properties.hashed_token) + '&type=recovery'
+      : buildRecoveryLink(publicOrigin, email, properties.email_otp!);
     await fetch(providerUrl, {
       method: 'POST',
-      headers: buildProviderHeaders(providerKey, `recovery:${email}:${properties.email_otp ?? properties.hashed_token}`),
+      headers: buildProviderHeaders(providerKey, 'recovery:' + email + ':' + (properties.hashed_token ?? properties.email_otp)),
       body: JSON.stringify(buildRecoveryEmail({ from, to: email, actionLink })),
     });
   } catch {
