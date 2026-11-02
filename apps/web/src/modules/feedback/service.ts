@@ -1,3 +1,9 @@
 import type { Actor } from '@/modules/identity/model';
 export type FeedbackClient = { rpc(name: 'submit_course_feedback', args: { p_enrollment_id: string; p_rating: number; p_comment: string }): Promise<{ data: string | null; error: { message: string } | null }> };
-export async function submitFeedback(actor: Actor, input: { enrollmentId: string; rating: number; comment: string }, client: FeedbackClient) { if (!actor.roles.includes('student')) throw new Error('Student role required'); if (!Number.isInteger(input.rating) || input.rating < 1 || input.rating > 5) throw new Error('FEEDBACK_INVALID'); const { data, error } = await client.rpc('submit_course_feedback', { p_enrollment_id: input.enrollmentId, p_rating: input.rating, p_comment: input.comment.trim() }); if (error || !data) throw new Error(error?.message ?? 'Feedback failed'); return data; }
+export async function submitFeedback(actor: Actor, input: { enrollmentId: string; rating: number; comment: string }, client: FeedbackClient) {
+  if (!actor.roles.includes('student')) throw new Error('Student role required');
+  if (typeof input.enrollmentId !== 'string' || !input.enrollmentId.trim() || !Number.isInteger(input.rating) || input.rating < 1 || input.rating > 5 || typeof input.comment !== 'string' || input.comment.length > 2000) throw new Error('FEEDBACK_INVALID');
+  const { data, error } = await client.rpc('submit_course_feedback', { p_enrollment_id: input.enrollmentId, p_rating: input.rating, p_comment: input.comment.trim() });
+  if (error || !data) throw new Error(error?.message ?? 'Feedback failed');
+  return data;
+}
