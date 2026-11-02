@@ -564,3 +564,8 @@ A rota interna de notificações agora aceita o header padrão `Authorization: B
 ## E2E Auth/RLS real — 02/11/2026 (fixtures temporárias)
 
 Foram criados dois usuários e duas organizações sintéticas somente para homologação no Supabase autorizado. Login por Auth REST retornou HTTP 200 para ambos; a consulta autenticada de organizações retornou exclusivamente a organização própria para cada usuário (tenant A não viu B e vice-versa). As fixtures foram removidas na mesma sessão, com confirmação final de zero usuários/organizações sintéticos. A tentativa de contexto SSR com bearer puro retornou 401, comportamento esperado porque a rota Next exige sessão em cookie; a prova browser/cookie permanece separada. SMTP/worker, backup/PITR e deployment do HEAD continuam pendentes.
+
+
+## Limite operacional Vercel Hobby — 02/11/2026
+
+A tentativa de publicar o HEAD após corrigir o Cron retornou `402 api-deployments-free-per-day` (mais de 100 deployments; retry informado em 24h). A primeira tentativa também revelou `cron_jobs_limits_reached`: o plano Hobby não aceita `*/5 * * * *`. O `apps/web/vercel.json` foi ajustado para `0 3 * * *`, a única cadência diária compatível sem upgrade pago. O endpoint continua protegido por segredo; a execução do worker no runtime permanece sem evidência até um deployment ser criado.
