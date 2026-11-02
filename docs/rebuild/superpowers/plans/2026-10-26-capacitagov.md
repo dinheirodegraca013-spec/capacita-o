@@ -499,6 +499,8 @@ Status único: PENDING → RUNNING → REVIEW → DONE; BLOCKED somente para dep
 - [x] Rechecagem autenticada temporária contra produção: tenant A **1/1 PASS** e tenant B **1/1 PASS** no navegador, com seleção e acesso somente à própria organização; fixtures removidas após o teste.
 - [ ] Executar as duas jornadas autenticadas completas e anexar evidência; revisar antes de marcar DONE.
 
+- [x] Regressão adicional 02/11: consulta de reuniões separada da relação `class_groups`; produção `dpl_XRYtMD5CwtFYksRp5gqpen7sV1zD` READY; jornada híbrida autenticada do tenant B **1/1 PASS**.
+
 ### T29 — Ambiente remoto e preview Vercel
 
 **Meta/prioridade:** M9/P0. **Status:** RUNNING. **Depende:** T28. **Requisitos:** R10.
