@@ -228,3 +228,8 @@ A lacuna de agendamento foi corrigida no código e na configuração Vercel; o g
 ### Evidência adicional — Auth/RLS multi-tenant — 02/11/2026
 
 Dois usuários sintéticos temporários autenticaram no Supabase real (HTTP 200) e, sob JWT individual, cada um consultou somente a própria organização via PostgREST. A limpeza foi executada na mesma sessão e confirmou zero fixtures restantes. Isso reduz o risco de isolamento de dados no nível Auth/RLS, mas não substitui a jornada SSR com cookie no deployment atual. O parecer integral permanece BLOCKED por deployment do HEAD/Cron, worker Resend processando outbox, backup/PITR e auditoria final independente.
+
+
+### Rechecagem de publicação e Cron — 02/11/2026
+
+O limite de Cron do plano Hobby rejeitou a cadência de cinco minutos. A configuração foi reduzida para uma execução diária às 03:00 UTC, sem upgrade ou cobrança automática. A nova tentativa de deployment ainda foi bloqueada pela cota diária de deployments (`402`, retry em 24h). Resultado operacional continua BLOCKED até publicação do HEAD e evidência do worker processando outbox.
