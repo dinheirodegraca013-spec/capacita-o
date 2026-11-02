@@ -11,6 +11,7 @@ insert into public.organizations(id, name, slug, kind) values ('10000000-0000-00
 insert into public.memberships(id, user_id, organization_id, status) values ('20000000-0000-0000-0000-000000000031', '00000000-0000-0000-0000-000000000031', '10000000-0000-0000-0000-000000000031', 'active'), ('20000000-0000-0000-0000-000000000032', '00000000-0000-0000-0000-000000000032', '10000000-0000-0000-0000-000000000032', 'active');
 insert into public.membership_roles(membership_id, role) values ('20000000-0000-0000-0000-000000000031', 'manager'), ('20000000-0000-0000-0000-000000000032', 'student');
 set local role authenticated;
+set local request.jwt.claim.aal = 'aal2';
 set local request.jwt.claim.sub = '00000000-0000-0000-0000-000000000031';
 insert into public.courses(id, organization_id, owner_type, title, slug, status, license_confirmed, created_by) values ('40000000-0000-0000-0000-000000000031', '10000000-0000-0000-0000-000000000031', 'organization', 'Course A', 'course-a', 'published', true, '00000000-0000-0000-0000-000000000031');
 insert into public.course_versions(id, course_id, version_no, title, license_confirmed, status, learning_mode, published_at) values ('50000000-0000-0000-0000-000000000031', '40000000-0000-0000-0000-000000000031', 1, 'Course A', true, 'published', 'self_paced', now());
