@@ -12,7 +12,13 @@ export async function POST(request: NextRequest) {
   if (!providerUrl || !providerKey || !from) return NextResponse.json({ error: 'EMAIL_PROVIDER_NOT_CONFIGURED' }, { status: 503 });
   try {
     const supabase = createSupabaseAdminClient();
-    const summary = await deliverPendingNotifications(supabase as never, async (item) => {
+    const deliveryClient = {
+      rpc: (name: 'claim_pending_notifications', args: { p_limit: number }) => supabase.rpc(name, args),
+      update: (values: Record<string, unknown>) => ({
+        eq: (column: string, value: string) => supabase.from('notification_outbox').update(values).eq(column, value),
+      }),
+    };
+    const summary = await deliverPendingNotifications(deliveryClient as never, async (item) => {
       const recipient = await supabase.auth.admin.getUserById(item.recipient_user_id);
       const email = recipient.data.user?.email;
       if (recipient.error || !email) throw new Error('recipient_email_unavailable');
