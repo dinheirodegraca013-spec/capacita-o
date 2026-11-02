@@ -277,3 +277,12 @@ Com fixtures sintéticas temporárias no Supabase autorizado e configuração Pl
 
 - Lista de e-mails: redefinição de senha recente do CapacitaGov com status **delivered**.
 - Corpo HTML/texto inspecionado: link canônico `https://capacita-o-x5hg.vercel.app/redefinir-senha?...`; nenhuma ocorrência de `localhost`.
+
+
+### Verificação remota atual — 02/11/2026
+
+- Supabase `zykfvzvydvifuzepujvv`: `ACTIVE_HEALTHY`, Postgres 17.11.
+- Hardening migrations 0900–0910 aplicadas remotamente; triggers de AAL2/imutabilidade e definições de `publish_offering`/`publish_course_version` conferidas via SQL.
+- Vercel preview `dpl_E8Qy248cAzsHJxDbq2Rrq7oxe2ig`: `/` e `/login` HTTP 200; `/api/v1/context` HTTP 401 sem sessão.
+- Resend: POST `/emails` HTTP 200 observado em 02/11/2026.
+- Ainda sem evidência desta rodada para sessão autenticada de duas organizações, worker agendado do outbox, restauração/PITR e novo preview do HEAD posterior por limite de deployments.
