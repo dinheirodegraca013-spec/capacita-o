@@ -478,3 +478,5 @@ O alias público continua servindo o fluxo Next e `NEXT_PUBLIC_APP_URL` está co
 A homologação encontrou que `/aluno/turmas` não renderizava encontros persistidos quando a consulta aninhada `meetings → class_groups` era filtrada pelo RLS da relação. A página foi ajustada para consultar reuniões e grupos em duas leituras tenant-scoped, sem relaxar políticas. Typecheck, lint, suíte web (30 arquivos/77 testes) e build passaram.
 
 O commit `c831e34253849ca38c3218e76d876692da733ff1` foi publicado no deployment de produção `dpl_XRYtMD5CwtFYksRp5gqpen7sV1zD`, estado READY, alias `capacita-o-x5hg.vercel.app`. Playwright remoto isolado confirmou a jornada do tenant B: **1/1 PASS**; a jornada do tenant A de catálogo/matrícula também passou **1/1**.
+
+Após a validação, as duas organizações, usuários, matrícula e demais fixtures sintéticas foram removidos em transação autorizada; consulta final: `orgs=0`, `users=0`, `enrollments=0`.
