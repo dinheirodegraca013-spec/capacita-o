@@ -192,3 +192,6 @@ Task T31 — hardening de publicação (02/11/2026): AAL2 exigido no endpoint e 
 
 
 Task T31 complemento — MFA no banco (02/11/2026): RPCs usam claim canônico `auth.jwt()->>'aal'`; triggers bloqueiam publicação direta sem AAL2; CI recebeu stub `auth.jwt()` compatível e concluiu web/pgTAP success (`41526354648`/`41526354875`). Auditoria independente final pendente.
+
+
+Auditoria independente final de código (02/11/2026): HEAD `49cb304ffa1ab3aa6977131e67e63d0ea8534e04` aprovado sem P0/P1 nos caminhos reauditados; bypasses MFA de publicação fechados. Gates operacionais T28–T30 permanecem pendentes.
