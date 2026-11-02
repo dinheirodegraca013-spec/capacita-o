@@ -271,6 +271,7 @@ Com fixtures sintéticas temporárias no Supabase autorizado e configuração Pl
 - Verificação local: typecheck, lint, `npm test` **30/30 arquivos, 77/77 testes** e build PASS.
 - Produção: `dpl_3JYLU4KXJhcS8D7UBVK1QNc3GTdz` READY.
 - Preview protegido do branch: raiz retorna 302 para SSO sem sessão e 200 após seguimento do fluxo público; `/login` retorna 200.
+- `npm audit --audit-level=high`: nenhum high/critical; há 16 moderate transitivos em `minimatch` no toolchain de lint, documentados como risco de desenvolvimento.
 
 ### Entrega Resend — 02/11/2026
 
