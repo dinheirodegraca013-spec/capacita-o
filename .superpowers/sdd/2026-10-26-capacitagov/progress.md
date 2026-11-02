@@ -179,3 +179,5 @@ Task T23 — certificados/verificação (02/11/2026): PDF agora calcula comprime
 Task T24 — feedback (02/11/2026): envio pós-conclusão agora valida matrícula, nota e comentário com limite de 2.000 caracteres; a UI trata falhas de rede e evita submissão concorrente, permitindo retry. Web run `41518650068` e pgTAP run `41518650065` concluíram `success`. E2E autenticado e agregação nos relatórios permanecem pendentes.
 
 Task T26 — relatórios (02/11/2026): serviço agora valida intervalo temporal antes da RPC; tela usa URLSearchParams para exportação, trata falhas de rede e bloqueia submissões concorrentes. Web run `41519373489` e pgTAP run `41519373493` concluíram `success`. E2E com dados autenticados e agregação de satisfação permanecem pendentes.
+
+Task T27 — notificações/outbox (02/11/2026): payloads agora rejeitam IDs/template inválidos, dados sensíveis inclusive aninhados e conteúdo acima de 16 KB; worker envia idempotency-key do item ao provedor Resend e mantém backoff/retry. Web run `41519686918` e pgTAP run `41519686614` concluíram `success`. Entrega real monitorada via Resend continua pendente.
