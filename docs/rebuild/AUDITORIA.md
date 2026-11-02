@@ -205,3 +205,5 @@ Reauditoria com fixtures sintéticas temporárias comprovou no navegador públic
 ### Achado corrigido: agenda híbrida não renderizada — 02/11/2026
 
 A causa foi uma leitura relacional aninhada de `meetings` com `class_groups(name)` que não retornava a reunião sob a combinação atual de RLS. A correção separa as consultas e restringe ambas por `organization_id`; não houve abertura de policy. O deployment `dpl_XRYtMD5CwtFYksRp5gqpen7sV1zD` está READY e o Playwright autenticado do tenant B passou **1/1**. O gate integral continua aberto por SMTP/worker real, backup/PITR e auditoria final.
+
+Rechecagem operacional do Resend no mesmo ciclo: e-mail de recuperação do CapacitaGov marcado `delivered`; HTML/texto sem `localhost` e com origem pública canônica. Isso não aprova o worker de notificações do outbox, que permanece pendente de execução real com segredo interno.
