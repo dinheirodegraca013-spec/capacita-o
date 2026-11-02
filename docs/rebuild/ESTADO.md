@@ -554,3 +554,8 @@ O projeto Supabase `zykfvzvydvifuzepujvv` está `ACTIVE_HEALTHY` (Postgres 17.11
 O preview Vercel mais recente verificado (`dpl_E8Qy248cAzsHJxDbq2Rrq7oxe2ig`) está READY, com landing `/` e login `/login` retornando HTTP 200 e origem canônica `https://capacita-o-x5hg.vercel.app`. A API protegida `/api/v1/context` retorna 401 sem sessão, conforme esperado. O projeto Vercel está com SSO habilitado e `live=false`; não houve promoção para produção. A integração Vercel registrou limitação de mais de 100 deployments/dia, então o HEAD posterior ainda aguarda novo preview quando a cota liberar.
 
 Resend registrou POST `/emails` com status 200 em 02/11/2026, comprovando envio transacional real; ainda falta observar o worker institucional consumindo `notification_outbox` em execução agendada.
+
+
+## T27 complemento — worker agendado — 02/11/2026
+
+A rota interna de notificações agora aceita o header padrão `Authorization: Bearer CRON_SECRET` além do segredo legado, e `apps/web/vercel.json` agenda `/api/internal/notifications` a cada cinco minutos. `CRON_SECRET` sensível foi criado no projeto Vercel para production/preview/development. CI web/pgTAP do commit `b6331f1e3b03a758a02bbd8cae809acba5bea6de` concluído com sucesso. A execução real aguarda um novo deployment, ainda bloqueado pela cota diária da Vercel.
