@@ -264,6 +264,13 @@ Com fixtures sintéticas temporárias no Supabase autorizado e configuração Pl
 - Regressão local: `npm run typecheck` PASS, `npm run lint` PASS, `npm test` **30 arquivos/77 testes PASS**, `npm run build` PASS.
 - Limpeza pós-teste confirmada no Supabase: `orgs=0`, `users=0`, `enrollments=0` para as fixtures sintéticas.
 
+### Revisão de autorização da agenda — 02/11/2026
+
+- Achado: a versão anterior da tela consultava todos os encontros `scheduled` do tenant.
+- Correção: reuniões agora são filtradas pelas turmas das matrículas ativas do usuário (`membership_id`) antes da leitura de nomes.
+- Verificação local: typecheck, lint, `npm test` **30/30 arquivos, 77/77 testes** e build PASS.
+- Produção: `dpl_3JYLU4KXJhcS8D7UBVK1QNc3GTdz` READY.
+
 ### Entrega Resend — 02/11/2026
 
 - Lista de e-mails: redefinição de senha recente do CapacitaGov com status **delivered**.
