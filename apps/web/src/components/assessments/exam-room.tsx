@@ -16,7 +16,6 @@ export function ExamRoom({ attemptId, organizationId }: { attemptId: string; org
 
   useEffect(() => {
     let active = true;
-    setLoading(true);
     fetch(`/api/v1/attempts/${attemptId}`)
       .then((response) => response.ok ? response.json() : null)
       .then((data: Delivery | null) => {
