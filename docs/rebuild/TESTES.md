@@ -342,3 +342,12 @@ Com fixtures sintéticas temporárias no Supabase autorizado e configuração Pl
 - Payload contém apenas mensagem de homologação; nenhum segredo ou token.
 - Estado inicial confirmado: `pending`, `attempts=0`.
 - Cron permanece diário em produção; a execução ainda não foi observada.
+
+
+## Fluxo de cadastro — 03/11/2026
+
+- `/cadastro`: e-mail, senha e confirmação; validação de 12 caracteres e igualdade.
+- Confirmação usa callback público canônico e não inclui segredos no cliente.
+- `/cadastro-confirmado`: orienta confirmação e retorno ao login.
+- `/selecionar-organizacao`: estado vazio orienta convite/atribuição e não concede acesso por cadastro.
+- Deployment público do patch ainda pendente de cota Vercel.
