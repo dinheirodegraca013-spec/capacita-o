@@ -574,3 +574,8 @@ A tentativa de publicar o HEAD após corrigir o Cron retornou `402 api-deploymen
 ## Preview Vercel atualizado — 02/11/2026
 
 A cota foi liberada e o deployment `dpl_AjnNewg9eHeASkwXzqYM9iGrtgQU` ficou READY no commit `76e7bfc7ae3a175eab95aecdbd6b95905387c30c`. Preview: `https://capacita-o-x5hg-1lsuj4yyq-dinheirodegraca013-specs-projects.vercel.app`. Validação via fetch autenticado da conta Vercel: `/` HTTP 200 com Next/CapacitaGov e imagem hero; `/login` HTTP 200; `/api/internal/notifications` HTTP 401 sem segredo, confirmando a proteção do worker. A promoção para produção permanece separada até a auditoria final.
+
+
+## Produção atualizada — 02/11/2026
+
+O alias `capacita-o-x5hg.vercel.app` foi reassigned com sucesso para o deployment READY `dpl_HJABkspWYbQwfqEb4hZnFucnHwgw`, commit `49339bedb6c7d3b3c69798d7cfbc9bb14904fa33`. A produção respondeu HTTP 200 em `/` e `/login`, com landing Next atualizada e imagem hero. O endpoint interno não foi considerado validado por fetch sem sessão devido à proteção SSO do domínio; o preview equivalente retornou 401 sem segredo. Revisão independente não encontrou P0/P1. Permanecem gates: consumo real do outbox/entrega Resend, backup/restauração e auditoria final.
