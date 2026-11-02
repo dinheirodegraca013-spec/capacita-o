@@ -21,21 +21,21 @@ export default function ActivateAccountPage() {
       const tokenType = params.get('type');
       const email = params.get('email');
       const otp = params.get('otp');
-      let authError = before.error;
+      let authFailed = Boolean(before.error);
 
-      if (!authError && tokenHash && (tokenType === 'invite' || tokenType === 'magiclink')) {
+      if (!authFailed && tokenHash && (tokenType === 'invite' || tokenType === 'magiclink')) {
         const result = await supabase.auth.verifyOtp({ token_hash: tokenHash, type: tokenType });
-        authError = result.error;
-      } else if (!authError && email && otp) {
+        authFailed = Boolean(result.error);
+      } else if (!authFailed && email && otp) {
         const result = await supabase.auth.verifyOtp({ email, token: otp, type: 'invite' });
         authError = result.error;
       }
 
       const after = await supabase.auth.getUser();
-      if (!authError && !after.data.user) authError = new Error('missing_session');
+      if (!authFailed && !after.data.user) authFailed = true;
       if (cancelled) return;
       setExistingAccount(hadExistingSession);
-      setError(authError ? 'O convite é inválido, expirou ou já foi utilizado.' : null);
+      setError(authFailed ? 'O convite é inválido, expirou ou já foi utilizado.' : null);
       setReady(true);
     }
     void consumeInvite();
