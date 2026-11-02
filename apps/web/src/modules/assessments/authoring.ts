@@ -4,8 +4,46 @@ export type AssessmentInput = { courseVersionId: string; title: string; passingS
 export type AssessmentClient = { from(table: 'assessments'): { insert(value: Record<string, unknown>): { select(): { single(): Promise<{ data: Record<string, unknown> | null; error: { message: string } | null }> } } }; rpc(name: 'publish_assessment', args: { p_assessment_id: string }): Promise<{ data: string | null; error: { message: string } | null }> };
 
 export function validateAssessment(input: AssessmentInput) {
-  if (!input.title.trim() || input.title.trim().length > 180 || !Number.isFinite(input.passingScore) || input.passingScore < 0 || input.passingScore > 100 || !Number.isInteger(input.maxAttempts) || input.maxAttempts < 1 || input.maxAttempts > 10 || !input.questions.length || input.questions.length > 100) return { ok: false as const, code: 'ASSESSMENT_INVALID' as const };
-  if (input.questions.some((question) => !question.prompt.trim() || question.prompt.trim().length > 4000 || !Number.isFinite(question.points) || question.points <= 0 || !question.options.length || question.options.length > 20 || question.options.some((option) => !option.label.trim() || option.label.trim().length > 1000) || !question.options.some((option) => option.isCorrect))) return { ok: false as const, code: 'ASSESSMENT_INVALID' as const };
+  if (
+    typeof input.courseVersionId !== 'string' ||
+    typeof input.title !== 'string' ||
+    !input.title.trim() ||
+    input.title.trim().length > 180 ||
+    !Number.isFinite(input.passingScore) ||
+    input.passingScore < 0 ||
+    input.passingScore > 100 ||
+    !Number.isInteger(input.maxAttempts) ||
+    input.maxAttempts < 1 ||
+    input.maxAttempts > 10 ||
+    !Array.isArray(input.questions) ||
+    !input.questions.length ||
+    input.questions.length > 100
+  ) return { ok: false as const, code: 'ASSESSMENT_INVALID' as const };
+
+  if (input.timeLimitSeconds !== null && input.timeLimitSeconds !== undefined && (!Number.isInteger(input.timeLimitSeconds) || input.timeLimitSeconds < 30 || input.timeLimitSeconds > 86400)) {
+    return { ok: false as const, code: 'ASSESSMENT_INVALID' as const };
+  }
+
+  if (input.questions.some((question) =>
+    !question ||
+    typeof question.prompt !== 'string' ||
+    !question.prompt.trim() ||
+    question.prompt.trim().length > 4000 ||
+    !Number.isFinite(question.points) ||
+    question.points <= 0 ||
+    !Array.isArray(question.options) ||
+    !question.options.length ||
+    question.options.length > 20 ||
+    question.options.some((option) =>
+      !option ||
+      typeof option.label !== 'string' ||
+      !option.label.trim() ||
+      option.label.trim().length > 1000 ||
+      typeof option.isCorrect !== 'boolean'
+    ) ||
+    !question.options.some((option) => option.isCorrect)
+  )) return { ok: false as const, code: 'ASSESSMENT_INVALID' as const };
+
   return { ok: true as const };
 }
 
