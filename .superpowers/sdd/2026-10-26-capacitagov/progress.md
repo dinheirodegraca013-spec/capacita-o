@@ -44,7 +44,7 @@ Task 15: running — progresso persistente por matrícula/aula, posição monot�
 
 Task 16: running — trilhas tenant-scoped, itens ordenados com pré-requisito e trigger anti-ciclo, assignments idempotentes e serviço de atribuição por gerente; pgTAP `6/6`, unit suite `24/24`, typecheck/lint/build verdes. Falta UI/E2E e validação de dependências em jornada real.
 
-Task 16 complemento: APIs e tela de gestão de trilhas adicionadas, com criação de rascunho, etapas ordenadas, publicação bloqueada sem etapas e navegação de gestor. Falta atribuição de membros pela UI e E2E real.
+Task 16 complemento: APIs e tela de gestão de trilhas adicionadas, com criação de rascunho, etapas ordenadas, publicação bloqueada sem etapas e navegação de gestor. Payloads agora rejeitam tipos inválidos, títulos acima de 180 caracteres e referências de oferta/pré-requisito fora da organização/trilha; publicação valida que a trilha pertence ao tenant antes de contar etapas. Web run `41516195615` e pgTAP run `41516195784` concluíram `success`. Falta atribuição de membros pela UI e E2E real.
 
 Task 17: running — banco de questões com avaliações versionadas, opções corretas protegidas por RLS, parâmetros de nota/tentativas e publicação transacional validada; pgTAP `8/8`, unit suite `26/26`, typecheck/lint/build verdes. Falta UI de autoria, DTO seguro do aluno e E2E.
 
@@ -124,11 +124,9 @@ Revalidação CI 27/10: o head `b871f7c98b3e7a2d8dec8558f4823b48390a71b4` també
 
 T06 complemento 27/10: gestão institucional ganhou formulário de edição de nome/fuso e cadastro de unidades; `PATCH`/`POST /api/v1/organizations/[orgId]` agora exigem membership ativo com papel `manager` antes da operação, além do RLS. Suíte web `26/53` testes PASS, typecheck, lint e build PASS. E2E cross-tenant continua pendente.
 
-T07 complemento 27/10: o importador passou a ter duas etapas reais na UI: validação/preview via `/api/v1/imports`, exibição de erros por linha e confirmação explícita via `/api/v1/imports/commit`; o servidor revalida o lote antes da transação. Testes de importação `3/3`, suíte web `26/53`, typecheck, lint e build PASS. Convites pós-importação e E2E autenticado permanecem pendentes.
+T07 complemento 27/10: o importador passou a ter duas etapas reais na UI: validação/preview via `/api/v1/imports`, exibição de erros por linha e confirmação explícita via `/api/v1/imports/commit`; o servidor revalida o lote antes da transação. Testes de importação `3/3`, suíte web `26/53`, typecheck, lint, build PASS. Convites pós-importação e E2E autenticado permanecem pendentes.
 
 Correção de sincronização remota 27/10: a primeira atualização via API do GitHub gravou texto de erro em dois caminhos `[orgId]`; o CI detectou a falha de typecheck. Reenvio literal corrigiu os arquivos. Head `04919470b8eeae84bb8a6f20660bdd88780280f7`: web run `40471248105` e SQL/pgTAP `40471248124` concluíram `success`.
-
-
 
 Checkpoint 02/11/2026: correção de recuperação de senha publicada no commit 9b5c04efeb012a95b252e80865843427605e78a6; produção recebeu o alias capacita-o-x5hg.vercel.app. O CI inicialmente falhou por npm ci rejeitar package-lock fora de sincronia (dependências opcionais @emnapi); workflow ajustado para npm install determinístico sem auditoria automática. Commit 373aebad3b97fb206d09023185ad6b5d180ee90b: web run 41507807679 e SQL/pgTAP run 41507807726 concluíram success (typecheck, lint, testes, build e migrations/pgTAP).
 
@@ -161,3 +159,5 @@ Task T13 — matrículas (02/11/2026): o card de autoinscrição agora trata fal
 Task T14 — catálogo/biblioteca do aluno (02/11/2026): páginas de catálogo e Meus cursos agora distinguem ausência de dados de falha do Supabase, exibindo alerta acionável em vez de estado vazio enganoso; busca, matrículas e isolamento por organização permanecem preservados. CI web 41515552570 e pgTAP 41515552547 success. E2E autenticado do catálogo/biblioteca continua pendente; deploy sujeito à quota Vercel.
 
 Task T15 — progresso/player (02/11/2026): salvamento de posição/conclusão agora trata falhas de rede, exibe feedback acessível e libera nova tentativa; o item fica bloqueado somente durante o salvamento para evitar duplicidade. CI web 41515791802 e pgTAP 41515791673 success. E2E com mídia e persistência autenticada continua pendente; deploy sujeito à quota Vercel.
+
+Task T16 — trilhas (02/11/2026): rotas de criação, itens e publicação agora rejeitam payloads não textuais/malformados, limitam títulos a 180 caracteres, confirmam que a trilha pertence à organização ativa e impedem referências a ofertas ou pré-requisitos de outro tenant/trilha. Web run `41516195615` e pgTAP run `41516195784` concluíram `success`. Atribuição de membros pela UI e E2E autenticado permanecem pendentes.
