@@ -540,3 +540,8 @@ Após nova revisão, foram corrigidos os dois P1 remanescentes: AAL2 agora é ex
 ## T31 complemento — AAL2 canônico e mutações diretas — 02/11/2026
 
 A camada de publicação passou a ler `auth.jwt()->>'aal'` (com fallback apenas para testes locais), o CI ganhou stub compatível com `request.jwt.claims`, e triggers bloqueiam INSERT/UPDATE direto para status `published` sem AAL2. HEAD `0835a4913aaba038e9e6256284293e7fd52e707d`; web `41526354648` e pgTAP `41526354875` success. Aguardando parecer independente final; gates operacionais continuam abertos.
+
+
+## Auditoria independente — parecer favorável de código — 02/11/2026
+
+No HEAD `49cb304ffa1ab3aa6977131e67e63d0ea8534e04`, a revisão independente confirmou que os bypasses MFA de publicação foram fechados para ofertas, cursos e versões (INSERT/UPDATE), com claim canônica do Supabase; a publicação de v2 permanece corrigida. Não foram identificados P0/P1 nos caminhos de código reauditados. A liberação geral continua condicionada aos gates operacionais T28–T30.
