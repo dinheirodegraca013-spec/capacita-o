@@ -490,3 +490,7 @@ Reauditoria de dependências em 02/11 encontrou 16 vulnerabilidades moderadas tr
 ## Entrega Resend revalidada — 02/11/2026
 
 A conta Resend registrou uma mensagem recente de redefinição do CapacitaGov como `delivered`. A inspeção do corpo confirmou que o botão e o texto usam exclusivamente `https://capacita-o-x5hg.vercel.app/redefinir-senha?...`, sem ocorrência de `localhost`. O gate de entrega Resend do fluxo de recuperação está comprovado; o worker de notificações institucionais ainda precisa de teste operacional separado.
+
+## Rechecagem pós-correção — 02/11/2026
+
+O runbook operacional de Auth foi versionado em `docs/rebuild/operations/supabase-auth.md`. A configuração Vercel continua canônica (`NEXT_PUBLIC_APP_URL=https://capacita-o-x5hg.vercel.app`). Verificações locais: typecheck, lint, 30 arquivos/77 testes e build PASS; produção respondeu HTTP 200 em `/login` e `/recuperar-senha`. Links nativos antigos do Supabase continuam dependendo de Site URL/Redirect URLs no painel Auth; links Resend permanecem públicos e sem `localhost`.
