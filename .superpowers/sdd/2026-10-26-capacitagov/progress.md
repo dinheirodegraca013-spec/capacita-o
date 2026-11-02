@@ -189,3 +189,6 @@ Task T31 — correções pós-auditoria (02/11/2026): adapter do worker Resend, 
 
 
 Task T31 — hardening de publicação (02/11/2026): AAL2 exigido no endpoint e RPCs de publicação; grants de cursos centrais vs próprios tratados explicitamente; publicação de nova versão não muta curso já publicado. CI final do HEAD `b55e03217d149500a493021fae9c846a3466da6a`: web `41524795771` e pgTAP `41524795594` success. Auditoria independente final ainda pendente.
+
+
+Task T31 complemento — MFA no banco (02/11/2026): RPCs usam claim canônico `auth.jwt()->>'aal'`; triggers bloqueiam publicação direta sem AAL2; CI recebeu stub `auth.jwt()` compatível e concluiu web/pgTAP success (`41526354648`/`41526354875`). Auditoria independente final pendente.
