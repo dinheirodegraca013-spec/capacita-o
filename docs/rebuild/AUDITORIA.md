@@ -191,3 +191,6 @@ O patch de recuperação chegou à produção: `dpl_5iptvUbq4mSb9aQn9UDp6CuSKYRJ
 
 Após o deployment READY, o fluxo foi exercitado com conta administrativa autorizada: Resend confirmou `delivered`, e a mensagem contém o caminho público `/redefinir-senha` sem `localhost`. O achado P0 das capturas está corrigido em produção; permanece pendente apenas a confirmação de clique/alteração de senha pelo usuário e os gates gerais de liberação.
 
+### Rechecagem de links antigos e atuais — 02/11/2026
+
+Foi emitido novo e-mail pelo endpoint público atual; o conteúdo contém somente a origem canônica do CapacitaGov e não contém `localhost`. As mensagens visualizadas nas capturas têm os assuntos nativos do Supabase Auth e são anteriores à correção Resend. A eliminação definitiva desses links antigos em fluxos diretos do Auth depende de alterar Site URL/Redirect URLs no painel Supabase da organização proprietária; essa configuração não é mutável pelo conector disponível nesta sessão.
