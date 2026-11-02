@@ -4,12 +4,22 @@ export type EnrollmentPolicy = 'self_enroll' | 'manager_assigned';
 export type PlatformActor = { userId: string; platformAdmin: true };
 export type OfferingInput = { title: string; mandatory: boolean; capacity: number | null; enrollmentPolicy: EnrollmentPolicy; startsAt?: string | null; endsAt?: string | null };
 export function validateOfferingInput(input: OfferingInput) {
-  if (!input.title.trim() || (input.capacity !== null && (!Number.isInteger(input.capacity) || input.capacity < 1))) return { ok: false as const, code: 'INVALID_OFFERING' as const };
-  if (input.startsAt && input.endsAt && new Date(input.endsAt) <= new Date(input.startsAt)) return { ok: false as const, code: 'INVALID_DATES' as const };
+  const startsAt = input.startsAt ? new Date(input.startsAt) : null;
+  const endsAt = input.endsAt ? new Date(input.endsAt) : null;
+  if (
+    typeof input.title !== 'string' ||
+    !input.title.trim() ||
+    typeof input.mandatory !== 'boolean' ||
+    !['self_enroll', 'manager_assigned'].includes(input.enrollmentPolicy) ||
+    (input.capacity !== null && (!Number.isInteger(input.capacity) || input.capacity < 1)) ||
+    (input.startsAt && Number.isNaN(startsAt?.getTime())) ||
+    (input.endsAt && Number.isNaN(endsAt?.getTime()))
+  ) return { ok: false as const, code: 'INVALID_OFFERING' as const };
+  if (startsAt && endsAt && endsAt <= startsAt) return { ok: false as const, code: 'INVALID_DATES' as const };
   return { ok: true as const };
 }
 
-export type CatalogClient = { from(table: 'course_grants' | 'offerings'): { insert(values: Record<string, unknown>): { select(): { single(): Promise<{ data: Record<string, unknown> | null; error: { message: string } | null }> } }; select(columns: string): { eq(column: string, value: string): { eq(column: string, value: string): { order(column: string, options: { ascending: boolean }): Promise<{ data: Record<string, unknown>[] | null; error: { message: string } | null }> } } } } };
+export type CatalogClient = { from(table: 'course_grants' | 'offerings'): { insert(values: Record<string, unknown>): { select(): { single(): Promise<{ data: Record<string, unknown> | null; error: { message: string } | null }> } }; select(columns: string): { eq(column: string, value: string): { eq(column: string, value: string): { order(column: string, options: { ascending: boolean }): Promise<{ data: Record<string, unknown>[] | null; error: { message: string } | null }> } } } };
 export async function grantCourse(actor: PlatformActor, input: { organizationId: string; courseVersionId: string }, client: CatalogClient) {
   if (!actor.platformAdmin) throw new Error('Platform admin required');
   const { data, error } = await client.from('course_grants').insert({ organization_id: input.organizationId, course_version_id: input.courseVersionId, granted_by: actor.userId, status: 'active' }).select().single();
