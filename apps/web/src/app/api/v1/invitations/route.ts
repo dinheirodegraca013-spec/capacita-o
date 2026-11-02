@@ -1,9 +1,23 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
-import { buildInvitationRedirect, inviteMember, resolveInvitationOrigin } from '@/modules/invitations/service';
-import { buildInvitationEmail } from '@/modules/notifications/resend';
+import { buildInvitationActivationLink, buildInvitationRedirect, buildInvitationTokenHashLink, inviteMember, resolveInvitationOrigin } from '@/modules/invitations/service';
+import { buildInvitationEmail, buildProviderHeaders } from '@/modules/notifications/resend';
 import type { OrganizationRole } from '@/modules/identity/model';
+
+export async function GET(request: NextRequest) {
+  const organizationId = request.nextUrl.searchParams.get('organizationId');
+  if (!organizationId) return NextResponse.json({ error: 'VALIDATION' }, { status: 422 });
+  const supabase = await createSupabaseServerClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return NextResponse.json({ error: 'UNAUTHENTICATED' }, { status: 401 });
+  const { data: membership } = await supabase.from('memberships').select('membership_roles(role)').eq('user_id', user.id).eq('organization_id', organizationId).eq('status', 'active').maybeSingle();
+  const roles = ((membership?.membership_roles ?? []) as Array<{ role: OrganizationRole }>).map((item) => item.role);
+  if (!membership || !roles.includes('manager')) return NextResponse.json({ error: 'FORBIDDEN' }, { status: 403 });
+  const { data, error } = await supabase.from('invitations').select('id, email, roles, status, expires_at, last_sent_at').eq('organization_id', organizationId).in('status', ['pending', 'sent', 'failed']).order('created_at', { ascending: false }).limit(50);
+  if (error) return NextResponse.json({ error: 'UNAVAILABLE' }, { status: 503 });
+  return NextResponse.json({ invitations: data ?? [] });
+}
 
 export async function POST(request: NextRequest) {
   const supabase = await createSupabaseServerClient();
@@ -36,15 +50,27 @@ export async function POST(request: NextRequest) {
     // transactional provider. Relying on Supabase's built-in mailer here can
     // silently leave the invitation without a usable button when Auth SMTP is
     // not configured or is rate-limited.
-    let generated = await admin.auth.admin.generateLink({ type: 'invite', email: invitation.email, options: { redirectTo } });
+    let generatedType: 'invite' | 'magiclink' = 'invite';
+    let generated = await admin.auth.admin.generateLink({ type: generatedType, email: invitation.email, options: { redirectTo } });
     if (generated.error && /already|registered|exists/i.test(generated.error.message)) {
-      generated = await admin.auth.admin.generateLink({ type: 'magiclink', email: invitation.email, options: { redirectTo } });
+      generatedType = 'magiclink';
+      generated = await admin.auth.admin.generateLink({ type: generatedType, email: invitation.email, options: { redirectTo } });
     }
     if (generated.error || !generated.data?.properties.action_link) {
       await admin.from('invitations').update({ status: 'failed' }).eq('id', invitation.id);
       return NextResponse.json({ error: 'INVITE_DELIVERY_FAILED' }, { status: 503 });
     }
-    const response = await fetch(providerUrl, { method: 'POST', headers: { authorization: `Bearer ${providerKey}`, 'content-type': 'application/json' }, body: JSON.stringify(buildInvitationEmail({ from, to: invitation.email, actionLink: generated.data.properties.action_link })) });
+    const properties = generated.data.properties as { email_otp?: string; hashed_token?: string };
+    const actionLink = properties.email_otp
+      ? buildInvitationActivationLink(publicOrigin, invitation.rawToken ?? '', invitation.email, properties.email_otp)
+      : properties.hashed_token
+        ? buildInvitationTokenHashLink(publicOrigin, invitation.rawToken ?? '', properties.hashed_token, generatedType)
+        : null;
+    if (!actionLink) {
+      await admin.from('invitations').update({ status: 'failed' }).eq('id', invitation.id);
+      return NextResponse.json({ error: 'INVITE_DELIVERY_FAILED' }, { status: 503 });
+    }
+    const response = await fetch(providerUrl, { method: 'POST', headers: buildProviderHeaders(providerKey, `invitation:${invitation.id}`), body: JSON.stringify(buildInvitationEmail({ from, to: invitation.email, actionLink })) });
     if (!response.ok) {
       await admin.from('invitations').update({ status: 'failed' }).eq('id', invitation.id);
       return NextResponse.json({ error: 'INVITE_DELIVERY_FAILED' }, { status: 503 });
@@ -57,4 +83,3 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: message.includes('already pending') ? 'CONFLICT' : 'VALIDATION' }, { status: message.includes('already pending') ? 409 : 422 });
   }
 }
-
