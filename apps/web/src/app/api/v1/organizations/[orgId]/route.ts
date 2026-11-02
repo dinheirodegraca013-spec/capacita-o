@@ -10,8 +10,12 @@ export async function PATCH(request: NextRequest, context: { params: Promise<{ o
   const roles = ((membership?.membership_roles ?? []) as Array<{ role: string }>).map((item) => item.role);
   if (!membership || !roles.includes('manager')) return NextResponse.json({ error: 'FORBIDDEN' }, { status: 403 });
   const body = await request.json().catch(() => null) as { name?: string; kind?: string; timezone?: string; slug?: string } | null;
-  if (!body?.name || !body.kind || !body.timezone) return NextResponse.json({ error: 'VALIDATION' }, { status: 422 });
-  const { data, error } = await supabase.from('organizations').update({ name: body.name.trim(), kind: body.kind, timezone: body.timezone, slug: body.slug?.trim().toLowerCase() }).eq('id', orgId).select().single();
+  const name = body?.name?.trim();
+  const timezone = body?.timezone?.trim();
+  const validKinds = ['company', 'municipality', 'public_agency', 'nonprofit', 'other'];
+  if (!name || name.length > 180 || !body.kind || !validKinds.includes(body.kind) || !timezone) return NextResponse.json({ error: 'VALIDATION' }, { status: 422 });
+  const slug = body.slug?.trim().toLowerCase();
+  const { data, error } = await supabase.from('organizations').update({ name, kind: body.kind, timezone, ...(slug ? { slug } : {}) }).eq('id', orgId).select().single();
   if (error) return NextResponse.json({ error: error.code === '42501' ? 'FORBIDDEN' : 'UNAVAILABLE' }, { status: error.code === '42501' ? 403 : 503 });
   return NextResponse.json({ organization: data });
 }
