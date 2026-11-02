@@ -257,3 +257,8 @@ Com fixtures sintéticas temporárias no Supabase autorizado e configuração Pl
 - `POST https://capacita-o-x5hg.vercel.app/api/v1/auth/recover` para a conta autorizada: **202**.
 - Resend registrou o novo e-mail transacional; inspeção programática confirmou `capacita-o-x5hg.vercel.app` presente e `localhost` ausente, sem registrar o token.
 - Vercel `NEXT_PUBLIC_APP_URL`: valor público canônico confirmado em production/preview/development.
+### Rechecagem híbrida publicada — 02/11/2026
+
+- Produção `dpl_XRYtMD5CwtFYksRp5gqpen7sV1zD` (READY), commit `c831e34253849ca38c3218e76d876692da733ff1`.
+- Playwright remoto isolado: login real do tenant B → `/aluno/turmas` → encontro `Encontro presencial` e turma `Turma Híbrida 2026`: **1/1 PASS**.
+- Regressão local: `npm run typecheck` PASS, `npm run lint` PASS, `npm test` **30 arquivos/77 testes PASS**, `npm run build` PASS.
