@@ -10,10 +10,13 @@ export default async function StudentCatalogPage({ params, searchParams }: { par
   const supabase = await createSupabaseServerClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect('/login');
-  const { data: membership } = await supabase.from('memberships').select('id').eq('user_id', user.id).eq('organization_id', orgId).eq('status', 'active').maybeSingle();
+  const { data: membership, error: membershipError } = await supabase.from('memberships').select('id').eq('user_id', user.id).eq('organization_id', orgId).eq('status', 'active').maybeSingle();
+  if (membershipError) return <p role="alert">Não foi possível carregar sua organização. Tente novamente.</p>;
   if (!membership) return <p>Acesso negado.</p>;
-  const { data: offerings } = await supabase.from('offerings').select('id, title, course_version_id, mandatory, capacity, enrollment_policy, starts_at, ends_at').eq('organization_id', orgId).eq('status', 'published').ilike('title', q ? `%${q}%` : '%').order('starts_at', { ascending: true });
-  const { data: enrollments } = await supabase.from('enrollments').select('offering_id').eq('organization_id', orgId).eq('membership_id', membership.id).neq('status', 'cancelled');
+  const { data: offerings, error: offeringsError } = await supabase.from('offerings').select('id, title, course_version_id, mandatory, capacity, enrollment_policy, starts_at, ends_at').eq('organization_id', orgId).eq('status', 'published').ilike('title', q ? `%${q}%` : '%').order('starts_at', { ascending: true });
+  if (offeringsError) return <p role="alert">Não foi possível carregar o catálogo. Tente novamente.</p>;
+  const { data: enrollments, error: enrollmentsError } = await supabase.from('enrollments').select('offering_id').eq('organization_id', orgId).eq('membership_id', membership.id).neq('status', 'cancelled');
+  if (enrollmentsError) return <p role="alert">Não foi possível carregar suas matrículas. Tente novamente.</p>;
   const enrolled = new Set((enrollments ?? []).map((item) => item.offering_id));
   return <section><h1>Catálogo de cursos</h1><form className="search-form"><label htmlFor="q">Buscar por título</label><input id="q" name="q" defaultValue={q} placeholder="Ex.: atendimento" /><button className="secondary-button" type="submit">Buscar</button></form>{offerings?.length ? <div className="course-grid">{offerings.map((offering) => <CourseCard key={offering.id} offering={offering} organizationId={orgId} membershipId={membership.id} enrolled={enrolled.has(offering.id)} />)}</div> : <p className="empty-state">Nenhum curso disponível para sua organização.</p>}</section>;
 }
