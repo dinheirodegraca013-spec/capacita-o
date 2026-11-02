@@ -22,6 +22,7 @@ insert into public.membership_roles(membership_id, role) values ('00000000-0000-
 insert into public.courses(id, organization_id, owner_type, title, slug, status) values ('00000000-0000-0000-0000-000000000181', '00000000-0000-0000-0000-000000000181', 'organization', 'Regression', 'regression', 'published');
 insert into public.course_versions(id, course_id, version_no, title, learning_mode, status) values ('00000000-0000-0000-0000-000000000181', '00000000-0000-0000-0000-000000000181', 1, 'Regression', 'self_paced', 'published');
 insert into public.offerings(id, organization_id, course_version_id, title, enrollment_policy, status) values ('00000000-0000-0000-0000-000000000181', '00000000-0000-0000-0000-000000000181', '00000000-0000-0000-0000-000000000181', 'Manager only', 'manager_assigned', 'published');
+select set_config('request.jwt.claim.aal', 'aal2', true);
 select set_config('request.jwt.claim.sub', '00000000-0000-0000-0000-000000000182', true);
 select throws_ok($$select public.enroll_member('00000000-0000-0000-0000-000000000181', '00000000-0000-0000-0000-000000000182')$$, 'MEMBERSHIP_FORBIDDEN', 'student cannot self-enroll in manager-assigned offering');
 select * from finish();
