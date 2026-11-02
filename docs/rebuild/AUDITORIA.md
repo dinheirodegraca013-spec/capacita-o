@@ -202,3 +202,6 @@ Foi emitido novo e-mail pelo endpoint público atual; o conteúdo contém soment
 ### E2E autenticado de dois tenants — 02/11/2026
 
 Reauditoria com fixtures sintéticas temporárias comprovou no navegador público: tenant A **1/1 PASS** e tenant B **1/1 PASS**, cada um vendo apenas a organização própria e alcançando o portal correspondente. Usuários e organizações foram removidos imediatamente depois; a consulta final confirmou zero fixtures. O gate de isolamento por jornada autenticada deixa de ser falta de evidência; permanecem SMTP/worker, backup/PITR, proteção de senha comprometida no plano Free e auditoria independente final.
+### Achado corrigido: agenda híbrida não renderizada — 02/11/2026
+
+A causa foi uma leitura relacional aninhada de `meetings` com `class_groups(name)` que não retornava a reunião sob a combinação atual de RLS. A correção separa as consultas e restringe ambas por `organization_id`; não houve abertura de policy. O deployment `dpl_XRYtMD5CwtFYksRp5gqpen7sV1zD` está READY e o Playwright autenticado do tenant B passou **1/1**. O gate integral continua aberto por SMTP/worker real, backup/PITR e auditoria final.
