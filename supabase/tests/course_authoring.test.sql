@@ -8,6 +8,7 @@ insert into public.organizations(id, name, slug, kind) values ('10000000-0000-00
 insert into public.memberships(id, user_id, organization_id, status) values ('20000000-0000-0000-0000-000000000041', '00000000-0000-0000-0000-000000000041', '10000000-0000-0000-0000-000000000041', 'active');
 insert into public.membership_roles(membership_id, role) values ('20000000-0000-0000-0000-000000000041', 'manager');
 set local role authenticated;
+set local request.jwt.claim.aal = 'aal2';
 set local request.jwt.claim.sub = '00000000-0000-0000-0000-000000000041';
 insert into public.courses(id, organization_id, owner_type, title, slug, license_confirmed, created_by) values ('40000000-0000-0000-0000-000000000041', '10000000-0000-0000-0000-000000000041', 'organization', 'Authoring', 'authoring', true, '00000000-0000-0000-0000-000000000041');
 insert into public.course_versions(id, course_id, version_no, title, license_confirmed, learning_mode) values ('50000000-0000-0000-0000-000000000041', '40000000-0000-0000-0000-000000000041', 1, 'Authoring', true, 'self_paced');
