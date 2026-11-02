@@ -589,3 +589,8 @@ A estrutura de `notification_outbox` e as funções `enqueue_notification`/`clai
 ## Notificação de homologação autorizada — 02/11/2026
 
 Com autorização explícita do usuário, foi criado um único item idempotente no outbox para `guicabanas13@gmail.com`, sem senha, token, CPF ou outro segredo. O registro `07204440-ea48-4276-8a82-1806136ba769` ficou `pending`, `attempts=0`, aguardando o Cron de produção. A tentativa de criar um deployment production imediato voltou a encontrar a cota Vercel de 100 deployments/dia; não houve duplicação nem envio manual fora do worker.
+
+
+## Cadastro e login simplificados — 03/11/2026
+
+O fluxo de autenticação ganhou `/cadastro`, link direto na tela de login e `/cadastro-confirmado`. O cadastro usa Supabase Auth com senha mínima de 12 caracteres e confirmação de e-mail; não concede superadmin nem organização automaticamente. Contas sem membership agora recebem uma mensagem clara aguardando convite/atribuição, em vez de uma lista vazia. A mudança aguarda novo deployment para validação pública.
