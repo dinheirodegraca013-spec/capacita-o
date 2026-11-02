@@ -504,3 +504,7 @@ O rebuild automático seguinte `dpl_FH9tPHsTyVjU8fjjQLKey4Hi4EXa` repetiu o trav
 ## Preview refeito com espera adequada — 02/11/2026
 
 O `npm ci --legacy-peer-deps --ignore-scripts` local concluiu em aproximadamente 1 minuto; o atraso não era falha determinística. O preview foi recriado manualmente no deployment `dpl_Ei8Fp3AXAbyL6cxevz7iqvhG9Aer` (commit `454c3e90`), estado **READY**. O alias protegido respondeu 302 para o SSO da Vercel em `/login` e `/recuperar-senha`; o preview autenticado continua pendente.
+
+## Hardening de dependências — 02/11/2026
+
+Foi adicionado override explícito de `minimatch` para `^11.0.1` em `apps/web/package.json`, com lockfile regenerado. `npm ci --legacy-peer-deps --ignore-scripts`, `npm audit --audit-level=high`, typecheck, lint, 30 arquivos/77 testes e build passaram; o audit agora retorna **0 vulnerabilidades**. O deployment de preview correspondente `dpl_5sKPsiAdsCYDX9MTkcoYp65zZxxC` ficou READY.
