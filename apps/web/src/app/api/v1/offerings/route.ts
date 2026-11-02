@@ -20,6 +20,8 @@ export async function POST(request: NextRequest) {
   if (!user) return NextResponse.json({ error: 'UNAUTHENTICATED' }, { status: 401 });
   const body = await request.json().catch(() => null) as { organizationId?: string; courseVersionId?: string; title?: string; mandatory?: boolean; capacity?: number | null; enrollmentPolicy?: 'self_enroll' | 'manager_assigned'; startsAt?: string | null; endsAt?: string | null } | null;
   if (!body?.organizationId || !body.courseVersionId || !body.title || !body.enrollmentPolicy) return NextResponse.json({ error: 'VALIDATION' }, { status: 422 });
+  const assurance = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+  if (assurance.error || assurance.data?.currentLevel !== 'aal2') return NextResponse.json({ error: 'MFA_REQUIRED' }, { status: 403 });
   const { data: membership } = await supabase.from('memberships').select('id, organization_id, membership_roles(role)').eq('user_id', user.id).eq('organization_id', body.organizationId).eq('status', 'active').maybeSingle();
   const roles = ((membership?.membership_roles ?? []) as Array<{ role: OrganizationRole }>).map((item) => item.role);
   if (!membership || !roles.includes('manager')) return NextResponse.json({ error: 'FORBIDDEN' }, { status: 403 });
