@@ -498,3 +498,9 @@ O runbook operacional de Auth foi versionado em `docs/rebuild/operations/supabas
 O preview do branch foi recompilado no deployment `dpl_E6Jm3797LV5Fq2y3dZMeNkHxkxUy` (commit `f793442a`), estado **READY**. O acesso anônimo às rotas profundas redireciona ao SSO da Vercel; a homologação autenticada do preview continua pendente.
 
 O deployment documental subsequente `dpl_EQCXoPVNRJRkYEy2EFjotDHkrJE3` ficou preso durante `npm ci` sem novos eventos e foi cancelado. Nenhum alias de produção foi alterado; o preview READY anterior permanece a referência operacional.
+
+O rebuild automático seguinte `dpl_FH9tPHsTyVjU8fjjQLKey4Hi4EXa` repetiu o travamento no `npm ci` e também foi cancelado. A produção continuou sem alteração; `/api/v1/auth/recover` respondeu 405 para GET, confirmando a rota pública.
+
+## Preview refeito com espera adequada — 02/11/2026
+
+O `npm ci --legacy-peer-deps --ignore-scripts` local concluiu em aproximadamente 1 minuto; o atraso não era falha determinística. O preview foi recriado manualmente no deployment `dpl_Ei8Fp3AXAbyL6cxevz7iqvhG9Aer` (commit `454c3e90`), estado **READY**. O alias protegido respondeu 302 para o SSO da Vercel em `/login` e `/recuperar-senha`; o preview autenticado continua pendente.
