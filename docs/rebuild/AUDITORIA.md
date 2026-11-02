@@ -209,3 +209,5 @@ A causa foi uma leitura relacional aninhada de `meetings` com `class_groups(name
 Rechecagem operacional do Resend no mesmo ciclo: e-mail de recuperação do CapacitaGov marcado `delivered`; HTML/texto sem `localhost` e com origem pública canônica. Isso não aprova o worker de notificações do outbox, que permanece pendente de execução real com segredo interno.
 
 Revisão independente posterior encontrou exposição de agenda entre alunos do mesmo tenant. Corrigido filtrando `meetings` por turmas presentes nas matrículas ativas do aluno; não houve alteração de policy nem uso de service role. O deployment `dpl_3JYLU4KXJhcS8D7UBVK1QNc3GTdz` está READY. A jornada completa até certificado/relatório ainda não foi declarada.
+
+O preview atual permanece protegido por SSO da Vercel; não foi tratado como homologação autenticada até uma sessão de preview ser fornecida.
