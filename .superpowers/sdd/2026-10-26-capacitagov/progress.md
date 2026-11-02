@@ -175,3 +175,5 @@ Task T21 — chamada/presença (02/11/2026): tokens e correções agora validam 
 Task T22 — conclusão/certificados (02/11/2026): endpoint de conclusão agora rejeita organização ou matrícula vazias/não textuais antes da RPC; serviço também valida o identificador e mantém conclusão idempotente e elegibilidade transacional no banco. Web run `41518125503` e pgTAP run `41518125515` concluíram `success`. PDF/verificação visual e E2E autenticado permanecem pendentes.
 
 Task T23 — certificados/verificação (02/11/2026): PDF agora calcula comprimentos em bytes UTF-8, neutraliza quebras de linha antes de escapar texto e mantém resposta privada sem cache; códigos públicos têm limite de tamanho antes da RPC. Web run `41518434305` e pgTAP run `41518434251` concluíram `success`. QR/verificação visual e E2E de PDF permanecem pendentes.
+
+Task T24 — feedback (02/11/2026): envio pós-conclusão agora valida matrícula, nota e comentário com limite de 2.000 caracteres; a UI trata falhas de rede e evita submissão concorrente, permitindo retry. Web run `41518650068` e pgTAP run `41518650065` concluíram `success`. E2E autenticado e agregação nos relatórios permanecem pendentes.
