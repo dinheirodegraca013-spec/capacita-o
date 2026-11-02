@@ -28,7 +28,7 @@ export default function ActivateAccountPage() {
         authFailed = Boolean(result.error);
       } else if (!authFailed && email && otp) {
         const result = await supabase.auth.verifyOtp({ email, token: otp, type: 'invite' });
-        authError = result.error;
+        authFailed = Boolean(result.error);
       }
 
       const after = await supabase.auth.getUser();
