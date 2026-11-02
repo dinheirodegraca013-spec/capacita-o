@@ -327,3 +327,10 @@ Com fixtures sintéticas temporárias no Supabase autorizado e configuração Pl
 - `/`: HTTP 200, conteúdo Next/CapacitaGov e hero verificados.
 - `/login`: HTTP 200, formulário de autenticação e recuperação presentes.
 - `/api/internal/notifications`: fetch externo ficou bloqueado pela autenticação SSO da Vercel; não usar esse 401 como resposta da aplicação. No preview do mesmo código, a rota sem segredo respondeu 401.
+
+
+## Worker/outbox — 02/11/2026
+
+- Schema remoto conferido: outbox possui idempotência, status, tentativas, retry e timestamps de processamento.
+- `claim_pending_notifications(50)` executou no banco autorizado e retornou `[]`.
+- Nenhum dado sintético foi inserido; a entrega Resend permanece pendente de uma notificação real autorizada.
