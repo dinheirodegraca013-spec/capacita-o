@@ -559,3 +559,8 @@ Resend registrou POST `/emails` com status 200 em 02/11/2026, comprovando envio 
 ## T27 complemento — worker agendado — 02/11/2026
 
 A rota interna de notificações agora aceita o header padrão `Authorization: Bearer CRON_SECRET` além do segredo legado, e `apps/web/vercel.json` agenda `/api/internal/notifications` a cada cinco minutos. `CRON_SECRET` sensível foi criado no projeto Vercel para production/preview/development. CI web/pgTAP do commit `b6331f1e3b03a758a02bbd8cae809acba5bea6de` concluído com sucesso. A execução real aguarda um novo deployment, ainda bloqueado pela cota diária da Vercel.
+
+
+## E2E Auth/RLS real — 02/11/2026 (fixtures temporárias)
+
+Foram criados dois usuários e duas organizações sintéticas somente para homologação no Supabase autorizado. Login por Auth REST retornou HTTP 200 para ambos; a consulta autenticada de organizações retornou exclusivamente a organização própria para cada usuário (tenant A não viu B e vice-versa). As fixtures foram removidas na mesma sessão, com confirmação final de zero usuários/organizações sintéticos. A tentativa de contexto SSR com bearer puro retornou 401, comportamento esperado porque a rota Next exige sessão em cookie; a prova browser/cookie permanece separada. SMTP/worker, backup/PITR e deployment do HEAD continuam pendentes.
