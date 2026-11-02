@@ -248,3 +248,8 @@ Revisor independente não encontrou novo P0/P1 no código ou autorização. Conf
 ### Worker/outbox — evidência negativa controlada — 02/11/2026
 
 A função de claim está implantada e executável, mas a fila remota estava vazia. Como não foi criado um destinatário ou item fictício em produção, não há evidência de envio/retry real do worker. O gate permanece aberto por ausência de evidência operacional, não por falha observada na função.
+
+
+### Rechecagem dos advisors e alias — 02/11/2026
+
+Supabase permanece sem alerta de RLS ausente; advisors continuam exibindo apenas `SECURITY DEFINER` intencionais, sete índices INFO não utilizados e `auth_leaked_password_protection` desativado. A configuração de senha comprometida depende do painel Auth, não exposto pelo conector desta sessão. O alias Vercel foi confirmado apontando para `dpl_HJABkspWYbQwfqEb4hZnFucnHwgw`; a pendência operacional restante é worker/outbox real, backup/restauração e essa configuração de segurança do Auth.
