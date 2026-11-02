@@ -4,10 +4,9 @@ import { deliverPendingNotifications } from '@/modules/notifications/service';
 import { buildProviderHeaders, buildResendNotification } from '@/modules/notifications/resend';
 
 function isAuthorized(request: NextRequest) {
-  const secret = process.env.NOTIFICATION_JOB_SECRET;
-  if (!secret) return false;
-  return request.headers.get('x-notification-job-secret') === secret
-    || request.headers.get('authorization') === `Bearer ${secret}`;
+  const secrets = [process.env.NOTIFICATION_JOB_SECRET, process.env.CRON_SECRET].filter(Boolean) as string[];
+  const authorization = request.headers.get('authorization');
+  return secrets.some((secret) => request.headers.get('x-notification-job-secret') === secret || authorization === `Bearer ${secret}`);
 }
 
 export async function POST(request: NextRequest) {
