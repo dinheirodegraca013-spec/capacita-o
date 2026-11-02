@@ -579,3 +579,8 @@ A cota foi liberada e o deployment `dpl_AjnNewg9eHeASkwXzqYM9iGrtgQU` ficou READ
 ## Produção atualizada — 02/11/2026
 
 O alias `capacita-o-x5hg.vercel.app` foi reassigned com sucesso para o deployment READY `dpl_HJABkspWYbQwfqEb4hZnFucnHwgw`, commit `49339bedb6c7d3b3c69798d7cfbc9bb14904fa33`. A produção respondeu HTTP 200 em `/` e `/login`, com landing Next atualizada e imagem hero. O endpoint interno não foi considerado validado por fetch sem sessão devido à proteção SSO do domínio; o preview equivalente retornou 401 sem segredo. Revisão independente não encontrou P0/P1. Permanecem gates: consumo real do outbox/entrega Resend, backup/restauração e auditoria final.
+
+
+## Worker — verificação não destrutiva — 02/11/2026
+
+A estrutura de `notification_outbox` e as funções `enqueue_notification`/`claim_pending_notifications` foram rechecadas no Supabase. `claim_pending_notifications(50)` executou sem erro e retornou fila vazia. Não foi criado destinatário nem item sintético em produção; portanto a entrega real do worker continua corretamente marcada como não comprovada.
