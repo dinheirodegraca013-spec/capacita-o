@@ -456,3 +456,6 @@ Preview, navegação e recuperação foram reexecutados no alias público: **2 P
 
 Consulta autoritativa da organização Supabase `hcmpjnzsocjsjujrffwe` retornou plano `free`/`tier_free`. Nesse plano, a proteção contra senhas vazadas não está disponível conforme a documentação oficial; backup/PITR gerenciado também não pode ser usado como evidência de release. Upgrade para Pro ou política operacional alternativa são decisões externas, não correções de código.
 
+## Rechecagem de links de autenticação — 02/11/2026
+
+O alias público continua servindo o fluxo Next e `NEXT_PUBLIC_APP_URL` está configurado como `https://capacita-o-x5hg.vercel.app` nos ambientes Vercel. Um novo POST público para recuperação retornou 202; o Resend registrou a mensagem transacional com assunto `CapacitaGov — redefinição de senha`, contendo o domínio público e sem `localhost`. As capturas antigas correspondem aos templates nativos do Supabase (“Reset your password”/“Your sign-in link”) e não ao fluxo Resend atual. A configuração global Site URL/Redirect URLs do projeto Supabase ainda requer acesso ao painel da organização proprietária para eliminar esses templates antigos em qualquer fluxo direto do Auth.
