@@ -211,3 +211,5 @@ Rechecagem operacional do Resend no mesmo ciclo: e-mail de recuperação do Capa
 Revisão independente posterior encontrou exposição de agenda entre alunos do mesmo tenant. Corrigido filtrando `meetings` por turmas presentes nas matrículas ativas do aluno; não houve alteração de policy nem uso de service role. O deployment `dpl_3JYLU4KXJhcS8D7UBVK1QNc3GTdz` está READY. A jornada completa até certificado/relatório ainda não foi declarada.
 
 O preview atual permanece protegido por SSO da Vercel; não foi tratado como homologação autenticada até uma sessão de preview ser fornecida.
+
+Dependências: a auditoria atual não encontrou high/critical; os 16 moderate transitivos de `minimatch` ficam restritos ao toolchain ESLint/TypeScript. A correção automática forçada seria breaking e permanece pendente de atualização compatível do ecossistema.
