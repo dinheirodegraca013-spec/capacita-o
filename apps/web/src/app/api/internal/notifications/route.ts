@@ -3,9 +3,15 @@ import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 import { deliverPendingNotifications } from '@/modules/notifications/service';
 import { buildProviderHeaders, buildResendNotification } from '@/modules/notifications/resend';
 
-export async function POST(request: NextRequest) {
+function isAuthorized(request: NextRequest) {
   const secret = process.env.NOTIFICATION_JOB_SECRET;
-  if (!secret || request.headers.get('x-notification-job-secret') !== secret) return NextResponse.json({ error: 'UNAUTHORIZED' }, { status: 401 });
+  if (!secret) return false;
+  return request.headers.get('x-notification-job-secret') === secret
+    || request.headers.get('authorization') === `Bearer ${secret}`;
+}
+
+export async function POST(request: NextRequest) {
+  if (!isAuthorized(request)) return NextResponse.json({ error: 'UNAUTHORIZED' }, { status: 401 });
   const providerUrl = process.env.EMAIL_PROVIDER_URL;
   const providerKey = process.env.EMAIL_PROVIDER_KEY;
   const from = process.env.EMAIL_FROM;
@@ -34,3 +40,5 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: error instanceof Error ? error.message : 'Notification worker failed' }, { status: 503 });
   }
 }
+
+export async function GET(request: NextRequest) { return POST(request); }
