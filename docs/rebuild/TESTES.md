@@ -334,3 +334,11 @@ Com fixtures sintéticas temporárias no Supabase autorizado e configuração Pl
 - Schema remoto conferido: outbox possui idempotência, status, tentativas, retry e timestamps de processamento.
 - `claim_pending_notifications(50)` executou no banco autorizado e retornou `[]`.
 - Nenhum dado sintético foi inserido; a entrega Resend permanece pendente de uma notificação real autorizada.
+
+
+## Teste autorizado do worker — 02/11/2026
+
+- Item idempotente criado no `notification_outbox` para a conta autorizada `guicabanas13@gmail.com`.
+- Payload contém apenas mensagem de homologação; nenhum segredo ou token.
+- Estado inicial confirmado: `pending`, `attempts=0`.
+- Cron permanece diário em produção; a execução ainda não foi observada.
