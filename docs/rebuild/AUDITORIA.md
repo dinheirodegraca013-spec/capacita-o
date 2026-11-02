@@ -223,3 +223,8 @@ Código: parecer independente favorável no HEAD `49cb304`; CI web/pgTAP verde e
 ### Worker de notificações — reavaliação 02/11/2026
 
 A lacuna de agendamento foi corrigida no código e na configuração Vercel; o gate de runtime permanece BLOCKED até existir deployment com Cron ativo e evidência de item `notification_outbox` processado.
+
+
+### Evidência adicional — Auth/RLS multi-tenant — 02/11/2026
+
+Dois usuários sintéticos temporários autenticaram no Supabase real (HTTP 200) e, sob JWT individual, cada um consultou somente a própria organização via PostgREST. A limpeza foi executada na mesma sessão e confirmou zero fixtures restantes. Isso reduz o risco de isolamento de dados no nível Auth/RLS, mas não substitui a jornada SSR com cookie no deployment atual. O parecer integral permanece BLOCKED por deployment do HEAD/Cron, worker Resend processando outbox, backup/PITR e auditoria final independente.
