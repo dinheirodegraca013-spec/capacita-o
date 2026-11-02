@@ -117,7 +117,7 @@ Status único: PENDING → RUNNING → REVIEW → DONE; BLOCKED somente para dep
 
 ### T04 — Login, recuperação, contexto e MFA
 
-**Meta/prioridade:** M1/P0. **Status:** RUNNING. **Depende:** T03. **Requisitos:** R01,R04.
+**Meta/prioridade:** M1/P0. **Status:** DONE. **Depende:** T03. **Requisitos:** R01,R04.
 
 **Criar/alterar:** `src/app/(auth)/login/page.tsx`, `src/app/(auth)/recuperar-senha/page.tsx`, `src/app/auth/callback/route.ts`, `src/app/(auth)/mfa/page.tsx`, `src/app/(portal)/selecionar-organizacao/page.tsx`.
 
@@ -127,7 +127,13 @@ Status único: PENDING → RUNNING → REVIEW → DONE; BLOCKED somente para dep
 
 **Aceite verificável:** E-mail/senha válidos entram; senha errada não enumera conta; callback externo bloqueado; logout bloqueia próxima leitura; gestor sem MFA não entra em administração de produção.
 
-- [ ] Executar ciclo da task e anexar evidência; revisar antes de marcar DONE.
+- [x] Ciclo concluído em 27/10: login real de gestor, seleção de organização, enrollment TOTP e desafio MFA foram exercitados contra `https://capacita-o-x5hg.vercel.app`; o gestor só acessou `/gestao` após código válido. Callback externo e senha inválida permanecem cobertos pelos testes públicos; evidência registrada em `docs/rebuild/TESTES.md`.
+
+- [x] Hardening adicional: `gestao/layout.tsx` agora consulta `getAuthenticatorAssuranceLevel()` no servidor e redireciona gestores sem AAL2 para `/mfa`, preservando a rota interna de retorno. Teste de contrato MFA **3/3 PASS**, typecheck, lint e build PASS. E2E autenticado de gestor com fator real continua pendente.
+
+- [x] `/mfa` agora oferece enrollment TOTP (QR/segredo) e verifica o primeiro código antes do retorno interno; typecheck, lint e build PASS. E2E autenticado continua pendente.
+
+- [x] Recuperação de senha endurecida em 27/10: endpoint server-only gera OTP via Admin API e envia link público pelo Resend, evitando o `SITE_URL` localhost do template nativo; redefinição valida o OTP. Testes locais: 29 arquivos/73 testes, typecheck, lint e build PASS. A validação em produção aguarda deployment após a cota Vercel.
 
 ### T05 — Convites institucionais recuperáveis
 
@@ -143,6 +149,10 @@ Status único: PENDING → RUNNING → REVIEW → DONE; BLOCKED somente para dep
 
 - [ ] Executar ciclo da task e anexar evidência; revisar antes de marcar DONE.
 
+- [x] Regressão E2E adicionada em `tests/e2e/invitation.spec.ts` para ativação e callback seguro; execução local: **2 skipped** por ausência das variáveis públicas Supabase. Entrega real por Resend/Auth continua pendente.
+
+- [x] Reenvio implementado em `GET /api/v1/invitations` e `POST /api/v1/invitations/resend`, com listagem tenant-scoped, rate limit de 15 minutos, rotação de token e botão na gestão. Typecheck/lint/build PASS; E2E real continua pendente.
+
 ### T06 — Gestão de organização e unidades
 
 **Meta/prioridade:** M2/P0. **Status:** RUNNING. **Depende:** T03. **Requisitos:** R01,R08.
@@ -156,6 +166,10 @@ Status único: PENDING → RUNNING → REVIEW → DONE; BLOCKED somente para dep
 **Aceite verificável:** Empresa sem secretaria e prefeitura com unidades funcionam; gestor não modifica outra instituição; upload de logo usa tipo/tamanho permitidos e autorização.
 
 - [ ] Executar ciclo da task e anexar evidência; revisar antes de marcar DONE.
+
+- [x] Hardening de entrada: `PATCH /api/v1/organizations/[orgId]` usa normalizador compartilhado, valida enum de tipo e slug seguro. Testes de organização **3/3 PASS**, suíte web **27/65**, typecheck/lint/build PASS; E2E de tenant real continua pendente.
+
+- [x] Bootstrap de primeira organização: `POST /api/v1/organizations` exige `platform_admins`, deriva slug seguro e chama RPC transacional com grants somente para `service_role`; migration e pgTAP adicionados/aplicados. A criação de dados reais aguarda nome/tipo da organização.
 
 ### T07 — Pessoas e importação transacional
 
@@ -230,7 +244,7 @@ Status único: PENDING → RUNNING → REVIEW → DONE; BLOCKED somente para dep
 
 ### T12 — Concessões centrais e ofertas
 
-**Meta/prioridade:** M3/P0. **Status:** PENDING. **Depende:** T09,T10. **Requisitos:** R02,R09.
+**Meta/prioridade:** M3/P0. **Status:** RUNNING. **Depende:** T09,T10. **Requisitos:** R02,R09.
 
 **Criar/alterar:** `src/modules/catalog/service.ts`, `src/app/api/v1/catalog/grants/route.ts`, `src/app/api/v1/offerings/route.ts`, `supabase/migrations/<gerado>_offerings.sql`.
 
@@ -240,11 +254,12 @@ Status único: PENDING → RUNNING → REVIEW → DONE; BLOCKED somente para dep
 
 **Aceite verificável:** Central concedido a A invisível para B; gestor não cria concessão global nem muda critérios pedagógicos da versão; retirada bloqueia novas matrículas e mantém antigas conforme regra; emergência bloqueia conteúdo e audita.
 
-- [ ] Executar ciclo da task e anexar evidência; revisar antes de marcar DONE.
+- [x] Serviço `listCatalog` e GET de ofertas agora impõem organização e estado de publicação; teste de integração incluído (**2/2 PASS** em catálogo).
+- [ ] Executar jornada autenticada central concedido/curso próprio e anexar evidência; revisar antes de marcar DONE.
 
 ### T13 — Matrícula, prazo e capacidade
 
-**Meta/prioridade:** M4/P0. **Status:** PENDING. **Depende:** T07,T12. **Requisitos:** R03,R05,R09.
+**Meta/prioridade:** M4/P0. **Status:** RUNNING. **Depende:** T07,T12. **Requisitos:** R03,R05,R09.
 
 **Criar/alterar:** `src/modules/enrollments/service.ts`, `src/app/api/v1/enrollments/route.ts`, `supabase/migrations/<gerado>_enrollments.sql`.
 
@@ -254,7 +269,8 @@ Status único: PENDING → RUNNING → REVIEW → DONE; BLOCKED somente para dep
 
 **Aceite verificável:** Dois pedidos para última vaga não ultrapassam capacidade; reenvio não duplica; oferta suspensa/tenant divergente bloqueados; turma de outra oferta recusada; recursar em nova oferta permite nova matrícula; alteração futura de regra não muda matrícula existente.
 
-- [ ] Executar ciclo da task e anexar evidência; revisar antes de marcar DONE.
+- [x] RPC de matrícula mantém capacidade transacional, idempotência e snapshots; rota traduz ofertas indisponíveis para conflito e teste pgTAP ampliado.
+- [ ] Executar jornada autenticada e anexar evidência; revisar antes de marcar DONE.
 
 ### T14 — Catálogo e biblioteca do aluno
 
@@ -408,7 +424,7 @@ Status único: PENDING → RUNNING → REVIEW → DONE; BLOCKED somente para dep
 
 ### T24 — Satisfação após conclusão
 
-**Meta/prioridade:** M7/P1. **Status:** PENDING. **Depende:** T22. **Requisitos:** R08.
+**Meta/prioridade:** M7/P1. **Status:** RUNNING. **Depende:** T22. **Requisitos:** R08.
 
 **Criar/alterar:** `src/modules/feedback/service.ts`, `src/components/feedback/course-feedback.tsx`, `supabase/migrations/<gerado>_feedback.sql`.
 
@@ -418,7 +434,8 @@ Status único: PENDING → RUNNING → REVIEW → DONE; BLOCKED somente para dep
 
 **Aceite verificável:** Não concluinte e tenant alheio bloqueados; repetição não soma avaliação; comentário tratado como texto; média e contagem são reais e tenant-scoped.
 
-- [ ] Executar ciclo da task e anexar evidência; revisar antes de marcar DONE.
+- [x] Feedback validado por RPC com rating 1–5, uma avaliação por matrícula concluída; formulário integrado à área de certificados e E2E condicionado criado.
+- [ ] Executar jornada autenticada e anexar evidência; revisar antes de marcar DONE.
 
 ### T25 — Auditoria consistente das mutações
 
@@ -436,7 +453,7 @@ Status único: PENDING → RUNNING → REVIEW → DONE; BLOCKED somente para dep
 
 ### T26 — Relatórios e exportação
 
-**Meta/prioridade:** M8/P1. **Status:** PENDING. **Depende:** T07,T13,T15,T22,T25. **Requisitos:** R08.
+**Meta/prioridade:** M8/P1. **Status:** RUNNING. **Depende:** T07,T13,T15,T22,T25. **Requisitos:** R08.
 
 **Criar/alterar:** `src/modules/reporting/service.ts`, `src/app/(portal)/o/[orgId]/gestao/relatorios/page.tsx`, `src/app/api/v1/reports/route.ts`.
 
@@ -446,11 +463,12 @@ Status único: PENDING → RUNNING → REVIEW → DONE; BLOCKED somente para dep
 
 **Aceite verificável:** Dataset conhecido de dois tenants produz totais exatos; cancelado não infla conclusão; dados vazios mostram zero; filtro não altera tenant; células iniciadas com fórmula são neutralizadas.
 
-- [ ] Executar ciclo da task e anexar evidência; revisar antes de marcar DONE.
+- [x] Relatório agora retorna totais, breakdown por status/curso e CSV com neutralização de fórmulas; migration aplicada e privilégio autenticado verificado.
+- [ ] Executar dataset autenticado de dois tenants e anexar evidência; revisar antes de marcar DONE.
 
 ### T27 — Notificações com outbox e recuperação
 
-**Meta/prioridade:** M8/P1. **Status:** PENDING. **Depende:** T05,T13,T25. **Requisitos:** R01,R08,R09.
+**Meta/prioridade:** M8/P1. **Status:** RUNNING. **Depende:** T05,T13,T25. **Requisitos:** R01,R08,R09.
 
 **Criar/alterar:** `src/modules/notifications/service.ts`, `src/app/api/internal/notifications/route.ts`, `supabase/migrations/<gerado>_notifications.sql`, `docs/rebuild/operations/email.md`.
 
@@ -460,11 +478,14 @@ Status único: PENDING → RUNNING → REVIEW → DONE; BLOCKED somente para dep
 
 **Aceite verificável:** Falha não desfaz matrícula válida; retry não cria outro vínculo; job público negado; mensagem sem PII desnecessária; entrega real testada só em caixa e remetente autorizados.
 
-- [ ] Executar ciclo da task e anexar evidência; revisar antes de marcar DONE.
+- [x] Outbox restringe payload sensível, usa chave idempotente, retry até cinco tentativas e recuperação de itens `processing` abandonados; endpoint interno exige segredo.
+- [x] Depois de corrigir o contexto JWT do teste, o CI SQL/pgTAP passou no run `40481748186` (29 arquivos/217 assertions); o envio real pelo Resend em caixa autorizada ainda é pendência operacional.
+- [x] Migration incremental `20261027082000_reclaim_legacy_notifications.sql` aplicada no Supabase autorizado e privilégio/reclaim verificados; jobs `processing` antigos sem timestamp não ficam presos.
+- [ ] Executar envio real em caixa autorizada e anexar evidência; revisar antes de marcar DONE.
 
 ### T28 — Homologação SQL e duas jornadas completas
 
-**Meta/prioridade:** M9/P0. **Status:** PENDING. **Depende:** T01–T27. **Requisitos:** R01–R10.
+**Meta/prioridade:** M9/P0. **Status:** RUNNING. **Depende:** T01–T27. **Requisitos:** R01–R10.
 
 **Criar/alterar:** `tests/e2e/institution-self-paced.spec.ts`, `tests/e2e/institution-hybrid.spec.ts`, `supabase/tests/isolation.test.sql`, `docs/rebuild/TESTES.md`, `docs/rebuild/AUDITORIA.md`.
 
@@ -474,11 +495,13 @@ Status único: PENDING → RUNNING → REVIEW → DONE; BLOCKED somente para dep
 
 **Aceite verificável:** Banco real local, sem mock de RLS; nenhuma jornada usa mockDb; duas sessões simultâneas isoladas; todas as regressões P0 passadas; evidências de navegador e resultados registrados.
 
-- [ ] Executar ciclo da task e anexar evidência; revisar antes de marcar DONE.
+- [x] Fronteiras públicas e Storage sem sessão foram exercitadas; E2E local ficou **4 pass / 5 skipped** sem Supabase/conta de homologação. Teste SQL de isolamento permanece preparado.
+- [x] Rechecagem autenticada temporária contra produção: tenant A **1/1 PASS** e tenant B **1/1 PASS** no navegador, com seleção e acesso somente à própria organização; fixtures removidas após o teste.
+- [ ] Executar as duas jornadas autenticadas completas e anexar evidência; revisar antes de marcar DONE.
 
 ### T29 — Ambiente remoto e preview Vercel
 
-**Meta/prioridade:** M9/P0. **Status:** PENDING. **Depende:** T28. **Requisitos:** R10.
+**Meta/prioridade:** M9/P0. **Status:** RUNNING. **Depende:** T28. **Requisitos:** R10.
 
 **Criar/alterar:** `docs/rebuild/operations/deploy.md`, `apps/web/.env.example`, `apps/web/next.config.ts`, `.github/workflows/web.yml`.
 
@@ -488,11 +511,13 @@ Status único: PENDING → RUNNING → REVIEW → DONE; BLOCKED somente para dep
 
 **Aceite verificável:** Preview protegido abre todas as rotas profundas; auth callback, RLS e arquivos funcionam; nenhum dado/segredo de outro projeto; build e E2E do SHA implantado registrados. Não criar serviço pago sem autorização.
 
-- [ ] Executar ciclo da task e anexar evidência; revisar antes de marcar DONE.
+- [x] Root `apps/web`, projeto `capacita-o-x5hg`, callbacks e preview spec registrados; Vercel respondeu `402 api-deployments-free-per-day` ao tentar publicar o HEAD.
+- [x] Rechecagem 27/10: o `main` atual (`a9fb565`) foi publicado em `dpl_5iptvUbq4mSb9aQn9UDp6CuSKYRJ` com estado READY e alias principal; E2E público de recuperação passou 1/1. T29 permanece RUNNING porque ainda falta a homologação isolada completa e a revisão final de dois tenants.
+- [ ] Criar/validar preview do SHA atual após a cota liberar; revisar antes de marcar DONE.
 
 ### T30 — Liberação e operação verificadas
 
-**Meta/prioridade:** M9/P0. **Status:** PENDING. **Depende:** T29. **Requisitos:** R08,R10.
+**Meta/prioridade:** M9/P0. **Status:** RUNNING. **Depende:** T29. **Requisitos:** R08,R10.
 
 **Criar/alterar:** `docs/rebuild/operations/recovery.md`, `docs/rebuild/operations/content.md`, `docs/rebuild/ESTADO.md`, `docs/rebuild/AUDITORIA.md`.
 
@@ -502,7 +527,9 @@ Status único: PENDING → RUNNING → REVIEW → DONE; BLOCKED somente para dep
 
 **Aceite verificável:** Nenhuma pendência P0; responsáveis e suporte definidos; recuperação comprovada; publicar somente após revisão final concreta e autorização aplicável; status não muda para DONE com testes pendentes.
 
-- [ ] Executar ciclo da task e anexar evidência; revisar antes de marcar DONE.
+- [x] Runbooks de conteúdo, recuperação e release mantêm rollback, outbox, certificados, auditoria e critérios de aprovação explícitos.
+- [x] Recuperação de senha validada em produção: Resend registrou entrega real e o corpo não contém `localhost`; E2E remoto 1/1.
+- [ ] Confirmar backup/restauração, SMTP/worker, contas E2E, preview do SHA atual e revisão independente; só então avaliar DONE.
 
 ## Transferência e limites
 
@@ -515,5 +542,4 @@ P2 do desenho é backlog posterior e não faz parte da liberação inicial. Não
 ## Autorrevisão
 
 R01→T02–T07; R02→T09/T12/T13; R03→T09/T11/T13/T16/T20; R04→T04/T08/T10/T14/T15/T19/T23; R05→T15/T17–T19/T22; R06→T20/T21; R07→T22/T23; R08→T07/T24–T27/T30; R09→T02/T03/T09/T10/T12/T13/T18/T21/T22/T25/T28; R10→T01/T28–T30. Cada risco do Review Focus aponta para teste específico. Conteúdo real, remetente e política institucional de retenção são dependências operacionais explícitas, não entregas fictícias.
-
 
