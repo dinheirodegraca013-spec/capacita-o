@@ -218,3 +218,8 @@ Dependências: a auditoria atual não encontrou high/critical; os 16 moderate tr
 ## Auditoria remota atual — 02/11/2026
 
 Código: parecer independente favorável no HEAD `49cb304`; CI web/pgTAP verde e bypasses MFA de publicação fechados. Infraestrutura: Supabase ativo e migrations de hardening aplicadas; advisors mantêm avisos de SECURITY DEFINER intencionalmente expostas a RPC e índices não usados. Vercel mantém preview READY/SSO, sem promoção de produção; Resend confirmou envio real, mas não o worker agendado do outbox. Resultado integral: **BLOCKED por evidência operacional faltante**, não por falha P0/P1 de código.
+
+
+### Worker de notificações — reavaliação 02/11/2026
+
+A lacuna de agendamento foi corrigida no código e na configuração Vercel; o gate de runtime permanece BLOCKED até existir deployment com Cron ativo e evidência de item `notification_outbox` processado.
