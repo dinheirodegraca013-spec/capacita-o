@@ -485,6 +485,8 @@ Revisão independente identificou que a primeira correção ainda listava todos 
 
 O preview protegido do mesmo branch/commit continua disponível em `capacita-o-x5hg-git-fe-8d0bb7-dinheirodegraca013-specs-projects.vercel.app`; acesso anônimo redireciona ao SSO da Vercel e a raiz autenticada responde 200 após proteção.
 
+Reauditoria de dependências em 02/11 encontrou 16 vulnerabilidades moderadas transitivas em `minimatch` no toolchain ESLint/TypeScript. `npm audit fix` não removeu o alerta; `--force` exigiria downgrade incompatível do ESLint e não foi aplicado. Não há alerta high/critical no relatório.
+
 ## Entrega Resend revalidada — 02/11/2026
 
 A conta Resend registrou uma mensagem recente de redefinição do CapacitaGov como `delivered`. A inspeção do corpo confirmou que o botão e o texto usam exclusivamente `https://capacita-o-x5hg.vercel.app/redefinir-senha?...`, sem ocorrência de `localhost`. O gate de entrega Resend do fluxo de recuperação está comprovado; o worker de notificações institucionais ainda precisa de teste operacional separado.
