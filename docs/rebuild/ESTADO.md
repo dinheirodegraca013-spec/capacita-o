@@ -508,3 +508,8 @@ O `npm ci --legacy-peer-deps --ignore-scripts` local concluiu em aproximadamente
 ## Hardening de dependências — 02/11/2026
 
 Foi adicionado override explícito de `minimatch` para `^11.0.1` em `apps/web/package.json`, com lockfile regenerado. `npm ci --legacy-peer-deps --ignore-scripts`, `npm audit --audit-level=high`, typecheck, lint, 30 arquivos/77 testes e build passaram; o audit agora retorna **0 vulnerabilidades**. O deployment de preview correspondente `dpl_5sKPsiAdsCYDX9MTkcoYp65zZxxC` ficou READY.
+
+
+## T29/T30 — release e LGPD — 02/11/2026
+
+Runbooks de release e deploy foram sincronizados com o estado real: branch de reconstrução, CI verde e preview Vercel READY protegido por SSO. O gate integral permanece aberto para backup/PITR ensaiado, worker institucional Resend, proteção de senhas comprometidas e revisão jurídica/auditoria final. docs/rebuild/PRIVACIDADE.md agora explicita controlador/base legal/retenção, direitos do titular, transferências de e-mail e critérios de restauração antes da promoção.
