@@ -494,3 +494,5 @@ A conta Resend registrou uma mensagem recente de redefinição do CapacitaGov co
 ## Rechecagem pós-correção — 02/11/2026
 
 O runbook operacional de Auth foi versionado em `docs/rebuild/operations/supabase-auth.md`. A configuração Vercel continua canônica (`NEXT_PUBLIC_APP_URL=https://capacita-o-x5hg.vercel.app`). Verificações locais: typecheck, lint, 30 arquivos/77 testes e build PASS; produção respondeu HTTP 200 em `/login` e `/recuperar-senha`. Links nativos antigos do Supabase continuam dependendo de Site URL/Redirect URLs no painel Auth; links Resend permanecem públicos e sem `localhost`.
+
+O preview do branch foi recompilado no deployment `dpl_E6Jm3797LV5Fq2y3dZMeNkHxkxUy` (commit `f793442a`), estado **READY**. O acesso anônimo às rotas profundas redireciona ao SSO da Vercel; a homologação autenticada do preview continua pendente.
