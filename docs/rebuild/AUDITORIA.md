@@ -253,3 +253,8 @@ A função de claim está implantada e executável, mas a fila remota estava vaz
 ### Rechecagem dos advisors e alias — 02/11/2026
 
 Supabase permanece sem alerta de RLS ausente; advisors continuam exibindo apenas `SECURITY DEFINER` intencionais, sete índices INFO não utilizados e `auth_leaked_password_protection` desativado. A configuração de senha comprometida depende do painel Auth, não exposto pelo conector desta sessão. O alias Vercel foi confirmado apontando para `dpl_HJABkspWYbQwfqEb4hZnFucnHwgw`; a pendência operacional restante é worker/outbox real, backup/restauração e essa configuração de segurança do Auth.
+
+
+### Teste autorizado do worker — estado pendente — 02/11/2026
+
+Foi criada uma única notificação de homologação autorizada e idempotente para a caixa do proprietário. A fila confirmou o item pendente. Como a Vercel voltou a bloquear novos deployments por cota diária e não há ferramenta disponível para disparar o Cron manualmente com o segredo sem expô-lo, a entrega permanece aguardando a próxima execução agendada; não marcar como sucesso antecipadamente.
