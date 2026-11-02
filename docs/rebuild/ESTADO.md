@@ -513,3 +513,8 @@ Foi adicionado override explícito de `minimatch` para `^11.0.1` em `apps/web/pa
 ## T29/T30 — release e LGPD — 02/11/2026
 
 Runbooks de release e deploy foram sincronizados com o estado real: branch de reconstrução, CI verde e preview Vercel READY protegido por SSO. O gate integral permanece aberto para backup/PITR ensaiado, worker institucional Resend, proteção de senhas comprometidas e revisão jurídica/auditoria final. docs/rebuild/PRIVACIDADE.md agora explicita controlador/base legal/retenção, direitos do titular, transferências de e-mail e critérios de restauração antes da promoção.
+
+
+## Auditoria final preparatória — 02/11/2026
+
+A branch `feat/capacitagov-rebuild` está em PR draft #3 contra `main` (`https://github.com/dinheirodegraca013-spec/capacita-o/pull/3`), com head `2bff7e08374bf5265e0aa2af37afa0238738b07a`. O PR anterior foi mesclado antes dos últimos hardenings; por isso a promoção automática não é segura. CI web/pgTAP da branch está verde. O parecer permanece **não liberado** até revisão independente do PR, backup/PITR ensaiado, worker Resend institucional observado e decisão formal sobre proteção de senhas comprometidas.
