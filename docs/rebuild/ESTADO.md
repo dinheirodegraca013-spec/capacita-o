@@ -480,3 +480,7 @@ A homologação encontrou que `/aluno/turmas` não renderizava encontros persist
 O commit `c831e34253849ca38c3218e76d876692da733ff1` foi publicado no deployment de produção `dpl_XRYtMD5CwtFYksRp5gqpen7sV1zD`, estado READY, alias `capacita-o-x5hg.vercel.app`. Playwright remoto isolado confirmou a jornada do tenant B: **1/1 PASS**; a jornada do tenant A de catálogo/matrícula também passou **1/1**.
 
 Após a validação, as duas organizações, usuários, matrícula e demais fixtures sintéticas foram removidos em transação autorizada; consulta final: `orgs=0`, `users=0`, `enrollments=0`.
+
+## Entrega Resend revalidada — 02/11/2026
+
+A conta Resend registrou uma mensagem recente de redefinição do CapacitaGov como `delivered`. A inspeção do corpo confirmou que o botão e o texto usam exclusivamente `https://capacita-o-x5hg.vercel.app/redefinir-senha?...`, sem ocorrência de `localhost`. O gate de entrega Resend do fluxo de recuperação está comprovado; o worker de notificações institucionais ainda precisa de teste operacional separado.
