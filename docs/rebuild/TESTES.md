@@ -286,3 +286,12 @@ Com fixtures sintéticas temporárias no Supabase autorizado e configuração Pl
 - Vercel preview `dpl_E8Qy248cAzsHJxDbq2Rrq7oxe2ig`: `/` e `/login` HTTP 200; `/api/v1/context` HTTP 401 sem sessão.
 - Resend: POST `/emails` HTTP 200 observado em 02/11/2026.
 - Ainda sem evidência desta rodada para sessão autenticada de duas organizações, worker agendado do outbox, restauração/PITR e novo preview do HEAD posterior por limite de deployments.
+
+
+### Worker agendado — 02/11/2026
+
+- Rota interna aceita autenticação Vercel Cron via `CRON_SECRET` e mantém header legado.
+- `apps/web/vercel.json` define execução a cada 5 minutos.
+- Env sensível `CRON_SECRET` criado no projeto Vercel.
+- CI web/pgTAP: success no commit `b6331f1e3b03a758a02bbd8cae809acba5bea6de`.
+- Observação em runtime ainda pendente porque o deployment com esse commit está bloqueado pela cota diária.
