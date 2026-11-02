@@ -183,3 +183,6 @@ Task T26 — relatórios (02/11/2026): serviço agora valida intervalo temporal 
 Task T27 — notificações/outbox (02/11/2026): payloads agora rejeitam IDs/template inválidos, dados sensíveis inclusive aninhados e conteúdo acima de 16 KB; worker envia idempotency-key do item ao provedor Resend e mantém backoff/retry. Web run `41519686918` e pgTAP run `41519686614` concluíram `success`. Entrega real monitorada via Resend continua pendente.
 
 Task T28 — E2E/RLS/API/Storage (02/11/2026): Playwright agora não inicia servidor local quando `E2E_BASE_URL` aponta para preview/produção, evitando validar um alvo diferente do configurado; cenários autenticados continuam condicionados a credenciais explicitamente não produtivas. Web run `41519891139` e pgTAP run `41519890910` concluíram `success`. Jornadas autenticadas reais de duas organizações e Storage continuam pendentes por credenciais/ambiente de homologação.
+
+
+Task T31 — correções pós-auditoria (02/11/2026): adapter do worker Resend, MFA AAL2 nas mutações de ofertas e triggers de imutabilidade para assessments, versões, cursos e conteúdo publicados. Fixtures pgTAP foram reordenados para construir em draft e publicar somente após conteúdo. HEAD `0d22339174203195c0c24fb77210e8a4bfc82699`; web `41523139146` e pgTAP `41523139101` concluíram `success`. Novo parecer independente e gates operacionais ainda pendentes.
