@@ -9,11 +9,13 @@ insert into public.organizations(id, name, slug, kind) values ('00000000-0000-00
 insert into public.memberships(id, user_id, organization_id, status) values
  ('00000000-0000-0000-0000-000000000061', '00000000-0000-0000-0000-000000000061', '00000000-0000-0000-0000-000000000061', 'active');
 insert into public.courses(id, organization_id, owner_type, title, slug, status) values
- ('00000000-0000-0000-0000-000000000061', '00000000-0000-0000-0000-000000000061', 'organization', 'Progress Course', 'progress-course', 'published');
+ ('00000000-0000-0000-0000-000000000061', '00000000-0000-0000-0000-000000000061', 'organization', 'Progress Course', 'progress-course', 'draft');
 insert into public.course_versions(id, course_id, version_no, title, learning_mode, status) values
- ('00000000-0000-0000-0000-000000000061', '00000000-0000-0000-0000-000000000061', 1, 'Progress v1', 'self_paced', 'published');
+ ('00000000-0000-0000-0000-000000000061', '00000000-0000-0000-0000-000000000061', 1, 'Progress v1', 'self_paced', 'draft');
 insert into public.course_modules(id, course_version_id, position, title) values ('00000000-0000-0000-0000-000000000061', '00000000-0000-0000-0000-000000000061', 0, 'Module');
 insert into public.course_lessons(id, module_id, position, title, duration_seconds) values ('00000000-0000-0000-0000-000000000061', '00000000-0000-0000-0000-000000000061', 0, 'Lesson', 600);
+update public.course_versions set status = 'published', published_at = now() where id = '00000000-0000-0000-0000-000000000061';
+update public.courses set status = 'published' where id = '00000000-0000-0000-0000-000000000061';
 insert into public.course_grants(organization_id, course_version_id, granted_by) values ('00000000-0000-0000-0000-000000000061', '00000000-0000-0000-0000-000000000061', '00000000-0000-0000-0000-000000000061');
 insert into public.offerings(id, organization_id, course_version_id, title, enrollment_policy, status) values ('00000000-0000-0000-0000-000000000061', '00000000-0000-0000-0000-000000000061', '00000000-0000-0000-0000-000000000061', 'Progress Offer', 'self_enroll', 'published');
 select set_config('request.jwt.claim.sub', '00000000-0000-0000-0000-000000000061', true);
