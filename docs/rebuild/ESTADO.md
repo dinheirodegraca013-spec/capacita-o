@@ -584,3 +584,8 @@ O alias `capacita-o-x5hg.vercel.app` foi reassigned com sucesso para o deploymen
 ## Worker — verificação não destrutiva — 02/11/2026
 
 A estrutura de `notification_outbox` e as funções `enqueue_notification`/`claim_pending_notifications` foram rechecadas no Supabase. `claim_pending_notifications(50)` executou sem erro e retornou fila vazia. Não foi criado destinatário nem item sintético em produção; portanto a entrega real do worker continua corretamente marcada como não comprovada.
+
+
+## Notificação de homologação autorizada — 02/11/2026
+
+Com autorização explícita do usuário, foi criado um único item idempotente no outbox para `guicabanas13@gmail.com`, sem senha, token, CPF ou outro segredo. O registro `07204440-ea48-4276-8a82-1806136ba769` ficou `pending`, `attempts=0`, aguardando o Cron de produção. A tentativa de criar um deployment production imediato voltou a encontrar a cota Vercel de 100 deployments/dia; não houve duplicação nem envio manual fora do worker.
