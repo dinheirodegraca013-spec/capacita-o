@@ -25,10 +25,11 @@ create or replace function public.prevent_published_course_content_mutation()
 returns trigger language plpgsql set search_path = public as $$
 declare v_status text;
 begin
-  select v.status into v_status
-  from public.course_versions v
-  join public.course_modules m on m.course_version_id = v.id
-  where m.id = case when tg_table_name = 'course_modules' then coalesce(new.id, old.id) else (select module_id from public.course_lessons where id = coalesce(new.id, old.id)) end;
+  if tg_table_name = 'course_modules' then
+    select v.status into v_status from public.course_versions v where v.id = coalesce(new.course_version_id, old.course_version_id);
+  else
+    select v.status into v_status from public.course_modules m join public.course_versions v on v.id = m.course_version_id where m.id = coalesce(new.module_id, old.module_id);
+  end if;
   if v_status = 'published' then
     raise exception using errcode = '55000', message = 'published course content is immutable';
   end if;
