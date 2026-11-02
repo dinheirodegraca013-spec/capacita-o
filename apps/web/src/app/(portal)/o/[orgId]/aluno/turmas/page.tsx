@@ -11,7 +11,11 @@ export default async function StudentClassesPage({ params }: { params: Promise<{
   if (!user) redirect('/login');
   const { data: membership } = await supabase.from('memberships').select('id').eq('user_id', user.id).eq('organization_id', orgId).eq('status', 'active').maybeSingle();
   if (!membership) redirect(`/o/${orgId}/aluno`);
-  const { data: meetings } = await supabase.from('meetings').select('id, title, starts_at, class_group_id').eq('organization_id', orgId).eq('status', 'scheduled').order('starts_at');
+  const { data: enrollments } = await supabase.from('enrollments').select('class_group_id').eq('organization_id', orgId).eq('membership_id', membership.id).eq('status', 'active').not('class_group_id', 'is', null);
+  const enrolledClassGroupIds = (enrollments ?? []).map((enrollment) => enrollment.class_group_id).filter(Boolean);
+  const { data: meetings } = enrolledClassGroupIds.length
+    ? await supabase.from('meetings').select('id, title, starts_at, class_group_id').eq('organization_id', orgId).eq('status', 'scheduled').in('class_group_id', enrolledClassGroupIds).order('starts_at')
+    : { data: [] };
   const classGroupIds = (meetings ?? []).map((meeting) => meeting.class_group_id).filter(Boolean);
   const { data: classGroups } = classGroupIds.length ? await supabase.from('class_groups').select('id, name').eq('organization_id', orgId).in('id', classGroupIds) : { data: [] };
   const classNames = new Map((classGroups ?? []).map((group) => [group.id, group.name]));
