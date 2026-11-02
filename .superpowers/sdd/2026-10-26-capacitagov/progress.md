@@ -195,3 +195,6 @@ Task T31 complemento — MFA no banco (02/11/2026): RPCs usam claim canônico `a
 
 
 Auditoria independente final de código (02/11/2026): HEAD `49cb304ffa1ab3aa6977131e67e63d0ea8534e04` aprovado sem P0/P1 nos caminhos reauditados; bypasses MFA de publicação fechados. Gates operacionais T28–T30 permanecem pendentes.
+
+
+Task T29/T30 evidência remota (02/11/2026): Supabase `zykfvzvydvifuzepujvv` ACTIVE_HEALTHY; 11 migrations de hardening aplicadas e conferidas por SQL; advisors sem finding de RLS, com avisos documentados de SECURITY DEFINER/índices não usados. Preview Vercel READY (`dpl_E8Qy248cAzsHJxDbq2Rrq7oxe2ig`), `/` e `/login` 200, `/api/v1/context` 401 anônimo; produção não promovida. Resend POST /emails 200 observado. Worker agendado, E2E autenticado de duas organizações, backup/PITR e proteção de senhas comprometidas permanecem pendentes.
