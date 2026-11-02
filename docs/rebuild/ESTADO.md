@@ -481,6 +481,8 @@ O commit `c831e34253849ca38c3218e76d876692da733ff1` foi publicado no deployment 
 
 Após a validação, as duas organizações, usuários, matrícula e demais fixtures sintéticas foram removidos em transação autorizada; consulta final: `orgs=0`, `users=0`, `enrollments=0`.
 
+Revisão independente identificou que a primeira correção ainda listava todos os encontros da organização para qualquer membro ativo. A consulta foi endurecida para buscar somente `class_group_id` de matrículas ativas do próprio `membership_id`, mantendo filtros de organização e RLS. Typecheck, lint, 77 testes e build passaram novamente. O patch foi publicado em `dpl_3JYLU4KXJhcS8D7UBVK1QNc3GTdz` (READY), alias principal atualizado.
+
 ## Entrega Resend revalidada — 02/11/2026
 
 A conta Resend registrou uma mensagem recente de redefinição do CapacitaGov como `delivered`. A inspeção do corpo confirmou que o botão e o texto usam exclusivamente `https://capacita-o-x5hg.vercel.app/redefinir-senha?...`, sem ocorrência de `localhost`. O gate de entrega Resend do fluxo de recuperação está comprovado; o worker de notificações institucionais ainda precisa de teste operacional separado.
