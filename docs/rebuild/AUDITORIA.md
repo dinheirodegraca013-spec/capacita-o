@@ -238,3 +238,8 @@ O limite de Cron do plano Hobby rejeitou a cadência de cinco minutos. A configu
 ### Rechecagem pós-cota Vercel — 02/11/2026
 
 O deployment `dpl_AjnNewg9eHeASkwXzqYM9iGrtgQU` ficou READY com o HEAD documental e a configuração de Cron diário. As rotas `/` e `/login` responderam 200 via fetch autenticado; o endpoint interno de notificações respondeu 401 sem segredo, demonstrando que a proteção server-only está ativa no runtime publicado. Ainda não há evidência de execução autorizada do worker contra `notification_outbox`; produção não foi promovida nesta etapa.
+
+
+### Revisão independente pós-publicação — 02/11/2026
+
+Revisor independente não encontrou novo P0/P1 no código ou autorização. Confirmou que `0 3 * * *` é compatível com Hobby e que Cron só executa em produção; cada execução processa no máximo 50 notificações. O alias principal foi reassigned para o deployment novo e `/`/`/login` responderam 200. O parecer integral continua condicionado a comprovar worker/outbox, entrega Resend e restauração de backup.
