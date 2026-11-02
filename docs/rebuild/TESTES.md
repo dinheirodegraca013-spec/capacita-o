@@ -244,3 +244,8 @@ Teste controlado em conta autorizada: POST público 202, Resend **delivered**, c
 
 Com `E2E_BASE_URL=https://capacita-o-x5hg.vercel.app`, a execução conjunta de preview, recuperação e navegação obteve **2 PASS / 3 SKIP**; os skips são cenários condicionados a sessão/fixture, não falhas. O E2E de recuperação público permaneceu PASS.
 
+### Rechecagem de origem do e-mail — 02/11/2026
+
+- `POST https://capacita-o-x5hg.vercel.app/api/v1/auth/recover` para a conta autorizada: **202**.
+- Resend registrou o novo e-mail transacional; inspeção programática confirmou `capacita-o-x5hg.vercel.app` presente e `localhost` ausente, sem registrar o token.
+- Vercel `NEXT_PUBLIC_APP_URL`: valor público canônico confirmado em production/preview/development.
