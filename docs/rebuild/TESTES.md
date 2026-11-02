@@ -295,3 +295,11 @@ Com fixtures sintéticas temporárias no Supabase autorizado e configuração Pl
 - Env sensível `CRON_SECRET` criado no projeto Vercel.
 - CI web/pgTAP: success no commit `b6331f1e3b03a758a02bbd8cae809acba5bea6de`.
 - Observação em runtime ainda pendente porque o deployment com esse commit está bloqueado pela cota diária.
+
+
+## Homologação real de Auth/RLS — 02/11/2026
+
+- Usuário sintético A: login Auth REST HTTP 200; GET autenticado de organizações retornou somente e2e-capacita-a-20261102.
+- Usuário sintético B: login Auth REST HTTP 200; GET autenticado de organizações retornou somente e2e-capacita-b-20261102.
+- Resultado: isolamento multi-tenant confirmado no PostgREST com JWT real. As fixtures foram removidas imediatamente e a consulta posterior não deixou resíduos.
+- Limite da evidência: /api/v1/context não aceita bearer puro porque a sessão SSR é cookie-based; a jornada browser/cookie continua pendente de execução em deployment atualizado.
