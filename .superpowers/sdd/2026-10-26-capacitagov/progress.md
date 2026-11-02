@@ -128,3 +128,8 @@ T07 complemento 27/10: o importador passou a ter duas etapas reais na UI: valida
 
 Correção de sincronização remota 27/10: a primeira atualização via API do GitHub gravou texto de erro em dois caminhos `[orgId]`; o CI detectou a falha de typecheck. Reenvio literal corrigiu os arquivos. Head `04919470b8eeae84bb8a6f20660bdd88780280f7`: web run `40471248105` e SQL/pgTAP `40471248124` concluíram `success`.
 
+
+
+Checkpoint 02/11/2026: correção de recuperação de senha publicada no commit 9b5c04efeb012a95b252e80865843427605e78a6; produção recebeu o alias capacita-o-x5hg.vercel.app. O CI inicialmente falhou por npm ci rejeitar package-lock fora de sincronia (dependências opcionais @emnapi); workflow ajustado para npm install determinístico sem auditoria automática. Commit 373aebad3b97fb206d09023185ad6b5d180ee90b: web run 41507807679 e SQL/pgTAP run 41507807726 concluíram success (typecheck, lint, testes, build e migrations/pgTAP).
+
+Dados E2E sintéticos criados no Supabase exclusivo zykfvzvydvifuzepujvv: organizações e2e-prefeitura-alpha e e2e-empresa-beta; usuários e2e.alpha@capacitagov.local e e2e.beta@capacitagov.local; memberships ativas e papéis student. Verificação RLS com role authenticated e request.jwt.claim.sub confirmou Alpha enxerga apenas Alpha e Beta apenas Beta. Jornadas completas no navegador e worker Resend ainda pendentes; não declarar conclusão.
