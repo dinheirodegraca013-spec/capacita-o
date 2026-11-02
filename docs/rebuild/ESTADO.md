@@ -530,3 +530,8 @@ A revisão independente encontrou quatro P1 no HEAD anterior: adapter ausente no
 - `d792d7e` e commits de testes seguintes: congelamento de cursos, versões e conteúdo publicados e preparação dos fixtures antes da publicação.
 
 O HEAD remoto atual é `0d22339174203195c0c24fb77210e8a4bfc82699`; os runs web `41523139146` e pgTAP `41523139101` concluíram `success`. O gate continua aberto até o novo parecer independente e as evidências operacionais de backup/PITR, worker Resend institucional, proteção contra senhas comprometidas e E2E autenticado de duas organizações.
+
+
+## T31 — publicação segura e imutabilidade — 02/11/2026
+
+Após nova revisão, foram corrigidos os dois P1 remanescentes: AAL2 agora é exigido na rota e nos RPCs de publicação de ofertas/cursos; a publicação de versões novas não atualiza cursos já publicados. A regra de grants diferencia cursos centrais de cursos próprios da organização. O HEAD atual é `b55e03217d149500a493021fae9c846a3466da6a`; web `41524795771` e pgTAP `41524795594` concluíram `success`. Permanecem gates operacionais de backup/PITR, worker Resend observado, proteção contra senhas comprometidas, E2E autenticado e auditoria final.
