@@ -303,3 +303,10 @@ Com fixtures sintéticas temporárias no Supabase autorizado e configuração Pl
 - Usuário sintético B: login Auth REST HTTP 200; GET autenticado de organizações retornou somente e2e-capacita-b-20261102.
 - Resultado: isolamento multi-tenant confirmado no PostgREST com JWT real. As fixtures foram removidas imediatamente e a consulta posterior não deixou resíduos.
 - Limite da evidência: /api/v1/context não aceita bearer puro porque a sessão SSR é cookie-based; a jornada browser/cookie continua pendente de execução em deployment atualizado.
+
+
+## Vercel Cron — 02/11/2026
+
+- Configuração versionada: `/api/internal/notifications` em `0 3 * * *` (cadência diária compatível com Vercel Hobby).
+- Tentativa de deployment do branch atualizado: bloqueada por `402 api-deployments-free-per-day`, retry em 24h.
+- A configuração `*/5 * * * *` foi rejeitada pelo limite de Cron do plano Hobby e não permanece no branch.
