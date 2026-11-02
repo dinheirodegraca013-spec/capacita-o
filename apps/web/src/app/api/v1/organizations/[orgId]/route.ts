@@ -13,7 +13,7 @@ export async function PATCH(request: NextRequest, context: { params: Promise<{ o
   const name = body?.name?.trim();
   const timezone = body?.timezone?.trim();
   const validKinds = ['company', 'municipality', 'public_agency', 'nonprofit', 'other'];
-  if (!name || name.length > 180 || !body.kind || !validKinds.includes(body.kind) || !timezone) return NextResponse.json({ error: 'VALIDATION' }, { status: 422 });
+  if (!name || name.length > 180 || !body?.kind || !validKinds.includes(body.kind) || !timezone) return NextResponse.json({ error: 'VALIDATION' }, { status: 422 });
   const slug = body.slug?.trim().toLowerCase();
   const { data, error } = await supabase.from('organizations').update({ name, kind: body.kind, timezone, ...(slug ? { slug } : {}) }).eq('id', orgId).select().single();
   if (error) return NextResponse.json({ error: error.code === '42501' ? 'FORBIDDEN' : 'UNAVAILABLE' }, { status: error.code === '42501' ? 403 : 503 });
@@ -35,4 +35,3 @@ export async function POST(request: NextRequest, context: { params: Promise<{ or
   if (error) return NextResponse.json({ error: error.code === '42501' ? 'FORBIDDEN' : 'UNAVAILABLE' }, { status: error.code === '42501' ? 403 : 503 });
   return NextResponse.json({ unit: data }, { status: 201 });
 }
-
