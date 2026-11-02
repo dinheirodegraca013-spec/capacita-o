@@ -186,3 +186,6 @@ Task T28 — E2E/RLS/API/Storage (02/11/2026): Playwright agora não inicia serv
 
 
 Task T31 — correções pós-auditoria (02/11/2026): adapter do worker Resend, MFA AAL2 nas mutações de ofertas e triggers de imutabilidade para assessments, versões, cursos e conteúdo publicados. Fixtures pgTAP foram reordenados para construir em draft e publicar somente após conteúdo. HEAD `0d22339174203195c0c24fb77210e8a4bfc82699`; web `41523139146` e pgTAP `41523139101` concluíram `success`. Novo parecer independente e gates operacionais ainda pendentes.
+
+
+Task T31 — hardening de publicação (02/11/2026): AAL2 exigido no endpoint e RPCs de publicação; grants de cursos centrais vs próprios tratados explicitamente; publicação de nova versão não muta curso já publicado. CI final do HEAD `b55e03217d149500a493021fae9c846a3466da6a`: web `41524795771` e pgTAP `41524795594` success. Auditoria independente final ainda pendente.
