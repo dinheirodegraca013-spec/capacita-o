@@ -310,3 +310,12 @@ Com fixtures sintéticas temporárias no Supabase autorizado e configuração Pl
 - Configuração versionada: `/api/internal/notifications` em `0 3 * * *` (cadência diária compatível com Vercel Hobby).
 - Tentativa de deployment do branch atualizado: bloqueada por `402 api-deployments-free-per-day`, retry em 24h.
 - A configuração `*/5 * * * *` foi rejeitada pelo limite de Cron do plano Hobby e não permanece no branch.
+
+
+## Preview Vercel atualizado — 02/11/2026
+
+- Deployment `dpl_AjnNewg9eHeASkwXzqYM9iGrtgQU`: READY.
+- `/`: HTTP 200; título CapacitaGov e conteúdo Next verificados.
+- `/login`: HTTP 200; formulário de e-mail/senha e recuperação presentes.
+- `/api/internal/notifications`: HTTP 401 sem segredo, comportamento esperado.
+- Preview: https://capacita-o-x5hg-1lsuj4yyq-dinheirodegraca013-specs-projects.vercel.app
