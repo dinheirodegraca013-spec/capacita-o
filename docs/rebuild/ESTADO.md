@@ -569,3 +569,8 @@ Foram criados dois usuários e duas organizações sintéticas somente para homo
 ## Limite operacional Vercel Hobby — 02/11/2026
 
 A tentativa de publicar o HEAD após corrigir o Cron retornou `402 api-deployments-free-per-day` (mais de 100 deployments; retry informado em 24h). A primeira tentativa também revelou `cron_jobs_limits_reached`: o plano Hobby não aceita `*/5 * * * *`. O `apps/web/vercel.json` foi ajustado para `0 3 * * *`, a única cadência diária compatível sem upgrade pago. O endpoint continua protegido por segredo; a execução do worker no runtime permanece sem evidência até um deployment ser criado.
+
+
+## Preview Vercel atualizado — 02/11/2026
+
+A cota foi liberada e o deployment `dpl_AjnNewg9eHeASkwXzqYM9iGrtgQU` ficou READY no commit `76e7bfc7ae3a175eab95aecdbd6b95905387c30c`. Preview: `https://capacita-o-x5hg-1lsuj4yyq-dinheirodegraca013-specs-projects.vercel.app`. Validação via fetch autenticado da conta Vercel: `/` HTTP 200 com Next/CapacitaGov e imagem hero; `/login` HTTP 200; `/api/internal/notifications` HTTP 401 sem segredo, confirmando a proteção do worker. A promoção para produção permanece separada até a auditoria final.
