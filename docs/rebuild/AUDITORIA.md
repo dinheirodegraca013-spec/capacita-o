@@ -243,3 +243,8 @@ O deployment `dpl_AjnNewg9eHeASkwXzqYM9iGrtgQU` ficou READY com o HEAD documenta
 ### Revisão independente pós-publicação — 02/11/2026
 
 Revisor independente não encontrou novo P0/P1 no código ou autorização. Confirmou que `0 3 * * *` é compatível com Hobby e que Cron só executa em produção; cada execução processa no máximo 50 notificações. O alias principal foi reassigned para o deployment novo e `/`/`/login` responderam 200. O parecer integral continua condicionado a comprovar worker/outbox, entrega Resend e restauração de backup.
+
+
+### Worker/outbox — evidência negativa controlada — 02/11/2026
+
+A função de claim está implantada e executável, mas a fila remota estava vazia. Como não foi criado um destinatário ou item fictício em produção, não há evidência de envio/retry real do worker. O gate permanece aberto por ausência de evidência operacional, não por falha observada na função.
