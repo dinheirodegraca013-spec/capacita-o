@@ -319,3 +319,11 @@ Com fixtures sintéticas temporárias no Supabase autorizado e configuração Pl
 - `/login`: HTTP 200; formulário de e-mail/senha e recuperação presentes.
 - `/api/internal/notifications`: HTTP 401 sem segredo, comportamento esperado.
 - Preview: https://capacita-o-x5hg-1lsuj4yyq-dinheirodegraca013-specs-projects.vercel.app
+
+
+## Produção após reassignment — 02/11/2026
+
+- Alias principal reassigned para `dpl_HJABkspWYbQwfqEb4hZnFucnHwgw` (commit `49339be`).
+- `/`: HTTP 200, conteúdo Next/CapacitaGov e hero verificados.
+- `/login`: HTTP 200, formulário de autenticação e recuperação presentes.
+- `/api/internal/notifications`: fetch externo ficou bloqueado pela autenticação SSO da Vercel; não usar esse 401 como resposta da aplicação. No preview do mesmo código, a rota sem segredo respondeu 401.
