@@ -737,3 +737,8 @@ As policies globais de `organizations` e `audit_events` agora exigem `aal2` no r
 A migration `20261103052000_optimize_member_rls_initplan.sql` foi aplicada no Supabase para encapsular também `is_active_member(...)` em `SELECT` nas policies consolidadas de `organizations` e `audit_events`, preservando isolamento por tenant e o requisito AAL2 para superadmin. A consulta remota confirmou as duas expressões com initplan.
 
 O advisor remoto ainda devolve as advertências `auth_rls_initplan` com timestamp anterior à aplicação; será reconsultado em nova janela para confirmar a atualização do linter. Permanecem 7 avisos informativos de índices não utilizados, sem remoção preventiva. No advisor de segurança, `verify_certificate` permanece público por desenho (validação pública de certificado); as RPCs autenticadas continuam SECURITY DEFINER intencionais e limitadas ao papel `authenticated`. Proteção contra senhas vazadas continua dependente do plano/configuração do Supabase.
+
+
+## Revisão independente após otimização — 03/11/2026
+
+A revisão independente confirmou remotamente que as policies globais de organizações e auditoria encapsulam `is_active_member`, exigem AAL2 no ramo de superadmin e não há INSERT direto de organizações. A RPC de criação exige superadmin/AAL2, registra `organization_id` no audit e não concede EXECUTE a `anon` ou `PUBLIC`. Nenhum P0/P1 foi encontrado nesses pontos.
