@@ -803,3 +803,10 @@ O projeto Supabase possui somente a branch `main`. A criação de uma branch iso
 ## Rechecagem final de grants e RLS — 03/11/2026
 
 A consulta remota confirmou novamente as policies consolidadas de `organizations` e `audit_events` com tenant ativo ou superadmin AAL2. `create_organization_for_platform_admin` é executável por `authenticated`, `postgres` e `service_role`, sem `anon`; `claim_pending_notifications` é executável apenas por `service_role`/proprietário. O advisor de segurança mantém apenas warnings de SECURITY DEFINER intencionais (incluindo `verify_certificate` público por desenho) e a limitação de proteção contra senhas do plano Free.
+
+
+## Rechecagem de contas administrativas e ambiente — 03/11/2026
+
+Consulta somente leitura no Supabase autorizado confirmou duas contas autenticadas confirmadas, `dinheirodegraca013@gmail.com` e `guicabanas13@gmail.com`, ambas presentes em `platform_admins`. Nenhuma possui membership organizacional ativa; por isso os painéis de aluno, gestão e professor não aparecem automaticamente para essas contas. O painel global de superadmin é separado e exige MFA para operações administrativas.
+
+O projeto continua sem branches Supabase adicionais; o ensaio isolado de backup/migrations permanece condicionado ao custo informado anteriormente de US$ 0,01344/h. O projeto Vercel segue sem erros de runtime nas últimas 24 horas. Nenhuma credencial, token ou senha foi registrada.
