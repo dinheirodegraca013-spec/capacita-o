@@ -3,7 +3,7 @@ set search_path = public, extensions;
 
 begin;
 
-select plan(7);
+select plan(10);
 
 select ok(
   to_regclass('public.audit_events') is not null,
@@ -91,6 +91,37 @@ select ok(
       and p.proname = 'verify_certificate'
   ),
   'verificação pública de certificado permanece disponível'
+);
+
+select ok(
+  exists (
+    select 1 from pg_policies
+    where schemaname = 'public' and tablename = 'organizations'
+      and policyname = 'organizations_select_platform_admin'
+      and qual like '%is_platform_admin%'
+  ),
+  'superadmin pode listar organizações via policy dedicada'
+);
+
+select ok(
+  exists (
+    select 1 from pg_policies
+    where schemaname = 'public' and tablename = 'organizations'
+      and policyname = 'organizations_insert_platform_admin'
+      and with_check like '%is_platform_admin%'
+  ),
+  'criação global exige superadmin'
+);
+
+select ok(
+  exists (
+    select 1 from pg_proc p
+    join pg_namespace n on n.oid = p.pronamespace
+    where n.nspname = 'public'
+      and p.proname = 'create_organization_for_platform_admin'
+      and position('MFA_REQUIRED' in pg_get_functiondef(p.oid)) > 0
+  ),
+  'RPC de organização exige MFA'
 );
 
 select * from finish();
