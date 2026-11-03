@@ -865,3 +865,8 @@ Após a autorização da equipe Vercel, foi tentado novo deployment de produçã
 ## Pós-revisão do enrollment MFA — 03/11/2026
 
 O fluxo de configuração TOTP recebeu um guard adicional após a limpeza de fatores pendentes: se a tela desmontar durante a operação assíncrona, nenhum novo fator é criado. A revisão independente não apontou novos P0/P1 nesse fluxo. CI e publicação permanecem pendentes pela cota Vercel.
+
+
+## Parecer independente final do fluxo MFA — 03/11/2026
+
+A revisão independente do HEAD `6f53d839` não identificou P0/P1 no fluxo reauditado. Foram confirmados: uso de `factors.all` para pendências, guardas `cancelled` antes/depois do enrollment e redirecionamentos protegidos pelo helper endurecido. Resta homologar cadastro e desafio TOTP no navegador com conta autorizada, o que depende da publicação do branch corrigido.
