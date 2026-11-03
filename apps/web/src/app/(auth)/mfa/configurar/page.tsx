@@ -8,8 +8,11 @@ type Totp = { id: string; qr_code?: string; secret?: string; uri?: string };
 
 export default function ConfigureMfaPage() {
   const router = useRouter();
-  const params = useSearchParams();
-  const next = params.get('next')?.startsWith('/') ? params.get('next')! : '/admin';
+  const [next] = useState(() => {
+    if (typeof window === 'undefined') return '/admin';
+    const value = new URLSearchParams(window.location.search).get('next');
+    return value?.startsWith('/') ? value : '/admin';
+  });
   const [totp, setTotp] = useState<Totp | null>(null);
   const [code, setCode] = useState('');
   const [error, setError] = useState<string | null>(null);
