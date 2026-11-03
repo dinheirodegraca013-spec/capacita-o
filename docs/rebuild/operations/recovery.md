@@ -7,3 +7,8 @@
 - Incidente: preservar logs sem tokens/PII, delimitar tenants afetados, notificar responsáveis e registrar linha do tempo.
 
 Antes da produção ainda faltam backup remoto testado, RTO/RPO aprovados e procedimento de restauração ensaiado.
+
+
+## Evidência de rollback de aplicação — 03/11/2026
+
+O alias principal foi reassociado ao deployment `dpl_C2WKQiXbhje2kU7bNRofKDHNbp2c`; o deployment anterior `dpl_5uXEXEh2ALU5BRXBj23KV9JaUof1` permanece como rollback candidate na Vercel. Em incidente, reassociar `capacita-o-x5hg.vercel.app` ao deployment anterior e validar `/`, `/login` e `/api/v1/context` antes de comunicar a recuperação. O rollback de banco continua não ensaiado: exige backup/PITR e ambiente de recuperação.
