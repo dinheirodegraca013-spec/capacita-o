@@ -742,3 +742,10 @@ O advisor remoto ainda devolve as advertências `auth_rls_initplan` com timestam
 ## Revisão independente após otimização — 03/11/2026
 
 A revisão independente confirmou remotamente que as policies globais de organizações e auditoria encapsulam `is_active_member`, exigem AAL2 no ramo de superadmin e não há INSERT direto de organizações. A RPC de criação exige superadmin/AAL2, registra `organization_id` no audit e não concede EXECUTE a `anon` ou `PUBLIC`. Nenhum P0/P1 foi encontrado nesses pontos.
+
+
+## Rechecagem de performance e publicação — 03/11/2026
+
+O advisor de performance continua retornando 2 avisos `auth_rls_initplan`, mesmo após as policies remotas estarem materialmente encapsuladas em `SELECT`; a expressão remota foi reescrita novamente em `20261103053000_optimize_member_rls_claim_initplan.sql` para passar `auth.uid()` explicitamente e usar somente o claim JWT `aal`. O resultado do linter é tratado como evidência pendente de atualização/limitação do advisor, não como aprovação automática. Os 7 índices `unused` permanecem apenas INFO.
+
+O head do PR #3 é `b54e3a3a836f374ac2e7766a3d5756141f044120`. Não há workflow run associado a esse SHA via connector; os únicos status reportados são falhas Vercel por `build-rate-limit`. A produção continua no deployment READY `dpl_5uXEXEh2ALU5BRXBj23KV9JaUof1`, commit `88eb9d36febab01399ff3d7585e1d6643d8da944`; nenhum deploy novo foi criado.
