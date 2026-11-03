@@ -24,6 +24,11 @@ export default function ConfigureMfaPage() {
     let cancelled = false;
     async function enroll() {
       const supabase = createSupabaseBrowserClient();
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        if (!cancelled) { setError('Entre na sua conta antes de configurar o autenticador.'); setLoading(false); }
+        return;
+      }
       const { data: factors } = await supabase.auth.mfa.listFactors();
       if (cancelled) return;
       const existing = factors?.totp?.find((factor) => factor.status === 'verified');
@@ -73,7 +78,7 @@ export default function ConfigureMfaPage() {
     <h1>Configurar autenticador</h1>
     <p className="muted">Use um aplicativo autenticador para liberar o painel do superadmin.</p>
     {loading && <p>Preparando cadastro…</p>}
-    {error && <p role="alert" className="form-error">{error}</p>}
+    {error && <><p role="alert" className="form-error">{error}</p><p><a className="text-link" href="/login?next=%2Fadmin">Voltar ao login</a></p></>}
     {totp && <section className="stack">
       {totp.qr_code && <img alt="QR Code para configurar o autenticador" width={220} height={220} src={'data:image/svg+xml;utf8,' + encodeURIComponent(totp.qr_code)} />}
       <p>Se não puder ler o QR Code, use esta chave:</p>
