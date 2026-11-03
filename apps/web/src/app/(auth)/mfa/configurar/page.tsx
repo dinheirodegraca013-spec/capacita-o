@@ -3,6 +3,7 @@
 import { FormEvent, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createSupabaseBrowserClient } from '@/lib/supabase/browser';
+import { safeRedirectPath } from '@/modules/auth/redirect';
 
 type Totp = { id: string; qr_code?: string; secret?: string; uri?: string };
 
@@ -11,7 +12,7 @@ export default function ConfigureMfaPage() {
   const [next] = useState(() => {
     if (typeof window === 'undefined') return '/admin';
     const value = new URLSearchParams(window.location.search).get('next');
-    return value?.startsWith('/') ? value : '/admin';
+    return safeRedirectPath(value) || '/admin';
   });
   const [totp, setTotp] = useState<Totp | null>(null);
   const [code, setCode] = useState('');
