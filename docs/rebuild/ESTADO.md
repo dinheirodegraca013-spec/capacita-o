@@ -825,3 +825,8 @@ O alias público atual ainda serve a versão anterior: `/mfa` retorna 200, enqua
 ## Tentativa de branch isolada — 03/11/2026
 
 Foi solicitada uma branch Supabase temporária `capacitagov-audit` para ensaio de restauração/migrations. O projeto respondeu `Branching is supported only on the Pro plan or above`; portanto nenhuma branch ou cobrança foi criada. O plano Free continua impedindo backup/PITR e ensaio isolado, que permanecem pendentes até habilitação autorizada do recurso.
+
+
+## Ajuste de recadastro MFA e descoberta de painéis — 03/11/2026
+
+A tela de seleção de organização já possui entrada explícita para o painel de plataforma quando a conta está em `platform_admins`; contas sem membership não devem receber menus de aluno/gestão/professor, pois esses módulos são tenant-scoped. O cadastro TOTP foi endurecido para remover fatores não verificados pendentes antes de gerar outro, evitando duplicação após abandono do fluxo. A alteração aguarda CI/deploy.
