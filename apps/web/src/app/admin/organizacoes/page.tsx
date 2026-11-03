@@ -18,8 +18,6 @@ async function createOrganization(formData: FormData) {
   if (!admin) redirect('/selecionar-organizacao');
   const { data: assurance } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
   if (assurance?.currentLevel !== 'aal2') redirect('/mfa?next=/admin/organizacoes');
-  const { data: assurance } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
-  if (assurance?.currentLevel !== 'aal2') redirect('/mfa?next=/admin/organizacoes');
   const name = String(formData.get('name') ?? '').trim();
   const kind = String(formData.get('kind') ?? 'other');
   const timezone = String(formData.get('timezone') ?? 'America/Sao_Paulo');
@@ -41,6 +39,8 @@ export default async function OrganizationsAdminPage() {
   if (!user) redirect('/login');
   const { data: admin } = await supabase.from('platform_admins').select('user_id').eq('user_id', user.id).maybeSingle();
   if (!admin) redirect('/selecionar-organizacao');
+  const { data: pageAssurance } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+  if (pageAssurance?.currentLevel !== 'aal2') redirect('/mfa?next=/admin/organizacoes');
   const { data: organizations } = await supabase.from('organizations').select('id,name,slug,kind,timezone').order('created_at', { ascending: true });
   return <main className="selection-page">
     <p className="eyebrow accent">Administração da plataforma</p>
