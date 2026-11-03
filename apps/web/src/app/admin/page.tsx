@@ -36,11 +36,11 @@ export default async function PlatformAdminPage() {
 
     <section className="admin-modules" aria-labelledby="modules-title">
       <p className="eyebrow">Módulos</p>
-      <h2 id="modules-title">Próximos painéis</h2>
+      <h2 id="modules-title">Painéis disponíveis</h2>
       <div className="module-grid">
         <article className="module-card"><h3>Organizações e convites</h3><p>Cadastro, gestores e acesso por convite.</p><a className="text-link" href="/admin/organizacoes">Abrir módulo →</a></article>
         <article className="module-card"><h3>Catálogo central</h3><p>Cursos institucionais e concessões por tenant.</p><a className="text-link" href="/admin/catalogo">Abrir catálogo →</a></article>
-        <article className="module-card"><h3>Auditoria</h3><p>Eventos, segurança e conformidade.</p><span>Em construção</span></article>
+        <article className="module-card"><h3>Auditoria</h3><p>Eventos, segurança e conformidade.</p><a className="text-link" href="/admin/auditoria">Abrir auditoria →</a></article>
       </div>
     </section>
 
