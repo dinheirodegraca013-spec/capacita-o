@@ -855,3 +855,8 @@ A autorização da equipe Vercel foi concluída e a listagem de aliases voltou a
 ## Confirmação de estado MFA no Supabase — 03/11/2026
 
 Consulta somente leitura em `auth.mfa_factors` confirmou que as duas contas superadmin (`guicabanas13@gmail.com` e `dinheirodegraca013@gmail.com`) têm zero fatores verificados e zero pendentes. O código mostrado na tela atual não pode ser obtido por e-mail; depende do cadastro TOTP da nova tela, ainda não publicada por causa da cota Vercel.
+
+
+## Nova tentativa de publicação — 03/11/2026
+
+Após a autorização da equipe Vercel, foi tentado novo deployment de produção do branch `feat/capacitagov-rebuild`. A API retornou novamente `402 api-deployments-free-per-day` (mais de 100 deployments; retry em 24h). Não houve alteração de alias nem de produção. Runtime continua sem erros nas últimas 24h.
