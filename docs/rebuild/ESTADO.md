@@ -900,3 +900,8 @@ A consulta de GitHub Actions para o SHA publicado `438e823c1fc2ae087324876641d9c
 ## UX do primeiro acesso MFA sem sessão — 03/11/2026
 
 As telas `/mfa` e `/mfa/configurar` foram ajustadas para exigir sessão antes de consultar/criar fatores. Usuário não autenticado é encaminhado ao login e recebe orientação explícita, em vez de ver uma tela de código sem origem. A alteração está no branch, mas o novo deployment foi bloqueado novamente pela cota Vercel de 100/dia; a produção segue no deployment READY anterior até a próxima janela.
+
+
+## Orientação explícita do código MFA — 03/11/2026
+
+A tela de verificação agora informa que o código é gerado localmente por Google Authenticator, Microsoft Authenticator ou Authy, não por e-mail/SMS. A tela de configuração explica instalação, leitura do QR Code/chave manual e confirmação do código de seis dígitos. Commits: `fd1c30cb28e44dba27b90160f74830940b0d40eb` e `0f4d25940a3a59989ee7a2650e64a79c5a4a855c`. Aguardam CI e novo deployment; não houve alteração de produção nesta rodada.
