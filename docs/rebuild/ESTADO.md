@@ -875,3 +875,8 @@ A revisão independente do HEAD `6f53d839` não identificou P0/P1 no fluxo reaud
 ## Publicação da correção MFA — 03/11/2026
 
 A cota Vercel foi liberada e o deployment `dpl_EJYoh52xcxx9V1odGpywCKfNpk2h` ficou READY em produção, commit `438e823c1fc2ae087324876641d9c3f454b6ea25`. O alias `https://capacita-o-x5hg.vercel.app` passou a apontar para esse deployment. Smoke público confirmou HTTP 200/Next.js em `/`, `/login`, `/mfa` e `/mfa/configurar`; `/mfa` exibe o link de configuração e a nova rota deixa de retornar 404. `/api/v1/context` não foi considerado evidência anônima nesta rodada porque a camada de Vercel Authentication bloqueou o share link; a evidência anterior de 401 permanece válida. Runtime Vercel segue sem erros nas últimas 24h.
+
+
+## Estabilidade pós-publicação — 03/11/2026
+
+O deployment `dpl_EJYoh52xcxx9V1odGpywCKfNpk2h` permanece READY e o alias principal continua associado a ele. A consulta de runtime da Vercel na última hora não encontrou erros. A homologação autenticada ainda depende de sessão/credenciais autorizadas; nenhum dado de produção foi criado nesta verificação pública.
