@@ -910,3 +910,8 @@ A tela de verificação agora informa que o código é gerado localmente por Goo
 ## Rechecagem do branch após orientação MFA — 03/11/2026
 
 O branch `feat/capacitagov-rebuild` está no head `6504a2a6984c48f7c078fc3a61771fb20d863327`, incluindo a orientação explícita sobre o código TOTP nas telas `/mfa` e `/mfa/configurar`. A tentativa de novo deployment do projeto autorizado `capacita-o-x5hg` retornou `402 api-deployments-free-per-day` com retry em 24h. O preview READY `dpl_3B7A85UUGNC5cQ5ZqkQMALHcXCab` (SHA `8d362f26`) não contém essa última orientação; a produção continua no deployment READY `dpl_EJYoh52xcxx9V1odGpywCKfNpk2h`. O status combinado do head apresenta apenas falhas Vercel por build-rate-limit; não há workflow CI associado aos dois commits recentes. Nenhuma alteração de alias ou produção foi feita.
+
+
+## Rechecagem do estado MFA no Supabase — 03/11/2026
+
+Consulta somente leitura no projeto autorizado confirmou PostgreSQL 17.11, as duas contas superadmin confirmadas (`dinheirodegraca013@gmail.com` e `guicabanas13@gmail.com`) e **zero fatores TOTP verificados ou pendentes** para ambas. Portanto, antes de informar um código na tela de verificação, o primeiro acesso deve passar por `/mfa/configurar` para cadastrar o aplicativo autenticador. Nenhuma alteração de dados foi feita.
