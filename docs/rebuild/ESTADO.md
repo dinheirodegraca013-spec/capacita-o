@@ -594,3 +594,8 @@ Com autorização explícita do usuário, foi criado um único item idempotente 
 ## Cadastro e login simplificados — 03/11/2026
 
 O fluxo de autenticação ganhou `/cadastro`, link direto na tela de login e `/cadastro-confirmado`. O cadastro usa Supabase Auth com senha mínima de 12 caracteres e confirmação de e-mail; não concede superadmin nem organização automaticamente. Contas sem membership agora recebem uma mensagem clara aguardando convite/atribuição, em vez de uma lista vazia. A mudança aguarda novo deployment para validação pública.
+
+
+## Cadastro/login publicado — 03/11/2026
+
+O deployment `dpl_F2nPY6eiaznUELcGWoy4c2r4yvdW` foi compilado com sucesso (READY) a partir do HEAD `d1e1d7174e5f13e3ab2f4a578fc0611451789e8f`. O alias `capacita-o-x5hg.vercel.app` foi reassigned para esse deployment. Validação pública: `/cadastro`, `/login` e `/cadastro-confirmado` retornaram HTTP 200 e renderizaram o fluxo Next esperado. A confirmação de conta e o primeiro login ainda dependem de um e-mail real/conta de homologação; a produção não deve ser declarada integralmente aprovada enquanto permanecem worker/outbox, backup/restauração, proteção de senha comprometida e auditoria final.
