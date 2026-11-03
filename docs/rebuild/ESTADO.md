@@ -756,3 +756,8 @@ O head do PR #3 é `b54e3a3a836f374ac2e7766a3d5756141f044120`. Não há workflow
 A integração GitHub criou um preview READY no projeto antigo `capacita-o` (`capacita-o-git-feat-ca-dd3e42-dinheirodegraca013-specs-projects.vercel.app`). A inspeção confirmou Vite legado: raiz HTTP 200, mas `/login` e `/admin` retornam 404. Esse preview não é evidência da reconstrução e não deve ser usado para homologação.
 
 O projeto autorizado `capacita-o-x5hg` continua servindo Next.js em produção: `/`, `/login` e `/admin` retornam HTTP 200. O alias permanece no deployment READY antigo enquanto a cota de novos deployments estiver bloqueada.
+
+
+## Smoke público do alias autorizado — 03/11/2026
+
+No deployment atualmente acessível do projeto `capacita-o-x5hg`, as rotas `/`, `/login`, `/admin`, `/recuperar-senha` e `/redefinir-senha` responderam HTTP 200 com HTML Next.js. A tentativa de consultar `/api/v1/context` pelo fetch autenticado do Vercel foi bloqueada pela camada de Vercel Authentication do deployment, portanto não é evidência nova do status HTTP da aplicação; a evidência anterior de 401 anônimo permanece registrada separadamente.
