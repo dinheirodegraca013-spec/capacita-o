@@ -99,8 +99,9 @@ select ok(
     where schemaname = 'public' and tablename = 'organizations'
       and policyname = 'organizations_select_platform_admin'
       and qual like '%is_platform_admin%'
+      and qual like '%aal2%'
   ),
-  'superadmin pode listar organizações via policy dedicada'
+  'superadmin pode listar organizações via policy dedicada com MFA'
 );
 
 select ok(
