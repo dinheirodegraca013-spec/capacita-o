@@ -619,3 +619,8 @@ Foi implementado no branch `feat/capacitagov-rebuild` o módulo `/admin/organiza
 ## Deploy dos painéis centrais — 03/11/2026
 
 A cota Vercel foi liberada. O deployment production `dpl_5uXEXEh2ALU5BRXBj23KV9JaUof1` (commit `88eb9d36febab01399ff3d7585e1d6643d8da944`) ficou READY e o alias principal foi atualizado. As rotas protegidas `/admin`, `/admin/organizacoes` e `/admin/catalogo` foram encontradas no runtime público; sem sessão redirecionam ao login, sem expor dados. O navegador pode manter 404 em cache de deployment anterior; recarregar a URL pública força o novo bundle.
+
+
+## Limpeza de fixtures E2E — 03/11/2026
+
+A rechecagem encontrou dois tenants sintéticos persistentes (`E2E Prefeitura Alpha`/`E2E Empresa Beta`) e contas `e2e.*@capacitagov.local`. Eles foram removidos em transação autorizada, incluindo memberships/roles e organizações; as contas reais dos dois administradores foram preservadas. Verificação posterior: zero organizações sintéticas e ambos os e-mails reais ainda presentes no Auth. O painel central agora inicia sem dados de homologação.
