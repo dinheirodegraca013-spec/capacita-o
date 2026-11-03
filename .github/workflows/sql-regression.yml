@@ -59,5 +59,5 @@ jobs:
           test -n "$container"
           docker cp "$GITHUB_WORKSPACE/supabase/tests/." "$container:/tmp/capacitagov-tests/"
           docker exec "$container" psql --username=postgres --dbname=capacitagov_test --set=ON_ERROR_STOP=1 --command='create extension if not exists pgtap;'
-          docker exec "$container" sh -lc 'pg_prove --username=postgres --dbname=capacitagov_test /tmp/capacitagov-tests/*.sql'
+          docker exec "$container" sh -lc 'find /tmp/capacitagov-tests -type f -name "*.sql" -print0 | sort -z | xargs -0 pg_prove --username=postgres --dbname=capacitagov_test'
 
