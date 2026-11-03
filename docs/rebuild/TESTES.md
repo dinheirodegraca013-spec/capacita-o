@@ -379,3 +379,8 @@ O fluxo de convite usa `resolveInvitationOrigin`: em produção, um `NEXT_PUBLIC
 ## Entrega real Resend — 03/11/2026
 
 A integração Resend reportou domínio `gestio.dev.br` verificado e envio habilitado. Mensagens recentes de recuperação de senha e convite foram `delivered`; a inspeção do conteúdo confirmou que os links usam `https://capacita-o-x5hg.vercel.app/redefinir-senha` e `https://capacita-o-x5hg.vercel.app/ativar-conta`, respectivamente. Tokens e OTPs não foram persistidos nem reproduzidos neste documento.
+
+
+## Observabilidade pós-publicação — 03/11/2026
+
+A consulta de clusters de runtime da Vercel para o projeto `capacita-o-x5hg` nas últimas 24 horas não encontrou erros de runtime. Isso não substitui E2E autenticado, mas não há regressão operacional agregada nas rotas publicadas.
