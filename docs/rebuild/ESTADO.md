@@ -614,3 +614,8 @@ A conta superadmin recém-cadastrada aparecia como “Conta criada” porque o s
 ## Módulo de organizações do superadmin — 03/11/2026
 
 Foi implementado no branch `feat/capacitagov-rebuild` o módulo `/admin/organizacoes`: listagem de tenants, criação protegida por `platform_admins`, validação de nome/tipo/fuso e API `POST /api/admin/organizations` com isolamento server-side. O dashboard `/admin` ganhou link para o módulo. A publicação não foi criada porque a Vercel retornou `402 api-deployments-free-per-day` (limite de 100 deployments; retry em 24 horas). O último production READY continua servindo o dashboard anterior.
+
+
+## Deploy dos painéis centrais — 03/11/2026
+
+A cota Vercel foi liberada. O deployment production `dpl_5uXEXEh2ALU5BRXBj23KV9JaUof1` (commit `88eb9d36febab01399ff3d7585e1d6643d8da944`) ficou READY e o alias principal foi atualizado. As rotas protegidas `/admin`, `/admin/organizacoes` e `/admin/catalogo` foram encontradas no runtime público; sem sessão redirecionam ao login, sem expor dados. O navegador pode manter 404 em cache de deployment anterior; recarregar a URL pública força o novo bundle.
