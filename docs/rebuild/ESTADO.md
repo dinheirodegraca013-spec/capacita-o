@@ -793,3 +793,8 @@ Smoke pelo endpoint público do alias confirmou HTTP 200/Next.js em `/admin/audi
 ## Dependência de plano Supabase — 03/11/2026
 
 A consulta da organização `hcmpjnzsocjsjujrffwe` confirmou `plan=free/tier_free`. Isso explica a advertência de proteção contra senhas vazadas e impede tratar backup/PITR como ensaiado neste ambiente. Nenhuma alteração de cobrança foi feita. Para fechar os gates de proteção contra senhas vazadas, backup remoto e restauração, é necessário habilitar o plano/recurso correspondente e executar um ensaio autorizado; o código e o runbook permanecem preparados para isso.
+
+
+## Branch temporária para backup/migrations — 03/11/2026
+
+O projeto Supabase possui somente a branch `main`. A criação de uma branch isolada para ensaio de migrations/backup teria custo informado de **US$ 0,01344 por hora**; não foi criada sem confirmação específica de cobrança. O ensaio de restauração continua pendente, enquanto as verificações remotas de schema/RLS seguem no projeto autorizado principal.
