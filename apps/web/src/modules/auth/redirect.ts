@@ -2,6 +2,13 @@ import type { OrganizationRole } from '@/modules/identity/model';
 
 export function safeRedirectPath(value: string | null | undefined): string {
   if (!value || !value.startsWith('/') || value.startsWith('//') || value.includes('\\') || value.includes('://')) return '/';
+  let decoded = value;
+  try { decoded = decodeURIComponent(value); } catch { return '/'; }
+  if (!decoded.startsWith('/') || decoded.startsWith('//') || decoded.includes('\\') || decoded.includes('://') || /[\u0000-\u001F\u007F]/.test(decoded)) return '/';
+  try {
+    const normalized = new URL(value, 'https://capacitagov.invalid');
+    if (normalized.origin !== 'https://capacitagov.invalid') return '/';
+  } catch { return '/'; }
   return value;
 }
 
