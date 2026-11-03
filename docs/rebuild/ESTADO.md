@@ -599,3 +599,8 @@ O fluxo de autenticação ganhou `/cadastro`, link direto na tela de login e `/c
 ## Cadastro/login publicado — 03/11/2026
 
 O deployment `dpl_F2nPY6eiaznUELcGWoy4c2r4yvdW` foi compilado com sucesso (READY) a partir do HEAD `d1e1d7174e5f13e3ab2f4a578fc0611451789e8f`. O alias `capacita-o-x5hg.vercel.app` foi reassigned para esse deployment. Validação pública: `/cadastro`, `/login` e `/cadastro-confirmado` retornaram HTTP 200 e renderizaram o fluxo Next esperado. A confirmação de conta e o primeiro login ainda dependem de um e-mail real/conta de homologação; a produção não deve ser declarada integralmente aprovada enquanto permanecem worker/outbox, backup/restauração, proteção de senha comprometida e auditoria final.
+
+
+## Deployment production com Cron habilitado — 03/11/2026
+
+O deployment `dpl_5tm7odzUf5rsPhqHwN7MrBr5oPpY` foi criado com `target=production`, compilado com sucesso e ficou **READY**. O alias `capacita-o-x5hg.vercel.app` aponta para ele. Isso corrige a limitação anterior de o código estar somente em preview/alias: o Cron diário de `apps/web/vercel.json` agora pode executar no ambiente de produção. A fila autorizada ainda precisa ser reconsultada após a janela das 03:00 UTC; nenhum envio foi simulado.
