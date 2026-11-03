@@ -8,7 +8,7 @@ create policy organizations_insert_platform_admin
   on public.organizations
   for insert
   to authenticated
-  with check (public.is_platform_admin());
+  with check (public.is_platform_admin() and coalesce(auth.jwt()->>'aal', nullif(current_setting('request.jwt.claim.aal', true), ''), 'aal1') = 'aal2');
 
 create or replace function public.create_organization_for_platform_admin(
   p_name text,
