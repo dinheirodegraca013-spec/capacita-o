@@ -76,16 +76,17 @@ export default function ConfigureMfaPage() {
   return <main>
     <p className="eyebrow accent">Proteção administrativa</p>
     <h1>Configurar autenticador</h1>
-    <p className="muted">Use um aplicativo autenticador para liberar o painel do superadmin.</p>
+    <p className="muted">Instale Google Authenticator, Microsoft Authenticator ou Authy no celular. Escaneie o QR Code abaixo; o aplicativo passará a gerar o código de 6 dígitos.</p>
     {loading && <p>Preparando cadastro…</p>}
     {error && <><p role="alert" className="form-error">{error}</p><p><a className="text-link" href="/login?next=%2Fadmin">Voltar ao login</a></p></>}
     {totp && <section className="stack">
       {totp.qr_code && <img alt="QR Code para configurar o autenticador" width={220} height={220} src={'data:image/svg+xml;utf8,' + encodeURIComponent(totp.qr_code)} />}
+      <p>Depois de escanear, digite aqui o código exibido no aplicativo:</p>
       <p>Se não puder ler o QR Code, use esta chave:</p>
       <code>{totp.secret}</code>
       {totp.uri && <details><summary>URI manual</summary><code>{totp.uri}</code></details>}
       <form onSubmit={submit}>
-        <label>Código de 6 dígitos<input value={code} onChange={(event) => setCode(event.target.value.replace(/\D/g, '').slice(0, 6))} inputMode="numeric" pattern="[0-9]{6}" autoComplete="one-time-code" required /></label>
+        <label>Código de 6 dígitos<input value={code} onChange={(event) => setCode(event.target.value.replace(/D/g, '').slice(0, 6))} inputMode="numeric" pattern="[0-9]{6}" autoComplete="one-time-code" required /></label>
         <button disabled={saving || code.length !== 6}>{saving ? 'Validando…' : 'Ativar autenticador'}</button>
       </form>
     </section>}
