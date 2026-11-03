@@ -730,3 +730,10 @@ A policy de SELECT global de `organizations` também passou a exigir `aal2`. Ass
 ## Fechamento dos bypasses de leitura global — 03/11/2026
 
 As policies globais de `organizations` e `audit_events` agora exigem `aal2` no ramo de superadmin. A verificação remota confirmou as expressões RLS; membros ativos continuam lendo apenas seus tenants. O acesso administrativo não depende apenas da UI.
+
+
+## Otimização final das policies globais — 03/11/2026
+
+A migration `20261103052000_optimize_member_rls_initplan.sql` foi aplicada no Supabase para encapsular também `is_active_member(...)` em `SELECT` nas policies consolidadas de `organizations` e `audit_events`, preservando isolamento por tenant e o requisito AAL2 para superadmin. A consulta remota confirmou as duas expressões com initplan.
+
+O advisor remoto ainda devolve as advertências `auth_rls_initplan` com timestamp anterior à aplicação; será reconsultado em nova janela para confirmar a atualização do linter. Permanecem 7 avisos informativos de índices não utilizados, sem remoção preventiva. No advisor de segurança, `verify_certificate` permanece público por desenho (validação pública de certificado); as RPCs autenticadas continuam SECURITY DEFINER intencionais e limitadas ao papel `authenticated`. Proteção contra senhas vazadas continua dependente do plano/configuração do Supabase.
