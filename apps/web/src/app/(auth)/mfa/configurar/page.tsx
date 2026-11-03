@@ -25,12 +25,13 @@ export default function ConfigureMfaPage() {
     async function enroll() {
       const supabase = createSupabaseBrowserClient();
       const { data: factors } = await supabase.auth.mfa.listFactors();
+      if (cancelled) return;
       const existing = factors?.totp?.find((factor) => factor.status === 'verified');
       if (existing) {
         router.replace('/mfa?next=' + encodeURIComponent(next));
         return;
       }
-      const pending = factors?.totp?.filter((factor) => factor.status === 'unverified') ?? [];
+      const pending = (factors?.all ?? []).filter((factor) => factor.factor_type === 'totp' && factor.status === 'unverified');
       await Promise.all(pending.map((factor) => supabase.auth.mfa.unenroll({ factorId: factor.id })));
       const { data, error: enrollError } = await supabase.auth.mfa.enroll({
         factorType: 'totp',
