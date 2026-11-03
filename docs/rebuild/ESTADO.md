@@ -766,3 +766,8 @@ No deployment atualmente acessível do projeto `capacita-o-x5hg`, as rotas `/`, 
 ## Preview autorizado disponível — 03/11/2026
 
 A cota permitiu um deployment preview no projeto correto `capacita-o-x5hg`: `dpl_C2WKQiXbhje2kU7bNRofKDHNbp2c`, URL `https://capacita-o-x5hg-nlczvore8-dinheirodegraca013-specs-projects.vercel.app`, commit `80d1f9744145ac9dc3c23ff511eeb0d6d62ca01d`. Smoke HTTP confirmou Next.js/200 em `/`, `/login`, `/admin`, `/recuperar-senha` e `/redefinir-senha`. O preview está adequado para homologação visual; promoção a produção permanece condicionada ao CI do head e à auditoria final.
+
+
+## Build do preview correto — 03/11/2026
+
+O deployment `dpl_C2WKQiXbhje2kU7bNRofKDHNbp2c` terminou READY com framework `nextjs`, `npm ci --legacy-peer-deps` e `next build`. O log lista as rotas de aluno, gestão, professor, MFA, recuperação/redefinição de senha e validação pública de certificado. Não houve erro de build; apenas avisos de npm sobre configuração/cache e versões de ESLint.
