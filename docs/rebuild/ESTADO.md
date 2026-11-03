@@ -662,3 +662,8 @@ Após restringir os helpers internos, o advisor do Supabase reduziu o alerta de 
 ## Endurecimento da conclusão de aulas — 03/11/2026
 
 O RPC `record_lesson_progress` passou a rejeitar `completed=true` quando a aula não atingiu a duração registrada e não houve confirmação explícita de leitura. A validação de pertencimento da matrícula, aula e limites de posição foi preservada. Migration aplicada no Supabase: `harden_lesson_completion_confirmation`; versão rastreável em `supabase/migrations/20261103044000_harden_lesson_completion_confirmation.sql`. Verificação da função em produção confirmou a nova guarda.
+
+
+## Nova tentativa de publicação — 03/11/2026
+
+Após as correções de RLS, helpers e conclusão de aulas, foi feita uma nova tentativa única de deployment production. A Vercel manteve o bloqueio `402 api-deployments-free-per-day` com `retryAfter=86400`; nenhum deployment foi criado. O branch permanece íntegro e a produção continua no último READY conhecido.
