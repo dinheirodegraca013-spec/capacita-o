@@ -776,3 +776,10 @@ O deployment `dpl_C2WKQiXbhje2kU7bNRofKDHNbp2c` terminou READY com framework `ne
 ## Cota Vercel revalidada — 03/11/2026
 
 O head do PR #3 avançou para `864ccf7bd534f9c3e37e2fb9b5c931ad8236505b`. Tentativa explícita de criar preview nesse SHA retornou `402 payment_required / api-deployments-free-per-day`, `retryAfter=86400`. O preview anterior `dpl_C2WKQiXbhje2kU7bNRofKDHNbp2c` permanece READY e válido para homologação, mas não representa os commits posteriores de documentação.
+
+
+## Publicação por alias validada — 03/11/2026
+
+A promoção API convencional retornou 422, mas a atribuição direta do alias autorizado foi concluída: `capacita-o-x5hg.vercel.app` passou a apontar para `dpl_C2WKQiXbhje2kU7bNRofKDHNbp2c`. Smoke pós-publicação confirmou HTTP 200/Next.js em `/`, `/login`, `/admin`, `/recuperar-senha` e `/redefinir-senha`. O deployment anterior `dpl_5uXEX...` foi removido do alias e permanece rollback candidate.
+
+A publicação não encerra a meta: CI do head, E2E autenticado de duas organizações, backup/rollback e auditoria final ainda precisam de evidência independente.
