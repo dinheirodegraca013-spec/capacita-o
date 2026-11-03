@@ -11,6 +11,8 @@ export async function POST(request: NextRequest) {
   if (!user) return NextResponse.json({ error: 'UNAUTHENTICATED' }, { status: 401 });
   const { data: admin } = await supabase.from('platform_admins').select('user_id').eq('user_id', user.id).maybeSingle();
   if (!admin) return NextResponse.json({ error: 'FORBIDDEN' }, { status: 403 });
+  const { data: assurance } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+  if (assurance?.currentLevel !== 'aal2') return NextResponse.json({ error: 'MFA_REQUIRED' }, { status: 403 });
   const body = await request.json().catch(() => null) as { name?: string; kind?: string; timezone?: string } | null;
   const name = body?.name?.trim() ?? '';
   const kind = body?.kind ?? 'other';
