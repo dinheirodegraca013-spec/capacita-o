@@ -845,3 +845,8 @@ A revisão confirmou que o SDK Supabase expõe fatores TOTP não verificados em 
 ## Correção final do redirect hardening — 03/11/2026
 
 A revisão independente identificou bypass por caracteres de controle codificados (por exemplo, `%0A`). `safeRedirectPath` agora decodifica com tratamento de erro, rejeita controles, barras invertidas, esquemas e destinos protocol-relative e confirma a origem após normalização. Foram adicionados testes Vitest para newline/tab codificados e destinos externos. Aguarda CI/deploy.
+
+
+## Revalidação de publicação após autorização Vercel — 03/11/2026
+
+A autorização da equipe Vercel foi concluída e a listagem de aliases voltou a funcionar. O alias público continua apontando para `dpl_C2WKQiXbhje2kU7bNRofKDHNbp2c`; o preview mais recente disponível é `dpl_2rmzfeHTDFDPwqyxSrxH3udksbf7`, commit `beff9f60`, anterior às correções MFA/redirect. Nova tentativa de deployment do branch corrigido retornou novamente `402 api-deployments-free-per-day`, com janela de 24 horas. Não houve alteração de produção nesta tentativa.
