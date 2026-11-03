@@ -10,6 +10,8 @@ export default async function CentralCatalogPage() {
   if (!user) redirect('/login');
   const { data: admin } = await supabase.from('platform_admins').select('user_id').eq('user_id', user.id).maybeSingle();
   if (!admin) redirect('/selecionar-organizacao');
+  const { data: assurance } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+  if (assurance?.currentLevel !== 'aal2') redirect('/mfa?next=/admin/catalogo');
   const { data: courses } = await supabase.from('courses').select('id,title,slug,description,learning_mode,status,course_versions(version_no,status,published_at)').eq('owner_type','central').order('created_at',{ascending:true});
   return <main className="selection-page">
     <p className="eyebrow accent">Catálogo central</p>
