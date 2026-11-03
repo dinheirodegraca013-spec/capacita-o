@@ -701,3 +701,8 @@ A revisão confirmou duas lacunas P1 e ambas foram corrigidas:
 - A criação passou para a RPC transacional `create_organization_for_platform_admin`, com validação `aal2` e evento de auditoria; API e server action usam a RPC.
 - Painéis administrativos e a tela de organizações exigem MFA; o destino é preservado após o desafio.
 - A suíte pgTAP foi ampliada para verificar policies, RPC e MFA.
+
+
+## Correção do CI pgTAP — 03/11/2026
+
+O workflow SQL executava apenas `supabase/tests/*.sql` e ignorava a suíte de segurança em subpasta. O comando foi alterado para localizar recursivamente todos os `.sql` antes do `pg_prove`. A execução verde do próximo commit será necessária para fechar essa evidência.
