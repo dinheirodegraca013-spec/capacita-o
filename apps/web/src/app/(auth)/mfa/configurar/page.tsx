@@ -29,6 +29,8 @@ export default function ConfigureMfaPage() {
         router.replace('/mfa?next=' + encodeURIComponent(next));
         return;
       }
+      const pending = factors?.totp?.filter((factor) => factor.status === 'unverified') ?? [];
+      await Promise.all(pending.map((factor) => supabase.auth.mfa.unenroll({ factorId: factor.id })));
       const { data, error: enrollError } = await supabase.auth.mfa.enroll({
         factorType: 'totp',
         friendlyName: 'CapacitaGov',
