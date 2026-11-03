@@ -609,3 +609,8 @@ O deployment `dpl_5tm7odzUf5rsPhqHwN7MrBr5oPpY` foi criado com `target=productio
 ## Correção do seletor para superadmin — 03/11/2026
 
 A conta superadmin recém-cadastrada aparecia como “Conta criada” porque o seletor consultava apenas memberships de organizações. A página agora consulta também `platform_admins`, mostra “Bem-vindo, superadmin” e direciona para `/admin`. Foi criada uma página protegida de painel da plataforma; usuários sem registro em `platform_admins` são redirecionados ao seletor. Deployment production `dpl_38x4KxT7UMBhk3j3z8TW9uWMzJTX` ficou READY e o alias principal foi atualizado. A rota `/admin` sem sessão redireciona ao login conforme esperado.
+
+
+## Módulo de organizações do superadmin — 03/11/2026
+
+Foi implementado no branch `feat/capacitagov-rebuild` o módulo `/admin/organizacoes`: listagem de tenants, criação protegida por `platform_admins`, validação de nome/tipo/fuso e API `POST /api/admin/organizations` com isolamento server-side. O dashboard `/admin` ganhou link para o módulo. A publicação não foi criada porque a Vercel retornou `402 api-deployments-free-per-day` (limite de 100 deployments; retry em 24 horas). O último production READY continua servindo o dashboard anterior.
