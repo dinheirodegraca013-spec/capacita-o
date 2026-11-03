@@ -720,3 +720,8 @@ A revisão encontrou dois problemas na primeira versão da gestão global:
 - O evento de auditoria agora informa `organization_id = v_id`, obrigatório no schema; a função foi verificada remotamente com `MFA_REQUIRED` e tenant no audit.
 
 A policy INSERT direta foi confirmada ausente e a RPC permanece executável apenas por `authenticated`.
+
+
+## Fechamento da leitura global AAL1 — 03/11/2026
+
+A policy de SELECT global de `organizations` também passou a exigir `aal2`. Assim, leitura e escrita administrativas dependem de MFA no banco, não apenas na UI/API.
