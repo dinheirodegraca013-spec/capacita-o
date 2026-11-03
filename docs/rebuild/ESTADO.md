@@ -835,3 +835,8 @@ A tela de seleção de organização já possui entrada explícita para o painel
 ## Hardening do retorno MFA — 03/11/2026
 
 A revisão do fluxo encontrou que o parâmetro `next` usado pelo cliente MFA não passava pelo mesmo bloqueio de destinos externos aplicado no callback do servidor. `/mfa` e `/mfa/configurar` agora usam `safeRedirectPath`, rejeitando esquemas, barras duplas e escapes antes de `router.push/replace`. A alteração aguarda CI e novo deployment.
+
+
+## Correção após revisão independente do MFA — 03/11/2026
+
+A revisão confirmou que o SDK Supabase expõe fatores TOTP não verificados em `factors.all`, enquanto `factors.totp` pode conter apenas fatores verificados. O cadastro agora limpa somente fatores TOTP `unverified` via `all` e interrompe antes de novas chamadas quando a tela desmonta. A proteção de `next` permanece aplicada com `safeRedirectPath`. Aguarda CI/deploy.
