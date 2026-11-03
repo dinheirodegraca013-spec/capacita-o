@@ -3,7 +3,7 @@ set search_path = public, extensions;
 
 begin;
 
-select plan(6);
+select plan(7);
 
 select ok(
   to_regclass('public.audit_events') is not null,
@@ -36,10 +36,26 @@ select ok(
         'is_org_manager',
         'is_platform_admin'
       )
-      and grantee in ('anon', 'authenticated')
+      and grantee = 'anon'
       and privilege_type = 'EXECUTE'
   ),
-  'helpers internos não são RPC públicos'
+  'helpers internos não são RPCs anônimos'
+);
+
+select ok(
+  (select count(*) from information_schema.routine_privileges
+   where specific_schema = 'public'
+     and routine_name in (
+       'assessment_org',
+       'can_access_course_metadata',
+       'can_access_course_version',
+       'is_active_member',
+       'is_org_manager',
+       'is_platform_admin'
+     )
+     and grantee = 'authenticated'
+     and privilege_type = 'EXECUTE') = 6,
+  'helpers permanecem executáveis pelo RLS autenticado'
 );
 
 select ok(
