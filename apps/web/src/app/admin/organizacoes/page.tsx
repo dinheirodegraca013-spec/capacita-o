@@ -18,6 +18,8 @@ async function createOrganization(formData: FormData) {
   if (!admin) redirect('/selecionar-organizacao');
   const { data: assurance } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
   if (assurance?.currentLevel !== 'aal2') redirect('/mfa?next=/admin/organizacoes');
+  const { data: assurance } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+  if (assurance?.currentLevel !== 'aal2') redirect('/mfa?next=/admin/organizacoes');
   const name = String(formData.get('name') ?? '').trim();
   const kind = String(formData.get('kind') ?? 'other');
   const timezone = String(formData.get('timezone') ?? 'America/Sao_Paulo');
