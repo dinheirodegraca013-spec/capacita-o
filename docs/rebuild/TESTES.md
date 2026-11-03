@@ -374,3 +374,8 @@ A revisão de código confirmou que o formulário `/recuperar-senha` usa `window
 ## Auditoria complementar de convites — 03/11/2026
 
 O fluxo de convite usa `resolveInvitationOrigin`: em produção, um `NEXT_PUBLIC_APP_URL` local é descartado e o host real da requisição é usado. Os links apontam para `/ativar-conta`, incluem token/hash/OTP conforme o tipo retornado pelo Auth, têm fallback de copiar endereço no e-mail e marcam a invitation como `failed` quando provedor/credenciais não estão configurados. A ativação valida a sessão, email/OTP e consome o token; E2E com caixa real continua pendente.
+
+
+## Entrega real Resend — 03/11/2026
+
+A integração Resend reportou domínio `gestio.dev.br` verificado e envio habilitado. Mensagens recentes de recuperação de senha e convite foram `delivered`; a inspeção do conteúdo confirmou que os links usam `https://capacita-o-x5hg.vercel.app/redefinir-senha` e `https://capacita-o-x5hg.vercel.app/ativar-conta`, respectivamente. Tokens e OTPs não foram persistidos nem reproduzidos neste documento.
