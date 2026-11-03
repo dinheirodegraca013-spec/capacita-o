@@ -677,3 +677,8 @@ Foi adicionada `supabase/tests/security/capacitagov_security_regressions.sql`, c
 ## Proteção contra senhas comprometidas — 03/11/2026
 
 A documentação oficial do Supabase confirma que a proteção HaveIBeenPwned fica disponível no plano Pro ou superior e é habilitada em Auth Settings. O advisor continua apontando essa configuração como pendente; não há ferramenta de configuração exposta nesta sessão e nenhum upgrade/pagamento foi realizado automaticamente.
+
+
+## Validação contínua do frontend — 03/11/2026
+
+Foi adicionado `.github/workflows/capacitagov-web.yml`, executando `npm ci`, typecheck, lint e Vitest para o workspace `apps/web` em pushes relevantes e pull requests. A Vercel permanece indisponível para publicar, mas o branch agora possui uma verificação independente reproduzível.
