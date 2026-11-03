@@ -895,3 +895,8 @@ O projeto Vercel publicado possui `CRON_SECRET`, `NOTIFICATION_JOB_SECRET`, `SUP
 ## CI associado ao SHA publicado — 03/11/2026
 
 A consulta de GitHub Actions para o SHA publicado `438e823c1fc2ae087324876641d9c3f454b6ea25` retornou `workflow_runs=[]`. Portanto a publicação Vercel READY não é tratada como evidência de typecheck/lint/Vitest/pgTAP nesse SHA; o gate CI remoto permanece aberto, embora existam execuções verdes anteriores documentadas.
+
+
+## UX do primeiro acesso MFA sem sessão — 03/11/2026
+
+As telas `/mfa` e `/mfa/configurar` foram ajustadas para exigir sessão antes de consultar/criar fatores. Usuário não autenticado é encaminhado ao login e recebe orientação explícita, em vez de ver uma tela de código sem origem. A alteração está no branch, mas o novo deployment foi bloqueado novamente pela cota Vercel de 100/dia; a produção segue no deployment READY anterior até a próxima janela.
