@@ -692,3 +692,12 @@ A revisão independente detectou que a migration de restrição dos helpers revo
 ## Revisão independente: MFA no superadmin — 03/11/2026
 
 A criação de organizações no superadmin agora exige `aal2` tanto na server action quanto em `POST /api/admin/organizations`. A tela MFA preserva o destino `next` após o desafio. O painel somente leitura continua acessível ao superadmin autenticado; operações de escrita não prosseguem sem fator forte.
+
+
+## Revisão independente: gestão global e MFA — 03/11/2026
+
+A revisão confirmou duas lacunas P1 e ambas foram corrigidas:
+- `organizations` recebeu policies RLS específicas para leitura e inserção por superadmin.
+- A criação passou para a RPC transacional `create_organization_for_platform_admin`, com validação `aal2` e evento de auditoria; API e server action usam a RPC.
+- Painéis administrativos e a tela de organizações exigem MFA; o destino é preservado após o desafio.
+- A suíte pgTAP foi ampliada para verificar policies, RPC e MFA.
