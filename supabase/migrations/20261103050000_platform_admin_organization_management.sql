@@ -4,12 +4,6 @@ create policy organizations_select_platform_admin
   to authenticated
   using (public.is_platform_admin());
 
-create policy organizations_insert_platform_admin
-  on public.organizations
-  for insert
-  to authenticated
-  with check (public.is_platform_admin() and coalesce(auth.jwt()->>'aal', nullif(current_setting('request.jwt.claim.aal', true), ''), 'aal1') = 'aal2');
-
 create or replace function public.create_organization_for_platform_admin(
   p_name text,
   p_slug text,
@@ -37,8 +31,8 @@ begin
   values (trim(p_name), p_slug, p_kind, coalesce(nullif(trim(p_timezone), ''), 'America/Sao_Paulo'))
   returning id into v_id;
 
-  insert into public.audit_events (actor_user_id, action, resource_type, resource_id, outcome, metadata)
-  values (auth.uid(), 'organization.create', 'organization', v_id, 'success', jsonb_build_object('slug', p_slug, 'kind', p_kind));
+  insert into public.audit_events (organization_id, actor_user_id, action, resource_type, resource_id, outcome, metadata)
+  values (v_id, auth.uid(), 'organization.create', 'organization', v_id, 'success', jsonb_build_object('slug', p_slug, 'kind', p_kind));
   return v_id;
 end;
 $function$;
