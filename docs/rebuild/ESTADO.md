@@ -880,3 +880,8 @@ A cota Vercel foi liberada e o deployment `dpl_EJYoh52xcxx9V1odGpywCKfNpk2h` fic
 ## Estabilidade pós-publicação — 03/11/2026
 
 O deployment `dpl_EJYoh52xcxx9V1odGpywCKfNpk2h` permanece READY e o alias principal continua associado a ele. A consulta de runtime da Vercel na última hora não encontrou erros. A homologação autenticada ainda depende de sessão/credenciais autorizadas; nenhum dado de produção foi criado nesta verificação pública.
+
+
+## Auditoria independente pós-publicação — 03/11/2026
+
+A revisão do deployment `dpl_EJYoh52xcxx9V1odGpywCKfNpk2h` confirmou READY/production e não encontrou novo P0/P1 de código. A liberação integral permanece aberta por evidências de escopo maior: T28/E2E completo de dois tenants até certificado/relatório; configuração e desafio MFA com negação AAL1/liberação AAL2 no navegador; ataques autenticados cross-tenant em RLS/Storage e URLs assinadas; ensaio de backup/restauração com RTO/RPO; runs web/pgTAP associados ao SHA implantado; e observação do worker outbox→Resend com `sent`/retry. HTTP público 200, inspeção de policies e runbook não substituem essas provas.
