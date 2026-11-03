@@ -657,3 +657,8 @@ Migration: `supabase/migrations/20261103043000_restrict_internal_authorization_h
 ## Resultado da auditoria de segurança — 03/11/2026
 
 Após restringir os helpers internos, o advisor do Supabase reduziu o alerta de funções SECURITY DEFINER autenticadas de 31 para 25. Permanece intencionalmente o RPC público `verify_certificate`; os 25 restantes são RPCs de negócio usados pelos fluxos do produto e exigem revisão funcional individual antes de qualquer revogação. O único alerta de configuração externo ainda é a proteção contra senhas comprometidas desativada no Auth.
+
+
+## Endurecimento da conclusão de aulas — 03/11/2026
+
+O RPC `record_lesson_progress` passou a rejeitar `completed=true` quando a aula não atingiu a duração registrada e não houve confirmação explícita de leitura. A validação de pertencimento da matrícula, aula e limites de posição foi preservada. Migration aplicada no Supabase: `harden_lesson_completion_confirmation`; versão rastreável em `supabase/migrations/20261103044000_harden_lesson_completion_confirmation.sql`. Verificação da função em produção confirmou a nova guarda.
