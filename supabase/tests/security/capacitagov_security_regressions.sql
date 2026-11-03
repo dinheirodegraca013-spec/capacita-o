@@ -109,8 +109,9 @@ select ok(
     where schemaname = 'public' and tablename = 'organizations'
       and policyname = 'organizations_insert_platform_admin'
       and with_check like '%is_platform_admin%'
+      and with_check like '%aal2%'
   ),
-  'criação global exige superadmin'
+  'criação global exige superadmin com MFA'
 );
 
 select ok(
