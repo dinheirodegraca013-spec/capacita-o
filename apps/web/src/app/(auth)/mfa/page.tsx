@@ -6,7 +6,7 @@ import { createSupabaseBrowserClient } from '@/lib/supabase/browser';
 
 export default function MfaPage() {
   const [error, setError] = useState<string | null>(null);
-  const [router] = useState(() => useRouter());
+  const router = useRouter();
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError(null);
