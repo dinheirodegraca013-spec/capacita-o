@@ -840,3 +840,8 @@ A revisão do fluxo encontrou que o parâmetro `next` usado pelo cliente MFA nã
 ## Correção após revisão independente do MFA — 03/11/2026
 
 A revisão confirmou que o SDK Supabase expõe fatores TOTP não verificados em `factors.all`, enquanto `factors.totp` pode conter apenas fatores verificados. O cadastro agora limpa somente fatores TOTP `unverified` via `all` e interrompe antes de novas chamadas quando a tela desmonta. A proteção de `next` permanece aplicada com `safeRedirectPath`. Aguarda CI/deploy.
+
+
+## Correção final do redirect hardening — 03/11/2026
+
+A revisão independente identificou bypass por caracteres de controle codificados (por exemplo, `%0A`). `safeRedirectPath` agora decodifica com tratamento de erro, rejeita controles, barras invertidas, esquemas e destinos protocol-relative e confirma a origem após normalização. Foram adicionados testes Vitest para newline/tab codificados e destinos externos. Aguarda CI/deploy.
