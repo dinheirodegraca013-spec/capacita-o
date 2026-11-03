@@ -652,3 +652,8 @@ As migrations intermediárias de auditoria foram consolidadas em `supabase/migra
 
 A auditoria de segurança identificou funções auxiliares de autorização expostas como RPC. Foi revogado o `EXECUTE` de `assessment_org`, `can_access_course_metadata`, `can_access_course_version`, `is_active_member`, `is_org_manager` e `is_platform_admin` para `anon` e `authenticated`; elas continuam utilizáveis internamente por RLS e funções server-side. RPCs de negócio, incluindo convite, matrícula, progresso e verificação pública de certificado, não foram removidos.
 Migration: `supabase/migrations/20261103043000_restrict_internal_authorization_helpers.sql`.
+
+
+## Resultado da auditoria de segurança — 03/11/2026
+
+Após restringir os helpers internos, o advisor do Supabase reduziu o alerta de funções SECURITY DEFINER autenticadas de 31 para 25. Permanece intencionalmente o RPC público `verify_certificate`; os 25 restantes são RPCs de negócio usados pelos fluxos do produto e exigem revisão funcional individual antes de qualquer revogação. O único alerta de configuração externo ainda é a proteção contra senhas comprometidas desativada no Auth.
