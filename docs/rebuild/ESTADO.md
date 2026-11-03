@@ -915,3 +915,8 @@ O branch `feat/capacitagov-rebuild` está no head `6504a2a6984c48f7c078fc3a61771
 ## Rechecagem do estado MFA no Supabase — 03/11/2026
 
 Consulta somente leitura no projeto autorizado confirmou PostgreSQL 17.11, as duas contas superadmin confirmadas (`dinheirodegraca013@gmail.com` e `guicabanas13@gmail.com`) e **zero fatores TOTP verificados ou pendentes** para ambas. Portanto, antes de informar um código na tela de verificação, o primeiro acesso deve passar por `/mfa/configurar` para cadastrar o aplicativo autenticador. Nenhuma alteração de dados foi feita.
+
+
+## Tentativa controlada de publicação — 03/11/2026
+
+Nova tentativa única de deployment do head do branch autorizado retornou novamente `402 payment_required / api-deployments-free-per-day`, com `retryAfter=86400`. Não houve criação de deployment, alteração de alias ou mudança em produção. O bloqueio é externo à aplicação; novas tentativas ficam suspensas até a janela de cota ou autorização explícita para plano com cobrança.
