@@ -749,3 +749,10 @@ A revisão independente confirmou remotamente que as policies globais de organiz
 O advisor de performance continua retornando 2 avisos `auth_rls_initplan`, mesmo após as policies remotas estarem materialmente encapsuladas em `SELECT`; a expressão remota foi reescrita novamente em `20261103053000_optimize_member_rls_claim_initplan.sql` para passar `auth.uid()` explicitamente e usar somente o claim JWT `aal`. O resultado do linter é tratado como evidência pendente de atualização/limitação do advisor, não como aprovação automática. Os 7 índices `unused` permanecem apenas INFO.
 
 O head do PR #3 é `b54e3a3a836f374ac2e7766a3d5756141f044120`. Não há workflow run associado a esse SHA via connector; os únicos status reportados são falhas Vercel por `build-rate-limit`. A produção continua no deployment READY `dpl_5uXEXEh2ALU5BRXBj23KV9JaUof1`, commit `88eb9d36febab01399ff3d7585e1d6643d8da944`; nenhum deploy novo foi criado.
+
+
+## Divergência de preview Vercel — 03/11/2026
+
+A integração GitHub criou um preview READY no projeto antigo `capacita-o` (`capacita-o-git-feat-ca-dd3e42-dinheirodegraca013-specs-projects.vercel.app`). A inspeção confirmou Vite legado: raiz HTTP 200, mas `/login` e `/admin` retornam 404. Esse preview não é evidência da reconstrução e não deve ser usado para homologação.
+
+O projeto autorizado `capacita-o-x5hg` continua servindo Next.js em produção: `/`, `/login` e `/admin` retornam HTTP 200. O alias permanece no deployment READY antigo enquanto a cota de novos deployments estiver bloqueada.
