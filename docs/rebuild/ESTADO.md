@@ -604,3 +604,8 @@ O deployment `dpl_F2nPY6eiaznUELcGWoy4c2r4yvdW` foi compilado com sucesso (READY
 ## Deployment production com Cron habilitado — 03/11/2026
 
 O deployment `dpl_5tm7odzUf5rsPhqHwN7MrBr5oPpY` foi criado com `target=production`, compilado com sucesso e ficou **READY**. O alias `capacita-o-x5hg.vercel.app` aponta para ele. Isso corrige a limitação anterior de o código estar somente em preview/alias: o Cron diário de `apps/web/vercel.json` agora pode executar no ambiente de produção. A fila autorizada ainda precisa ser reconsultada após a janela das 03:00 UTC; nenhum envio foi simulado.
+
+
+## Correção do seletor para superadmin — 03/11/2026
+
+A conta superadmin recém-cadastrada aparecia como “Conta criada” porque o seletor consultava apenas memberships de organizações. A página agora consulta também `platform_admins`, mostra “Bem-vindo, superadmin” e direciona para `/admin`. Foi criada uma página protegida de painel da plataforma; usuários sem registro em `platform_admins` são redirecionados ao seletor. Deployment production `dpl_38x4KxT7UMBhk3j3z8TW9uWMzJTX` ficou READY e o alias principal foi atualizado. A rota `/admin` sem sessão redireciona ao login conforme esperado.
