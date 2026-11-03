@@ -667,3 +667,8 @@ O RPC `record_lesson_progress` passou a rejeitar `completed=true` quando a aula 
 ## Nova tentativa de publicação — 03/11/2026
 
 Após as correções de RLS, helpers e conclusão de aulas, foi feita uma nova tentativa única de deployment production. A Vercel manteve o bloqueio `402 api-deployments-free-per-day` com `retryAfter=86400`; nenhum deployment foi criado. O branch permanece íntegro e a produção continua no último READY conhecido.
+
+
+## Suíte pgTAP de regressões — 03/11/2026
+
+Foi adicionada `supabase/tests/security/capacitagov_security_regressions.sql`, cobrindo RLS da auditoria, exposição de helpers, guarda de conclusão e funções de certificado. A suíte instala pgTAP somente no banco de teste e usa `search_path` explícito. O projeto de produção não possui pgTAP instalado; a execução remota foi evitada para não introduzir extensão de teste no ambiente produtivo.
