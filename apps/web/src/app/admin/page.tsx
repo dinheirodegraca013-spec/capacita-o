@@ -11,6 +11,8 @@ export default async function PlatformAdminPage() {
 
   const { data: platformAdmin } = await supabase.from('platform_admins').select('user_id').eq('user_id', user.id).maybeSingle();
   if (!platformAdmin) redirect('/selecionar-organizacao');
+  const { data: assurance } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+  if (assurance?.currentLevel !== 'aal2') redirect('/mfa?next=/admin');
 
   const { data: organizations } = await supabase
     .from('organizations')
