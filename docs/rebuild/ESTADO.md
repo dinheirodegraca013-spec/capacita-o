@@ -646,3 +646,9 @@ A auditoria de performance identificou duas políticas permissivas de leitura em
 ## Rastreabilidade final da migration de auditoria — 03/11/2026
 
 As migrations intermediárias de auditoria foram consolidadas em `supabase/migrations/20261103042000_audit_events_platform_admin_read.sql`, com SQL idempotente e estado final único. A mesma alteração foi aplicada pelo mecanismo de migrations do Supabase com o nome `audit_events_platform_admin_read`; verificação posterior confirmou uma única política `audit_events_select_scoped`.
+
+
+## Restrição de helpers internos — 03/11/2026
+
+A auditoria de segurança identificou funções auxiliares de autorização expostas como RPC. Foi revogado o `EXECUTE` de `assessment_org`, `can_access_course_metadata`, `can_access_course_version`, `is_active_member`, `is_org_manager` e `is_platform_admin` para `anon` e `authenticated`; elas continuam utilizáveis internamente por RLS e funções server-side. RPCs de negócio, incluindo convite, matrícula, progresso e verificação pública de certificado, não foram removidos.
+Migration: `supabase/migrations/20261103043000_restrict_internal_authorization_helpers.sql`.
