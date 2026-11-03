@@ -19,8 +19,9 @@ select ok(
       and policyname = 'audit_events_select_scoped'
       and qual like '%is_active_member%'
       and qual like '%is_platform_admin%'
+      and qual like '%aal2%'
   ),
-  'audit_events possui RLS para membro ativo ou superadmin'
+  'audit_events possui RLS para membro ativo ou superadmin com MFA'
 );
 
 select ok(
