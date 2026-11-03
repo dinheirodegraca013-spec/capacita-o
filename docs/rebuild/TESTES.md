@@ -359,3 +359,8 @@ Com fixtures sintéticas temporárias no Supabase autorizado e configuração Pl
 - Smoke HTTP pós-publicação passou em `/`, `/login`, `/admin`, `/admin/auditoria`, `/admin/organizacoes`, `/recuperar-senha` e `/redefinir-senha`. O build lista as rotas de aluno, gestão, professor, MFA e validação pública de certificado.
 - A comparação GitHub entre o commit implantado e o head atual encontrou somente alterações em `docs/rebuild/ESTADO.md`; portanto, o código do deployment publicado cobre o head funcional atual.
 - A revisão independente confirmou policies globais com isolamento tenant/AAL2 e redirecionamento de `/admin/auditoria` sem sessão. CI do head atual e E2E autenticado de duas organizações continuam pendentes.
+
+
+## Revisão independente pós-alias — 03/11/2026
+
+A revisão confirmou, sem alterações, que em produção `/admin`, `/admin/auditoria` e rotas de gestão sem sessão retornam 307 para login; `/api/v1/context` retorna 401; e o worker interno sem segredo retorna 401 `UNAUTHORIZED`. Nenhum P0/P1 novo foi identificado. Não foi exercitada sessão AAL1 nesta rodada.
