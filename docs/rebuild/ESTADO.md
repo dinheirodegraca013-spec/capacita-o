@@ -636,3 +636,8 @@ A tentativa de publicar essa melhoria foi bloqueada pela cota da Vercel (`402 ap
 ## RLS do painel de auditoria — 03/11/2026
 
 A política existente de `audit_events` permitia leitura apenas a membros de organizações. Como o superadmin pode não pertencer a um tenant, foi adicionada e aplicada a política `audit_events_select_platform_admin`, usando a função `is_platform_admin()`. Migration rastreável: `supabase/migrations/20261103040000_allow_platform_admin_audit_read.sql`. Verificação SQL concluída sem erro.
+
+
+## Consolidação da política RLS de auditoria — 03/11/2026
+
+A auditoria de performance identificou duas políticas permissivas de leitura em `audit_events`. Elas foram substituídas por uma única política `audit_events_select_scoped`, permitindo leitura apenas para membro ativo do tenant ou superadmin. A alteração foi aplicada no Supabase e versionada em `supabase/migrations/20261103041000_consolidate_audit_read_policy.sql`. Acesso não foi ampliado além desses dois casos.
