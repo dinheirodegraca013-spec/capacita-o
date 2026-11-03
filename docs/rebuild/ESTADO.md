@@ -830,3 +830,8 @@ Foi solicitada uma branch Supabase temporária `capacitagov-audit` para ensaio d
 ## Ajuste de recadastro MFA e descoberta de painéis — 03/11/2026
 
 A tela de seleção de organização já possui entrada explícita para o painel de plataforma quando a conta está em `platform_admins`; contas sem membership não devem receber menus de aluno/gestão/professor, pois esses módulos são tenant-scoped. O cadastro TOTP foi endurecido para remover fatores não verificados pendentes antes de gerar outro, evitando duplicação após abandono do fluxo. A alteração aguarda CI/deploy.
+
+
+## Hardening do retorno MFA — 03/11/2026
+
+A revisão do fluxo encontrou que o parâmetro `next` usado pelo cliente MFA não passava pelo mesmo bloqueio de destinos externos aplicado no callback do servidor. `/mfa` e `/mfa/configurar` agora usam `safeRedirectPath`, rejeitando esquemas, barras duplas e escapes antes de `router.push/replace`. A alteração aguarda CI e novo deployment.
