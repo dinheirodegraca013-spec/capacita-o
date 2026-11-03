@@ -672,3 +672,8 @@ Após as correções de RLS, helpers e conclusão de aulas, foi feita uma nova t
 ## Suíte pgTAP de regressões — 03/11/2026
 
 Foi adicionada `supabase/tests/security/capacitagov_security_regressions.sql`, cobrindo RLS da auditoria, exposição de helpers, guarda de conclusão e funções de certificado. A suíte instala pgTAP somente no banco de teste e usa `search_path` explícito. O projeto de produção não possui pgTAP instalado; a execução remota foi evitada para não introduzir extensão de teste no ambiente produtivo.
+
+
+## Proteção contra senhas comprometidas — 03/11/2026
+
+A documentação oficial do Supabase confirma que a proteção HaveIBeenPwned fica disponível no plano Pro ou superior e é habilitada em Auth Settings. O advisor continua apontando essa configuração como pendente; não há ferramenta de configuração exposta nesta sessão e nenhum upgrade/pagamento foi realizado automaticamente.
