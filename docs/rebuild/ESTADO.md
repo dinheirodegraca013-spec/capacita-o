@@ -788,3 +788,8 @@ A publicação não encerra a meta: CI do head, E2E autenticado de duas organiza
 ## Pós-publicação: rotas públicas e protegidas — 03/11/2026
 
 Smoke pelo endpoint público do alias confirmou HTTP 200/Next.js em `/admin/auditoria`, `/admin/organizacoes`, `/o/demo/aluno` e `/o/demo/gestao`; o controle de sessão continua no servidor/cliente e não houve criação de dados demo. A revisão independente já confirmou que `/admin/auditoria` sem sessão redireciona para `/login` no navegador.
+
+
+## Dependência de plano Supabase — 03/11/2026
+
+A consulta da organização `hcmpjnzsocjsjujrffwe` confirmou `plan=free/tier_free`. Isso explica a advertência de proteção contra senhas vazadas e impede tratar backup/PITR como ensaiado neste ambiente. Nenhuma alteração de cobrança foi feita. Para fechar os gates de proteção contra senhas vazadas, backup remoto e restauração, é necessário habilitar o plano/recurso correspondente e executar um ensaio autorizado; o código e o runbook permanecem preparados para isso.
