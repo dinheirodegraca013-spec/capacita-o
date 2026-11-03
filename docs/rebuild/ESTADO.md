@@ -798,3 +798,8 @@ A consulta da organização `hcmpjnzsocjsjujrffwe` confirmou `plan=free/tier_fre
 ## Branch temporária para backup/migrations — 03/11/2026
 
 O projeto Supabase possui somente a branch `main`. A criação de uma branch isolada para ensaio de migrations/backup teria custo informado de **US$ 0,01344 por hora**; não foi criada sem confirmação específica de cobrança. O ensaio de restauração continua pendente, enquanto as verificações remotas de schema/RLS seguem no projeto autorizado principal.
+
+
+## Rechecagem final de grants e RLS — 03/11/2026
+
+A consulta remota confirmou novamente as policies consolidadas de `organizations` e `audit_events` com tenant ativo ou superadmin AAL2. `create_organization_for_platform_admin` é executável por `authenticated`, `postgres` e `service_role`, sem `anon`; `claim_pending_notifications` é executável apenas por `service_role`/proprietário. O advisor de segurança mantém apenas warnings de SECURITY DEFINER intencionais (incluindo `verify_certificate` público por desenho) e a limitação de proteção contra senhas do plano Free.
