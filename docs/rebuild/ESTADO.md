@@ -682,3 +682,8 @@ A documentação oficial do Supabase confirma que a proteção HaveIBeenPwned fi
 ## Validação contínua do frontend — 03/11/2026
 
 Foi adicionado `.github/workflows/capacitagov-web.yml`, executando `npm ci`, typecheck, lint e Vitest para o workspace `apps/web` em pushes relevantes e pull requests. A Vercel permanece indisponível para publicar, mas o branch agora possui uma verificação independente reproduzível.
+
+
+## Revisão independente: correção de privilégio RLS — 03/11/2026
+
+A revisão independente detectou que a migration de restrição dos helpers revogava `EXECUTE` também de `authenticated`. Como esses helpers são chamados diretamente por policies RLS, isso poderia produzir `42501 permission denied for function` em leituras autenticadas. Correção aplicada: `anon` continua sem EXECUTE, `authenticated` recebeu EXECUTE novamente, e a suíte pgTAP passou a testar ambas as invariantes. Verificação remota confirmou os seis helpers executáveis por `authenticated` e ausentes para `anon`.
