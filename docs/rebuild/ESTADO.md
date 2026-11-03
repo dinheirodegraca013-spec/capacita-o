@@ -860,3 +860,8 @@ Consulta somente leitura em `auth.mfa_factors` confirmou que as duas contas supe
 ## Nova tentativa de publicação — 03/11/2026
 
 Após a autorização da equipe Vercel, foi tentado novo deployment de produção do branch `feat/capacitagov-rebuild`. A API retornou novamente `402 api-deployments-free-per-day` (mais de 100 deployments; retry em 24h). Não houve alteração de alias nem de produção. Runtime continua sem erros nas últimas 24h.
+
+
+## Pós-revisão do enrollment MFA — 03/11/2026
+
+O fluxo de configuração TOTP recebeu um guard adicional após a limpeza de fatores pendentes: se a tela desmontar durante a operação assíncrona, nenhum novo fator é criado. A revisão independente não apontou novos P0/P1 nesse fluxo. CI e publicação permanecem pendentes pela cota Vercel.
