@@ -641,3 +641,8 @@ A política existente de `audit_events` permitia leitura apenas a membros de org
 ## Consolidação da política RLS de auditoria — 03/11/2026
 
 A auditoria de performance identificou duas políticas permissivas de leitura em `audit_events`. Elas foram substituídas por uma única política `audit_events_select_scoped`, permitindo leitura apenas para membro ativo do tenant ou superadmin. A alteração foi aplicada no Supabase e versionada em `supabase/migrations/20261103041000_consolidate_audit_read_policy.sql`. Acesso não foi ampliado além desses dois casos.
+
+
+## Rastreabilidade final da migration de auditoria — 03/11/2026
+
+As migrations intermediárias de auditoria foram consolidadas em `supabase/migrations/20261103042000_audit_events_platform_admin_read.sql`, com SQL idempotente e estado final único. A mesma alteração foi aplicada pelo mecanismo de migrations do Supabase com o nome `audit_events_platform_admin_read`; verificação posterior confirmou uma única política `audit_events_select_scoped`.
