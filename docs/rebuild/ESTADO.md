@@ -885,3 +885,8 @@ O deployment `dpl_EJYoh52xcxx9V1odGpywCKfNpk2h` permanece READY e o alias princi
 ## Auditoria independente pós-publicação — 03/11/2026
 
 A revisão do deployment `dpl_EJYoh52xcxx9V1odGpywCKfNpk2h` confirmou READY/production e não encontrou novo P0/P1 de código. A liberação integral permanece aberta por evidências de escopo maior: T28/E2E completo de dois tenants até certificado/relatório; configuração e desafio MFA com negação AAL1/liberação AAL2 no navegador; ataques autenticados cross-tenant em RLS/Storage e URLs assinadas; ensaio de backup/restauração com RTO/RPO; runs web/pgTAP associados ao SHA implantado; e observação do worker outbox→Resend com `sent`/retry. HTTP público 200, inspeção de policies e runbook não substituem essas provas.
+
+
+## Rechecagem do worker de notificações — 03/11/2026
+
+O projeto Vercel publicado possui `CRON_SECRET`, `NOTIFICATION_JOB_SECRET`, `SUPABASE_SERVICE_ROLE_KEY`, `EMAIL_PROVIDER_URL`, `EMAIL_PROVIDER_KEY` e `EMAIL_FROM` configurados nos três ambientes; valores sensíveis não foram lidos nem registrados. `apps/web/vercel.json` agenda `/api/internal/notifications` diariamente às 03:00 e a rota aceita somente os segredos server-only. A chamada sem segredo continua retornando 401; a entrega autorizada outbox→Resend ainda requer uma execução controlada com segredo, sem expô-lo.
