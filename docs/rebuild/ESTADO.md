@@ -725,3 +725,8 @@ A policy INSERT direta foi confirmada ausente e a RPC permanece executável apen
 ## Fechamento da leitura global AAL1 — 03/11/2026
 
 A policy de SELECT global de `organizations` também passou a exigir `aal2`. Assim, leitura e escrita administrativas dependem de MFA no banco, não apenas na UI/API.
+
+
+## Fechamento dos bypasses de leitura global — 03/11/2026
+
+As policies globais de `organizations` e `audit_events` agora exigem `aal2` no ramo de superadmin. A verificação remota confirmou as expressões RLS; membros ativos continuam lendo apenas seus tenants. O acesso administrativo não depende apenas da UI.
