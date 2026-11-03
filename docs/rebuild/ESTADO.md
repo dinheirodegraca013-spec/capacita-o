@@ -761,3 +761,8 @@ O projeto autorizado `capacita-o-x5hg` continua servindo Next.js em produção: 
 ## Smoke público do alias autorizado — 03/11/2026
 
 No deployment atualmente acessível do projeto `capacita-o-x5hg`, as rotas `/`, `/login`, `/admin`, `/recuperar-senha` e `/redefinir-senha` responderam HTTP 200 com HTML Next.js. A tentativa de consultar `/api/v1/context` pelo fetch autenticado do Vercel foi bloqueada pela camada de Vercel Authentication do deployment, portanto não é evidência nova do status HTTP da aplicação; a evidência anterior de 401 anônimo permanece registrada separadamente.
+
+
+## Preview autorizado disponível — 03/11/2026
+
+A cota permitiu um deployment preview no projeto correto `capacita-o-x5hg`: `dpl_C2WKQiXbhje2kU7bNRofKDHNbp2c`, URL `https://capacita-o-x5hg-nlczvore8-dinheirodegraca013-specs-projects.vercel.app`, commit `80d1f9744145ac9dc3c23ff511eeb0d6d62ca01d`. Smoke HTTP confirmou Next.js/200 em `/`, `/login`, `/admin`, `/recuperar-senha` e `/redefinir-senha`. O preview está adequado para homologação visual; promoção a produção permanece condicionada ao CI do head e à auditoria final.
