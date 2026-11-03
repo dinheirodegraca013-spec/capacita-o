@@ -369,3 +369,8 @@ A revisão confirmou, sem alterações, que em produção `/admin`, `/admin/audi
 ## Auditoria do fluxo de recuperação — 03/11/2026
 
 A revisão de código confirmou que o formulário `/recuperar-senha` usa `window.location.origin` no momento da solicitação e envia `/auth/callback?next=/redefinir-senha`; não depende de `NEXT_PUBLIC_APP_URL=http://localhost:3000` do exemplo. `resolveAppOrigin` também rejeita localhost em produção no endpoint server-side. O callback aceita somente `recovery/invite/magiclink` e `safeRedirectPath` impede destinos externos. O fluxo ainda precisa de uma conta/caixa de homologação para validar o e-mail recebido de ponta a ponta.
+
+
+## Auditoria complementar de convites — 03/11/2026
+
+O fluxo de convite usa `resolveInvitationOrigin`: em produção, um `NEXT_PUBLIC_APP_URL` local é descartado e o host real da requisição é usado. Os links apontam para `/ativar-conta`, incluem token/hash/OTP conforme o tipo retornado pelo Auth, têm fallback de copiar endereço no e-mail e marcam a invitation como `failed` quando provedor/credenciais não estão configurados. A ativação valida a sessão, email/OTP e consome o token; E2E com caixa real continua pendente.
