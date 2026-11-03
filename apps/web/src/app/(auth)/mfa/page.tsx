@@ -1,6 +1,6 @@
 'use client';
 
-import { FormEvent, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createSupabaseBrowserClient } from '@/lib/supabase/browser';
 import { safeRedirectPath } from '@/modules/auth/redirect';
@@ -8,6 +8,12 @@ import { safeRedirectPath } from '@/modules/auth/redirect';
 export default function MfaPage() {
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+  useEffect(() => {
+    void (async () => {
+      const { data: { user } } = await createSupabaseBrowserClient().auth.getUser();
+      if (!user) router.replace('/login?next=%2Fadmin');
+    })();
+  }, [router]);
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError(null);
