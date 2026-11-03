@@ -624,3 +624,10 @@ A cota Vercel foi liberada. O deployment production `dpl_5uXEXEh2ALU5BRXBj23KV9J
 ## Limpeza de fixtures E2E — 03/11/2026
 
 A rechecagem encontrou dois tenants sintéticos persistentes (`E2E Prefeitura Alpha`/`E2E Empresa Beta`) e contas `e2e.*@capacitagov.local`. Eles foram removidos em transação autorizada, incluindo memberships/roles e organizações; as contas reais dos dois administradores foram preservadas. Verificação posterior: zero organizações sintéticas e ambos os e-mails reais ainda presentes no Auth. O painel central agora inicia sem dados de homologação.
+
+
+## Painel de auditoria do superadmin — 03/11/2026
+
+Foi criado o painel protegido `/admin/auditoria`, conectado à tabela real `audit_events`, com consulta somente leitura dos 50 eventos mais recentes. O dashboard passou a expor o link “Abrir auditoria”. Commit `030985d080e1d58942cdb7e4bb22436c87a60b57` no branch `feat/capacitagov-rebuild`.
+
+A tentativa de publicar essa melhoria foi bloqueada pela cota da Vercel (`402 api-deployments-free-per-day`, retry em 24 horas). Produção permanece no deployment READY `dpl_5uXEXEh2ALU5BRXBj23KV9JaUof1`; nenhuma alteração incompleta foi promovida.
