@@ -771,3 +771,8 @@ A cota permitiu um deployment preview no projeto correto `capacita-o-x5hg`: `dpl
 ## Build do preview correto — 03/11/2026
 
 O deployment `dpl_C2WKQiXbhje2kU7bNRofKDHNbp2c` terminou READY com framework `nextjs`, `npm ci --legacy-peer-deps` e `next build`. O log lista as rotas de aluno, gestão, professor, MFA, recuperação/redefinição de senha e validação pública de certificado. Não houve erro de build; apenas avisos de npm sobre configuração/cache e versões de ESLint.
+
+
+## Cota Vercel revalidada — 03/11/2026
+
+O head do PR #3 avançou para `864ccf7bd534f9c3e37e2fb9b5c931ad8236505b`. Tentativa explícita de criar preview nesse SHA retornou `402 payment_required / api-deployments-free-per-day`, `retryAfter=86400`. O preview anterior `dpl_C2WKQiXbhje2kU7bNRofKDHNbp2c` permanece READY e válido para homologação, mas não representa os commits posteriores de documentação.
