@@ -104,14 +104,12 @@ select ok(
 );
 
 select ok(
-  exists (
+  not exists (
     select 1 from pg_policies
     where schemaname = 'public' and tablename = 'organizations'
       and policyname = 'organizations_insert_platform_admin'
-      and with_check like '%is_platform_admin%'
-      and with_check like '%aal2%'
   ),
-  'criação global exige superadmin com MFA'
+  'INSERT direto de organização permanece bloqueado'
 );
 
 select ok(
@@ -121,8 +119,9 @@ select ok(
     where n.nspname = 'public'
       and p.proname = 'create_organization_for_platform_admin'
       and position('MFA_REQUIRED' in pg_get_functiondef(p.oid)) > 0
+      and position('organization_id' in pg_get_functiondef(p.oid)) > 0
   ),
-  'RPC de organização exige MFA'
+  'RPC de organização exige MFA e tenant no audit'
 );
 
 select * from finish();
