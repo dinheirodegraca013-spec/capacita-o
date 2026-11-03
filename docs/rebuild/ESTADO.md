@@ -905,3 +905,8 @@ As telas `/mfa` e `/mfa/configurar` foram ajustadas para exigir sessão antes de
 ## Orientação explícita do código MFA — 03/11/2026
 
 A tela de verificação agora informa que o código é gerado localmente por Google Authenticator, Microsoft Authenticator ou Authy, não por e-mail/SMS. A tela de configuração explica instalação, leitura do QR Code/chave manual e confirmação do código de seis dígitos. Commits: `fd1c30cb28e44dba27b90160f74830940b0d40eb` e `0f4d25940a3a59989ee7a2650e64a79c5a4a855c`. Aguardam CI e novo deployment; não houve alteração de produção nesta rodada.
+
+
+## Rechecagem do branch após orientação MFA — 03/11/2026
+
+O branch `feat/capacitagov-rebuild` está no head `6504a2a6984c48f7c078fc3a61771fb20d863327`, incluindo a orientação explícita sobre o código TOTP nas telas `/mfa` e `/mfa/configurar`. A tentativa de novo deployment do projeto autorizado `capacita-o-x5hg` retornou `402 api-deployments-free-per-day` com retry em 24h. O preview READY `dpl_3B7A85UUGNC5cQ5ZqkQMALHcXCab` (SHA `8d362f26`) não contém essa última orientação; a produção continua no deployment READY `dpl_EJYoh52xcxx9V1odGpywCKfNpk2h`. O status combinado do head apresenta apenas falhas Vercel por build-rate-limit; não há workflow CI associado aos dois commits recentes. Nenhuma alteração de alias ou produção foi feita.
