@@ -384,3 +384,8 @@ A integração Resend reportou domínio `gestio.dev.br` verificado e envio habil
 ## Observabilidade pós-publicação — 03/11/2026
 
 A consulta de clusters de runtime da Vercel para o projeto `capacita-o-x5hg` nas últimas 24 horas não encontrou erros de runtime. Isso não substitui E2E autenticado, mas não há regressão operacional agregada nas rotas publicadas.
+
+
+## Triagem de logs Supabase — 03/11/2026
+
+Na janela de 24 horas, os eventos de `auth_logs` encontrados foram compatíveis com testes/uso: credenciais inválidas, OTP/token expirado, refresh token ausente, limite de envio de e-mail e uma tentativa duplicada de cadastro. O formulário de cadastro converte erros de Auth em mensagem genérica, sem enumeração. Não foram encontrados sinais de bypass RLS, falha do worker ou erro de runtime Vercel; a métrica Vercel permaneceu sem clusters nas últimas 24h.
