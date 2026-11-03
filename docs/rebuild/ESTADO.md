@@ -631,3 +631,8 @@ A rechecagem encontrou dois tenants sintéticos persistentes (`E2E Prefeitura Al
 Foi criado o painel protegido `/admin/auditoria`, conectado à tabela real `audit_events`, com consulta somente leitura dos 50 eventos mais recentes. O dashboard passou a expor o link “Abrir auditoria”. Commit `030985d080e1d58942cdb7e4bb22436c87a60b57` no branch `feat/capacitagov-rebuild`.
 
 A tentativa de publicar essa melhoria foi bloqueada pela cota da Vercel (`402 api-deployments-free-per-day`, retry em 24 horas). Produção permanece no deployment READY `dpl_5uXEXEh2ALU5BRXBj23KV9JaUof1`; nenhuma alteração incompleta foi promovida.
+
+
+## RLS do painel de auditoria — 03/11/2026
+
+A política existente de `audit_events` permitia leitura apenas a membros de organizações. Como o superadmin pode não pertencer a um tenant, foi adicionada e aplicada a política `audit_events_select_platform_admin`, usando a função `is_platform_admin()`. Migration rastreável: `supabase/migrations/20261103040000_allow_platform_admin_audit_read.sql`. Verificação SQL concluída sem erro.
