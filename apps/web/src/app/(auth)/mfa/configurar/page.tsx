@@ -33,6 +33,7 @@ export default function ConfigureMfaPage() {
       }
       const pending = (factors?.all ?? []).filter((factor) => factor.factor_type === 'totp' && factor.status === 'unverified');
       await Promise.all(pending.map((factor) => supabase.auth.mfa.unenroll({ factorId: factor.id })));
+      if (cancelled) return;
       const { data, error: enrollError } = await supabase.auth.mfa.enroll({
         factorType: 'totp',
         friendlyName: 'CapacitaGov',
