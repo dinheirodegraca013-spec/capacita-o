@@ -15,6 +15,8 @@ export default async function AdminAuditPage() {
     .eq('user_id', user.id)
     .maybeSingle();
   if (!platformAdmin) redirect('/selecionar-organizacao');
+  const { data: assurance } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+  if (assurance?.currentLevel !== 'aal2') redirect('/mfa?next=/admin/auditoria');
 
   const { data: events } = await supabase
     .from('audit_events')
