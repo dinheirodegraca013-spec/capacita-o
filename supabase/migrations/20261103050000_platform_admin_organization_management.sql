@@ -2,7 +2,7 @@ create policy organizations_select_platform_admin
   on public.organizations
   for select
   to authenticated
-  using (public.is_platform_admin());
+  using (public.is_platform_admin() and coalesce(auth.jwt()->>'aal', nullif(current_setting('request.jwt.claim.aal', true), ''), 'aal1') = 'aal2');
 
 create or replace function public.create_organization_for_platform_admin(
   p_name text,
