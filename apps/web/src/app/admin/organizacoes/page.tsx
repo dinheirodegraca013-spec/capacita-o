@@ -16,6 +16,8 @@ async function createOrganization(formData: FormData) {
   if (!user) redirect('/login');
   const { data: admin } = await supabase.from('platform_admins').select('user_id').eq('user_id', user.id).maybeSingle();
   if (!admin) redirect('/selecionar-organizacao');
+  const { data: assurance } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+  if (assurance?.currentLevel !== 'aal2') redirect('/mfa?next=/admin/organizacoes');
   const name = String(formData.get('name') ?? '').trim();
   const kind = String(formData.get('kind') ?? 'other');
   const timezone = String(formData.get('timezone') ?? 'America/Sao_Paulo');
