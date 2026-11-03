@@ -22,9 +22,13 @@ async function createOrganization(formData: FormData) {
   const kind = String(formData.get('kind') ?? 'other');
   const timezone = String(formData.get('timezone') ?? 'America/Sao_Paulo');
   if (!name || name.length > 180) return;
-  const { data: existing } = await supabase.from('organizations').select('id').eq('slug', slugify(name)).maybeSingle();
-  if (existing) return;
-  await supabase.from('organizations').insert({ name, slug: slugify(name), kind, timezone });
+  const { error } = await supabase.rpc('create_organization_for_platform_admin', {
+    p_name: name,
+    p_slug: slugify(name),
+    p_kind: kind,
+    p_timezone: timezone,
+  });
+  if (error) return;
   revalidatePath('/admin');
   revalidatePath('/admin/organizacoes');
 }
