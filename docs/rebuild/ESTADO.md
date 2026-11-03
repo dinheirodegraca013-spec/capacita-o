@@ -850,3 +850,8 @@ A revisão independente identificou bypass por caracteres de controle codificado
 ## Revalidação de publicação após autorização Vercel — 03/11/2026
 
 A autorização da equipe Vercel foi concluída e a listagem de aliases voltou a funcionar. O alias público continua apontando para `dpl_C2WKQiXbhje2kU7bNRofKDHNbp2c`; o preview mais recente disponível é `dpl_2rmzfeHTDFDPwqyxSrxH3udksbf7`, commit `beff9f60`, anterior às correções MFA/redirect. Nova tentativa de deployment do branch corrigido retornou novamente `402 api-deployments-free-per-day`, com janela de 24 horas. Não houve alteração de produção nesta tentativa.
+
+
+## Confirmação de estado MFA no Supabase — 03/11/2026
+
+Consulta somente leitura em `auth.mfa_factors` confirmou que as duas contas superadmin (`guicabanas13@gmail.com` e `dinheirodegraca013@gmail.com`) têm zero fatores verificados e zero pendentes. O código mostrado na tela atual não pode ser obtido por e-mail; depende do cadastro TOTP da nova tela, ainda não publicada por causa da cota Vercel.
