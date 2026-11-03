@@ -820,3 +820,8 @@ A inspeção dos fluxos confirmou um bloqueio de UX: `/admin` exige AAL2 e redir
 ## Validação pós-correção MFA — 03/11/2026
 
 O alias público atual ainda serve a versão anterior: `/mfa` retorna 200, enquanto `/mfa/configurar` retorna 404. Isso confirma que a correção do primeiro acesso está no branch, mas ainda não foi publicada. A tentativa de inspecionar aliases via API Vercel solicitou autorização renovada da equipe; não foi alterada nenhuma configuração de produção nesta etapa.
+
+
+## Tentativa de branch isolada — 03/11/2026
+
+Foi solicitada uma branch Supabase temporária `capacitagov-audit` para ensaio de restauração/migrations. O projeto respondeu `Branching is supported only on the Pro plan or above`; portanto nenhuma branch ou cobrança foi criada. O plano Free continua impedindo backup/PITR e ensaio isolado, que permanecem pendentes até habilitação autorizada do recurso.
