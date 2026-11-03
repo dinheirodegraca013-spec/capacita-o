@@ -33,7 +33,8 @@ export default function MfaPage() {
   return <main>
     <p className="eyebrow accent">Proteção administrativa</p>
     <h1>Verificação administrativa</h1>
-    <p className="muted">Informe o código do seu aplicativo autenticador.</p>
+    <p className="muted">Abra o Google Authenticator, Microsoft Authenticator ou Authy no celular usado no cadastro.</p>
+    <p className="muted">O código de 6 dígitos é gerado pelo aplicativo e muda a cada poucos segundos; ele não chega por e-mail ou SMS.</p>
     <form onSubmit={submit}>
       <label>Código do autenticador<input name="code" inputMode="numeric" pattern="[0-9]{6}" autoComplete="one-time-code" required /></label>
       {error && <p role="alert" className="form-error">{error}</p>}
