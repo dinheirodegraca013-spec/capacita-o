@@ -711,3 +711,12 @@ O workflow SQL executava apenas `supabase/tests/*.sql` e ignorava a suíte de se
 ## Fechamento do bypass de INSERT — 03/11/2026
 
 A policy `organizations_insert_platform_admin` também passou a exigir `aal2`, impedindo inserção direta via PostgREST com sessão apenas `aal1`. A RPC e a API já exigiam MFA; agora a proteção existe em todas as camadas. A suíte pgTAP foi ajustada para verificar o requisito.
+
+
+## Correção final da criação de organizações — 03/11/2026
+
+A revisão encontrou dois problemas na primeira versão da gestão global:
+- INSERT direto foi removido da superfície RLS; a criação ocorre somente pela RPC protegida por MFA.
+- O evento de auditoria agora informa `organization_id = v_id`, obrigatório no schema; a função foi verificada remotamente com `MFA_REQUIRED` e tenant no audit.
+
+A policy INSERT direta foi confirmada ausente e a RPC permanece executável apenas por `authenticated`.
