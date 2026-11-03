@@ -364,3 +364,8 @@ Com fixtures sintéticas temporárias no Supabase autorizado e configuração Pl
 ## Revisão independente pós-alias — 03/11/2026
 
 A revisão confirmou, sem alterações, que em produção `/admin`, `/admin/auditoria` e rotas de gestão sem sessão retornam 307 para login; `/api/v1/context` retorna 401; e o worker interno sem segredo retorna 401 `UNAUTHORIZED`. Nenhum P0/P1 novo foi identificado. Não foi exercitada sessão AAL1 nesta rodada.
+
+
+## Auditoria do fluxo de recuperação — 03/11/2026
+
+A revisão de código confirmou que o formulário `/recuperar-senha` usa `window.location.origin` no momento da solicitação e envia `/auth/callback?next=/redefinir-senha`; não depende de `NEXT_PUBLIC_APP_URL=http://localhost:3000` do exemplo. `resolveAppOrigin` também rejeita localhost em produção no endpoint server-side. O callback aceita somente `recovery/invite/magiclink` e `safeRedirectPath` impede destinos externos. O fluxo ainda precisa de uma conta/caixa de homologação para validar o e-mail recebido de ponta a ponta.
