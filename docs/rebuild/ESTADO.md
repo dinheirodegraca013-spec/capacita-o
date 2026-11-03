@@ -783,3 +783,8 @@ O head do PR #3 avançou para `864ccf7bd534f9c3e37e2fb9b5c931ad8236505b`. Tentat
 A promoção API convencional retornou 422, mas a atribuição direta do alias autorizado foi concluída: `capacita-o-x5hg.vercel.app` passou a apontar para `dpl_C2WKQiXbhje2kU7bNRofKDHNbp2c`. Smoke pós-publicação confirmou HTTP 200/Next.js em `/`, `/login`, `/admin`, `/recuperar-senha` e `/redefinir-senha`. O deployment anterior `dpl_5uXEX...` foi removido do alias e permanece rollback candidate.
 
 A publicação não encerra a meta: CI do head, E2E autenticado de duas organizações, backup/rollback e auditoria final ainda precisam de evidência independente.
+
+
+## Pós-publicação: rotas públicas e protegidas — 03/11/2026
+
+Smoke pelo endpoint público do alias confirmou HTTP 200/Next.js em `/admin/auditoria`, `/admin/organizacoes`, `/o/demo/aluno` e `/o/demo/gestao`; o controle de sessão continua no servidor/cliente e não houve criação de dados demo. A revisão independente já confirmou que `/admin/auditoria` sem sessão redireciona para `/login` no navegador.
