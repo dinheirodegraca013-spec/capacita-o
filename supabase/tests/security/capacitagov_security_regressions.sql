@@ -98,7 +98,7 @@ select ok(
   exists (
     select 1 from pg_policies
     where schemaname = 'public' and tablename = 'organizations'
-      and policyname = 'organizations_select_platform_admin'
+      and policyname = 'organizations_select_scoped'
       and qual like '%is_platform_admin%'
       and qual like '%aal2%'
   ),
