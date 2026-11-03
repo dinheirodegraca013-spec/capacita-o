@@ -706,3 +706,8 @@ A revisão confirmou duas lacunas P1 e ambas foram corrigidas:
 ## Correção do CI pgTAP — 03/11/2026
 
 O workflow SQL executava apenas `supabase/tests/*.sql` e ignorava a suíte de segurança em subpasta. O comando foi alterado para localizar recursivamente todos os `.sql` antes do `pg_prove`. A execução verde do próximo commit será necessária para fechar essa evidência.
+
+
+## Fechamento do bypass de INSERT — 03/11/2026
+
+A policy `organizations_insert_platform_admin` também passou a exigir `aal2`, impedindo inserção direta via PostgREST com sessão apenas `aal1`. A RPC e a API já exigiam MFA; agora a proteção existe em todas as camadas. A suíte pgTAP foi ajustada para verificar o requisito.
