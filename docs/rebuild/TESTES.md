@@ -351,3 +351,11 @@ Com fixtures sintéticas temporárias no Supabase autorizado e configuração Pl
 - `/cadastro-confirmado`: orienta confirmação e retorno ao login.
 - `/selecionar-organizacao`: estado vazio orienta convite/atribuição e não concede acesso por cadastro.
 - Deployment público do patch ainda pendente de cota Vercel.
+
+
+## Evidência pós-publicação — 03/11/2026
+
+- O alias `capacita-o-x5hg.vercel.app` foi reassociado ao deployment READY `dpl_C2WKQiXbhje2kU7bNRofKDHNbp2c`, construído pelo projeto `capacita-o-x5hg` com framework Next.js e root `apps/web`.
+- Smoke HTTP pós-publicação passou em `/`, `/login`, `/admin`, `/admin/auditoria`, `/admin/organizacoes`, `/recuperar-senha` e `/redefinir-senha`. O build lista as rotas de aluno, gestão, professor, MFA e validação pública de certificado.
+- A comparação GitHub entre o commit implantado e o head atual encontrou somente alterações em `docs/rebuild/ESTADO.md`; portanto, o código do deployment publicado cobre o head funcional atual.
+- A revisão independente confirmou policies globais com isolamento tenant/AAL2 e redirecionamento de `/admin/auditoria` sem sessão. CI do head atual e E2E autenticado de duas organizações continuam pendentes.
