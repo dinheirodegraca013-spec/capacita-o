@@ -29,7 +29,7 @@ export default async function PlatformAdminPage() {
       <article className="summary-card"><strong>RLS ativo</strong><span>Isolamento por organização</span></article>
     </section>
 
-    <section aria-labelledby="organizations-title">
+    <section aria-labelledby="organizations-title"><p><a className="text-link" href="/admin/organizacoes">Gerenciar organizações →</a></p>
       <div className="section-heading"><div><p className="eyebrow">Tenants cadastrados</p><h2 id="organizations-title">Organizações</h2></div></div>
       {items.length ? <ul className="organization-list">{items.map((organization) => <li key={organization.id}><div><span className="org-avatar" aria-hidden="true">{organization.name.charAt(0).toUpperCase()}</span><span><strong>{organization.name}</strong><small>{organization.kind} · {organization.slug}</small></span></div><span className="muted">{organization.timezone}</span></li>)}</ul> : <p className="empty-state">Nenhuma organização cadastrada.</p>}
     </section>
@@ -38,7 +38,7 @@ export default async function PlatformAdminPage() {
       <p className="eyebrow">Módulos</p>
       <h2 id="modules-title">Próximos painéis</h2>
       <div className="module-grid">
-        <article className="module-card"><h3>Organizações e convites</h3><p>Cadastro, gestores e acesso por convite.</p><span>Em construção</span></article>
+        <article className="module-card"><h3>Organizações e convites</h3><p>Cadastro, gestores e acesso por convite.</p><a className="text-link" href="/admin/organizacoes">Abrir módulo →</a></article>
         <article className="module-card"><h3>Catálogo central</h3><p>Cursos institucionais e concessões por tenant.</p><span>Em construção</span></article>
         <article className="module-card"><h3>Auditoria</h3><p>Eventos, segurança e conformidade.</p><span>Em construção</span></article>
       </div>
