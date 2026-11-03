@@ -3,6 +3,7 @@
 import { FormEvent, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createSupabaseBrowserClient } from '@/lib/supabase/browser';
+import { safeRedirectPath } from '@/modules/auth/redirect';
 
 export default function MfaPage() {
   const [error, setError] = useState<string | null>(null);
@@ -11,16 +12,17 @@ export default function MfaPage() {
     event.preventDefault();
     setError(null);
     const supabase = createSupabaseBrowserClient();
+    const next = safeRedirectPath(new URLSearchParams(window.location.search).get('next')) || '/selecionar-organizacao';
     const factor = (await supabase.auth.mfa.listFactors()).data?.totp.find((item) => item.status === 'verified');
     if (!factor) {
-      router.push('/mfa/configurar?next=' + encodeURIComponent(new URLSearchParams(window.location.search).get('next') || '/selecionar-organizacao'));
+      router.push('/mfa/configurar?next=' + encodeURIComponent(next));
       return;
     }
     const code = String(new FormData(event.currentTarget).get('code') ?? '');
     const challenge = await supabase.auth.mfa.challenge({ factorId: factor.id });
     if (challenge.error) { setError('Não foi possível iniciar o desafio.'); return; }
     const result = await supabase.auth.mfa.verify({ factorId: factor.id, challengeId: challenge.data.id, code });
-    if (result.error) setError('Código MFA inválido.'); else router.push(new URLSearchParams(window.location.search).get('next') || '/selecionar-organizacao');
+    if (result.error) setError('Código MFA inválido.'); else router.push(next);
   }
   return <main>
     <p className="eyebrow accent">Proteção administrativa</p>
@@ -31,6 +33,6 @@ export default function MfaPage() {
       {error && <p role="alert" className="form-error">{error}</p>}
       <button>Confirmar</button>
     </form>
-    <p><a className="text-link" href={'/mfa/configurar?next=' + encodeURIComponent(new URLSearchParams(typeof window === 'undefined' ? '' : window.location.search).get('next') || '/selecionar-organizacao')}>Configurar meu autenticador</a></p>
+    <p><a className="text-link" href={'/mfa/configurar?next=' + encodeURIComponent(safeRedirectPath(new URLSearchParams(typeof window === 'undefined' ? '' : window.location.search).get('next')) || '/selecionar-organizacao')}>Configurar meu autenticador</a></p>
   </main>;
 }
