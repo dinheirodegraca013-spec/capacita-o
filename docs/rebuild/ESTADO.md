@@ -815,3 +815,8 @@ O projeto continua sem branches Supabase adicionais; o ensaio isolado de backup/
 ## Correção do primeiro acesso superadmin/MFA — 03/11/2026
 
 A inspeção dos fluxos confirmou um bloqueio de UX: `/admin` exige AAL2 e redirecionava para `/mfa`, mas a tela só aceitava um fator TOTP já cadastrado. Como as duas contas superadmin confirmadas ainda não tinham fator, o usuário não conseguia alcançar os painéis administrativos. Foi criada `/(auth)/mfa/configurar`, com cadastro TOTP, QR Code/chave manual, verificação de seis dígitos e preservação segura do destino; `/mfa` agora encaminha automaticamente para essa configuração quando não existe fator verificado. Nenhum segredo foi persistido. A alteração aguarda CI e novo deployment Vercel; a cota diária de deployments continua sendo o bloqueio operacional conhecido.
+
+
+## Validação pós-correção MFA — 03/11/2026
+
+O alias público atual ainda serve a versão anterior: `/mfa` retorna 200, enquanto `/mfa/configurar` retorna 404. Isso confirma que a correção do primeiro acesso está no branch, mas ainda não foi publicada. A tentativa de inspecionar aliases via API Vercel solicitou autorização renovada da equipe; não foi alterada nenhuma configuração de produção nesta etapa.
