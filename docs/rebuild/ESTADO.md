@@ -810,3 +810,8 @@ A consulta remota confirmou novamente as policies consolidadas de `organizations
 Consulta somente leitura no Supabase autorizado confirmou duas contas autenticadas confirmadas, `dinheirodegraca013@gmail.com` e `guicabanas13@gmail.com`, ambas presentes em `platform_admins`. Nenhuma possui membership organizacional ativa; por isso os painéis de aluno, gestão e professor não aparecem automaticamente para essas contas. O painel global de superadmin é separado e exige MFA para operações administrativas.
 
 O projeto continua sem branches Supabase adicionais; o ensaio isolado de backup/migrations permanece condicionado ao custo informado anteriormente de US$ 0,01344/h. O projeto Vercel segue sem erros de runtime nas últimas 24 horas. Nenhuma credencial, token ou senha foi registrada.
+
+
+## Correção do primeiro acesso superadmin/MFA — 03/11/2026
+
+A inspeção dos fluxos confirmou um bloqueio de UX: `/admin` exige AAL2 e redirecionava para `/mfa`, mas a tela só aceitava um fator TOTP já cadastrado. Como as duas contas superadmin confirmadas ainda não tinham fator, o usuário não conseguia alcançar os painéis administrativos. Foi criada `/(auth)/mfa/configurar`, com cadastro TOTP, QR Code/chave manual, verificação de seis dígitos e preservação segura do destino; `/mfa` agora encaminha automaticamente para essa configuração quando não existe fator verificado. Nenhum segredo foi persistido. A alteração aguarda CI e novo deployment Vercel; a cota diária de deployments continua sendo o bloqueio operacional conhecido.
