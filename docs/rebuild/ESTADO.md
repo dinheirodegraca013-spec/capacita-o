@@ -890,3 +890,8 @@ A revisão do deployment `dpl_EJYoh52xcxx9V1odGpywCKfNpk2h` confirmou READY/prod
 ## Rechecagem do worker de notificações — 03/11/2026
 
 O projeto Vercel publicado possui `CRON_SECRET`, `NOTIFICATION_JOB_SECRET`, `SUPABASE_SERVICE_ROLE_KEY`, `EMAIL_PROVIDER_URL`, `EMAIL_PROVIDER_KEY` e `EMAIL_FROM` configurados nos três ambientes; valores sensíveis não foram lidos nem registrados. `apps/web/vercel.json` agenda `/api/internal/notifications` diariamente às 03:00 e a rota aceita somente os segredos server-only. A chamada sem segredo continua retornando 401; a entrega autorizada outbox→Resend ainda requer uma execução controlada com segredo, sem expô-lo.
+
+
+## CI associado ao SHA publicado — 03/11/2026
+
+A consulta de GitHub Actions para o SHA publicado `438e823c1fc2ae087324876641d9c3f454b6ea25` retornou `workflow_runs=[]`. Portanto a publicação Vercel READY não é tratada como evidência de typecheck/lint/Vitest/pgTAP nesse SHA; o gate CI remoto permanece aberto, embora existam execuções verdes anteriores documentadas.
