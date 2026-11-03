@@ -870,3 +870,8 @@ O fluxo de configuração TOTP recebeu um guard adicional após a limpeza de fat
 ## Parecer independente final do fluxo MFA — 03/11/2026
 
 A revisão independente do HEAD `6f53d839` não identificou P0/P1 no fluxo reauditado. Foram confirmados: uso de `factors.all` para pendências, guardas `cancelled` antes/depois do enrollment e redirecionamentos protegidos pelo helper endurecido. Resta homologar cadastro e desafio TOTP no navegador com conta autorizada, o que depende da publicação do branch corrigido.
+
+
+## Publicação da correção MFA — 03/11/2026
+
+A cota Vercel foi liberada e o deployment `dpl_EJYoh52xcxx9V1odGpywCKfNpk2h` ficou READY em produção, commit `438e823c1fc2ae087324876641d9c3f454b6ea25`. O alias `https://capacita-o-x5hg.vercel.app` passou a apontar para esse deployment. Smoke público confirmou HTTP 200/Next.js em `/`, `/login`, `/mfa` e `/mfa/configurar`; `/mfa` exibe o link de configuração e a nova rota deixa de retornar 404. `/api/v1/context` não foi considerado evidência anônima nesta rodada porque a camada de Vercel Authentication bloqueou o share link; a evidência anterior de 401 permanece válida. Runtime Vercel segue sem erros nas últimas 24h.
