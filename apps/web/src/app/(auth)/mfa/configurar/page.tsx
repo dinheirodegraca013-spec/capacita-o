@@ -86,7 +86,7 @@ export default function ConfigureMfaPage() {
       <code>{totp.secret}</code>
       {totp.uri && <details><summary>URI manual</summary><code>{totp.uri}</code></details>}
       <form onSubmit={submit}>
-        <label>Código de 6 dígitos<input value={code} onChange={(event) => setCode(event.target.value.replace(/D/g, '').slice(0, 6))} inputMode="numeric" pattern="[0-9]{6}" autoComplete="one-time-code" required /></label>
+        <label>Código de 6 dígitos<input value={code} onChange={(event) => setCode(event.target.value.replace(/\D/g, '').slice(0, 6))} inputMode="numeric" pattern="[0-9]{6}" autoComplete="one-time-code" required /></label>
         <button disabled={saving || code.length !== 6}>{saving ? 'Validando…' : 'Ativar autenticador'}</button>
       </form>
     </section>}
