@@ -928,3 +928,8 @@ Nova tentativa única de deployment do head do branch autorizado retornou novame
 - A suíte pgTAP também revelou expectativas obsoletas após hardening: policies passaram a usar `audit_events_select_scoped` e `organizations_select_scoped`; o teste de progresso foi ajustado para confirmar leitura antes de concluir.
 - Head `698ac46a`: web validation run `45690994697`, web run `45690994731` e SQL/pgTAP run `45690994679` concluíram **success**. SQL: 30 arquivos, 223 assertions, PASS.
 - Acesso administrativo MCP ao Supabase `zykfvzvydvifuzepujvv` continua negado nesta sessão; não foi feita mutação remota. A auditoria integral permanece aberta para validar worker/Resend, backup/restore e revisão independente final.
+
+
+## Rechecagem pública de endpoints — 25/11/2026
+
+Sem sessão no alias de produção, `/api/v1/context`, `/api/v1/offerings` e `/api/v1/reports` responderam 401; `/api/internal/notifications` respondeu 401; rotas POST-only `/api/v1/catalog/grants` e `/api/v1/auth/recover` responderam 405 para GET. Não houve 5xx nem exposição anônima observada.
