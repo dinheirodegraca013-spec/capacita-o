@@ -22,7 +22,7 @@ select set_config('request.jwt.claim.sub', '00000000-0000-0000-0000-000000000061
 select public.enroll_member('00000000-0000-0000-0000-000000000061', '00000000-0000-0000-0000-000000000061') as enrollment_id \gset
 select lives_ok(format($$select public.record_lesson_progress('%s', '00000000-0000-0000-0000-000000000061', 120, false, false)$$, :'enrollment_id'), 'progress can be recorded');
 select is((select position_seconds from public.lesson_progress limit 1), 120, 'position is persisted');
-select lives_ok(format($$select public.record_lesson_progress('%s', '00000000-0000-0000-0000-000000000061', 60, true, false)$$, :'enrollment_id'), 'repeat update is idempotent');
+select lives_ok(format($$select public.record_lesson_progress('%s', '00000000-0000-0000-0000-000000000061', 60, true, true)$, :'enrollment_id'), 'repeat update is idempotent');
 select is((select position_seconds from public.lesson_progress limit 1), 120, 'position never regresses');
 select throws_ok(format($$select public.record_lesson_progress('%s', '00000000-0000-0000-0000-000000000061', 601, false, false)$$, :'enrollment_id'), 'POSITION_INVALID', 'position beyond duration is rejected');
 select * from finish();
