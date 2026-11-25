@@ -397,3 +397,11 @@ Na janela de 24 horas, os eventos de `auth_logs` encontrados foram compatíveis 
 - A suíte pgTAP também revelou expectativas obsoletas após hardening: policies passaram a usar `audit_events_select_scoped` e `organizations_select_scoped`; o teste de progresso foi ajustado para confirmar leitura antes de concluir.
 - Head `698ac46a`: web validation run `45690994697`, web run `45690994731` e SQL/pgTAP run `45690994679` concluíram **success**. SQL: 30 arquivos, 223 assertions, PASS.
 - Acesso administrativo MCP ao Supabase `zykfvzvydvifuzepujvv` continua negado nesta sessão; não foi feita mutação remota. A auditoria integral permanece aberta para validar worker/Resend, backup/restore e revisão independente final.
+
+
+## Fechamento de CI e revisão independente — 25/11/2026
+
+- HEAD `32584be19fe18bb9eadac6b2e619430c9ac1b6fa`: workflows web `45695293191`, validação web `45695293288` e SQL/pgTAP `45695293185` concluíram **success**.
+- Preview Vercel `dpl_7B9jy58CYBwtt6397CLaKf1p52jQ` está READY para o mesmo SHA; produção permanece no deployment `dpl_EJYoh52xcxx9V1odGpywCKfNpk2h`/SHA `438e823c`.
+- Revisão independente atualizada: PR #3 limpo/mergeable, mas liberação integral permanece BLOCKED pelos testes autenticados de dois tenants (incluindo MFA, RLS/Storage e certificado/relatório), clique de convite/retry do outbox e backup/restore/rollback com RTO/RPO.
+- A tentativa de inspeção somente leitura do Supabase nesta sessão retornou `Unknown tool` na integração MCP; não foi feita mutação nem considerado esse gate como aprovado.
