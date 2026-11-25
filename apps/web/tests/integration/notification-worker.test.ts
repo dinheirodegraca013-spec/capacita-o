@@ -36,7 +36,7 @@ describe('notification worker route', () => {
     try {
       const response = await POST(new NextRequest('https://example.com/api/internal/notifications', { method: 'POST', headers: { 'x-notification-job-secret': 'worker-secret' } }));
       expect(response.status).toBe(200);
-      expect(fetchMock).toHaveBeenCalledWith('https://provider.example/emails', expect.objectContaining({ headers: expect.objectContaining({ 'idempotency-key': 'outbox-key' }) }));
+      expect(fetchMock).toHaveBeenCalledWith('https://provider.example/emails', expect.objectContaining({ headers: expect.objectContaining({ 'idempotency-key': 'n1' }) }));
     } finally {
       fetchMock.mockRestore();
       deliver.mockReset();
