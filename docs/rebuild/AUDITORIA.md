@@ -263,3 +263,11 @@ Foi criada uma única notificação de homologação autorizada e idempotente pa
 ### Correção UX/Auth: cadastro direto — 03/11/2026
 
 A experiência de primeiro acesso foi corrigida para não depender exclusivamente de recuperação de senha: cadastro público, confirmação de e-mail e login estão conectados. O desenho mantém o isolamento: cadastro não cria organização, membership ou superadmin. O estado vazio do seletor explica o próximo passo ao cliente. Requer validação E2E após deployment; não aprovar como concluído antes disso.
+
+
+## Reauditoria CI e branch remoto — 25/11/2026
+
+- O branch remoto `feat/capacitagov-rebuild` estava com `apps/web/package-lock.json` incompatível com o npm do runner Linux; `npm ci` falhava com `@emnapi/core` e `@emnapi/runtime` ausentes. O lockfile foi regenerado com npm 10 e publicado no commit `4092361`.
+- A suíte pgTAP também revelou expectativas obsoletas após hardening: policies passaram a usar `audit_events_select_scoped` e `organizations_select_scoped`; o teste de progresso foi ajustado para confirmar leitura antes de concluir.
+- Head `698ac46a`: web validation run `45690994697`, web run `45690994731` e SQL/pgTAP run `45690994679` concluíram **success**. SQL: 30 arquivos, 223 assertions, PASS.
+- Acesso administrativo MCP ao Supabase `zykfvzvydvifuzepujvv` continua negado nesta sessão; não foi feita mutação remota. A auditoria integral permanece aberta para validar worker/Resend, backup/restore e revisão independente final.
