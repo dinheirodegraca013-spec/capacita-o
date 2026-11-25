@@ -933,3 +933,7 @@ Nova tentativa única de deployment do head do branch autorizado retornou novame
 ## Rechecagem pública de endpoints — 25/11/2026
 
 Sem sessão no alias de produção, `/api/v1/context`, `/api/v1/offerings` e `/api/v1/reports` responderam 401; `/api/internal/notifications` respondeu 401; rotas POST-only `/api/v1/catalog/grants` e `/api/v1/auth/recover` responderam 405 para GET. Não houve 5xx nem exposição anônima observada.
+
+## Preview Vercel revalidado — 25/11/2026
+
+O deployment `dpl_C6LmR95toiyrxi8rGvh2BKkyDjfx` ficou **READY** para o commit `f5a13fd`. O domínio de preview protegido responde 302 para SSO em `/`, `/login`, `/recuperar-senha` e `/api/v1/context`; isso confirma proteção de preview, mas não substitui uma sessão autenticada de homologação. CI do mesmo HEAD: web, validação web e SQL concluídos com sucesso.
