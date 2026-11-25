@@ -10,6 +10,12 @@ export function normalizeOrganizationInput(input: OrganizationInput): Organizati
   return { name, kind: input.kind, timezone: input.timezone.trim(), ...(input.slug ? { slug: input.slug.trim().toLowerCase() } : {}) };
 }
 
+export function buildOrganizationSlug(name: string): string {
+  const slug = name.normalize('NFKD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 80);
+  if (!slug) throw new Error('Invalid organization slug');
+  return slug;
+}
+
 export async function updateOrganization(actor: Actor, input: OrganizationInput, client: OrganizationClient) {
   if (!actor.roles.includes('manager')) throw new Error('Only managers can update organization');
   const { data, error } = await client.from('organizations').update(normalizeOrganizationInput(input)).eq('id', actor.organizationId).select().single();
