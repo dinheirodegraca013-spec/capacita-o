@@ -8,8 +8,10 @@ export default async function StudentCoursesPage({ params }: { params: Promise<{
   const supabase = await createSupabaseServerClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect('/login');
-  const { data: membership } = await supabase.from('memberships').select('id').eq('user_id', user.id).eq('organization_id', orgId).eq('status', 'active').maybeSingle();
+  const { data: membership, error: membershipError } = await supabase.from('memberships').select('id').eq('user_id', user.id).eq('organization_id', orgId).eq('status', 'active').maybeSingle();
+  if (membershipError) return <p role="alert">Não foi possível carregar sua organização. Tente novamente.</p>;
   if (!membership) return <p>Acesso negado.</p>;
-  const { data: enrollments } = await supabase.from('enrollments').select('id, status, enrolled_at, offerings(title)').eq('organization_id', orgId).eq('membership_id', membership.id).order('enrolled_at', { ascending: false });
+  const { data: enrollments, error: enrollmentsError } = await supabase.from('enrollments').select('id, status, enrolled_at, offerings(title)').eq('organization_id', orgId).eq('membership_id', membership.id).order('enrolled_at', { ascending: false });
+  if (enrollmentsError) return <p role="alert">Não foi possível carregar suas matrículas. Tente novamente.</p>;
   return <section><h1>Meus cursos</h1>{enrollments?.length ? <ul className="course-list">{enrollments.map((item) => <li key={item.id}><a href={`/o/${orgId}/aluno/cursos/${item.id}`}><strong>{(item.offerings as { title?: string } | null)?.title ?? 'Curso'}</strong></a><span>{item.status === 'active' ? 'Em andamento' : item.status}</span></li>)}</ul> : <p className="empty-state">Você ainda não possui matrículas.</p>}</section>;
 }

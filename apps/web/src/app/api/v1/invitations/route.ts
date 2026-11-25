@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
-import { buildInvitationActivationLink, buildInvitationRedirect, inviteMember, resolveInvitationOrigin } from '@/modules/invitations/service';
+import { buildInvitationActivationLink, buildInvitationRedirect, buildInvitationTokenHashLink, inviteMember, resolveInvitationOrigin } from '@/modules/invitations/service';
 import { buildInvitationEmail, buildProviderHeaders } from '@/modules/notifications/resend';
 import type { OrganizationRole } from '@/modules/identity/model';
 
@@ -50,18 +50,26 @@ export async function POST(request: NextRequest) {
     // transactional provider. Relying on Supabase's built-in mailer here can
     // silently leave the invitation without a usable button when Auth SMTP is
     // not configured or is rate-limited.
-    let generated = await admin.auth.admin.generateLink({ type: 'invite', email: invitation.email, options: { redirectTo } });
+    let generatedType: 'invite' | 'magiclink' = 'invite';
+    let generated = await admin.auth.admin.generateLink({ type: generatedType, email: invitation.email, options: { redirectTo } });
     if (generated.error && /already|registered|exists/i.test(generated.error.message)) {
-      generated = await admin.auth.admin.generateLink({ type: 'magiclink', email: invitation.email, options: { redirectTo } });
+      generatedType = 'magiclink';
+      generated = await admin.auth.admin.generateLink({ type: generatedType, email: invitation.email, options: { redirectTo } });
     }
     if (generated.error || !generated.data?.properties.action_link) {
       await admin.from('invitations').update({ status: 'failed' }).eq('id', invitation.id);
       return NextResponse.json({ error: 'INVITE_DELIVERY_FAILED' }, { status: 503 });
     }
-    const emailOtp = (generated.data.properties as { email_otp?: string }).email_otp;
-    const actionLink = emailOtp
-      ? buildInvitationActivationLink(publicOrigin, invitation.rawToken ?? '', invitation.email, emailOtp)
-      : generated.data.properties.action_link;
+    const properties = generated.data.properties as { email_otp?: string; hashed_token?: string };
+    const actionLink = properties.email_otp
+      ? buildInvitationActivationLink(publicOrigin, invitation.rawToken ?? '', invitation.email, properties.email_otp)
+      : properties.hashed_token
+        ? buildInvitationTokenHashLink(publicOrigin, invitation.rawToken ?? '', properties.hashed_token, generatedType)
+        : null;
+    if (!actionLink) {
+      await admin.from('invitations').update({ status: 'failed' }).eq('id', invitation.id);
+      return NextResponse.json({ error: 'INVITE_DELIVERY_FAILED' }, { status: 503 });
+    }
     const response = await fetch(providerUrl, { method: 'POST', headers: buildProviderHeaders(providerKey, `invitation:${invitation.id}`), body: JSON.stringify(buildInvitationEmail({ from, to: invitation.email, actionLink })) });
     if (!response.ok) {
       await admin.from('invitations').update({ status: 'failed' }).eq('id', invitation.id);
@@ -75,4 +83,3 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: message.includes('already pending') ? 'CONFLICT' : 'VALIDATION' }, { status: message.includes('already pending') ? 409 : 422 });
   }
 }
-

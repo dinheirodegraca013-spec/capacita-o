@@ -31,6 +31,11 @@ export function buildInvitationActivationLink(origin: string, rawToken: string, 
   return `${origin.replace(/\/$/, '')}/ativar-conta?${params.toString()}`;
 }
 
+export function buildInvitationTokenHashLink(origin: string, rawToken: string, tokenHash: string, tokenType: 'invite' | 'magiclink' = 'invite') {
+  const params = new URLSearchParams({ token: rawToken, token_hash: tokenHash, type: tokenType });
+  return `${origin.replace(/\/$/, '')}/ativar-conta?${params.toString()}`;
+}
+
 export function resolveInvitationOrigin(configuredOrigin: string | undefined, requestOrigin: string, environment = process.env.NODE_ENV) {
   const configured = configuredOrigin?.trim().replace(/\/$/, '');
   // A localhost value left in a production Vercel environment makes the
@@ -51,4 +56,3 @@ export async function inviteMember(actor: Actor, input: { email: string; roles: 
   if (error || !data) throw new Error(error?.code === '23505' ? 'Invitation already pending' : error?.message ?? 'Invitation was not created');
   return { ...data, rawToken };
 }
-

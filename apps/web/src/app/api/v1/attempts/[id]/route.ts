@@ -6,6 +6,7 @@ export async function GET(_request: NextRequest, { params }: { params: Promise<{
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: 'UNAUTHENTICATED' }, { status: 401 });
   const { id } = await params;
+  if (!id.trim()) return NextResponse.json({ error: 'VALIDATION' }, { status: 422 });
   const { data, error } = await supabase.rpc('get_attempt_delivery', { p_attempt_id: id });
   if (error) return NextResponse.json({ error: error.message }, { status: 403 });
   return NextResponse.json(data);

@@ -33,3 +33,4 @@ export function PendingInvitations({ organizationId }: { organizationId: string 
   return <section className="card" aria-labelledby="pending-invitations-title"><h2 id="pending-invitations-title">Convites recentes</h2><ul>{items.map((item) => <li key={item.id}><span>{item.email} — {item.status}</span><button type="button" onClick={() => void resend(item.id)} disabled={busy === item.id}>{busy === item.id ? 'Enviando…' : 'Reenviar'}</button></li>)}</ul>{message && <p role="status">{message}</p>}</section>;
 }
 
+

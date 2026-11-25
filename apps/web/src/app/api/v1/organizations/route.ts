@@ -33,3 +33,4 @@ export async function POST(request: NextRequest) {
   }
   return NextResponse.json({ organizationId }, { status: 201 });
 }
+

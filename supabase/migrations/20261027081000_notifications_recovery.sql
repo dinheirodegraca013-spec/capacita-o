@@ -36,3 +36,4 @@ revoke all on function public.enqueue_notification(text, uuid, text, jsonb), pub
 grant execute on function public.enqueue_notification(text, uuid, text, jsonb) to authenticated;
 grant execute on function public.claim_pending_notifications(integer) to service_role;
 
+

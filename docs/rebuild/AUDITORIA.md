@@ -193,4 +193,89 @@ Após o deployment READY, o fluxo foi exercitado com conta administrativa autori
 
 ### Rechecagem de links antigos e atuais — 02/11/2026
 
+O registro documental foi publicado no Vercel em `dpl_B54MBugw9bYmA9dQYKRU1e8rVPga` (commit `ec8bec2`), estado **READY**. O alias principal respondeu 200 na raiz e localizou a rota de recuperação com 405 para método GET, sem regressão pública observada.
+
+O aviso `rls_enabled_no_policy` do `notification_outbox` foi eliminado com migration versionada e policy exclusiva `service_role`; a consulta remota confirmou a regra e ausência de acesso público. Não foram reduzidos os avisos de `SECURITY DEFINER` intencionais nem a proteção de senhas comprometidas, que permanecem gates operacionais separados.
+
 Foi emitido novo e-mail pelo endpoint público atual; o conteúdo contém somente a origem canônica do CapacitaGov e não contém `localhost`. As mensagens visualizadas nas capturas têm os assuntos nativos do Supabase Auth e são anteriores à correção Resend. A eliminação definitiva desses links antigos em fluxos diretos do Auth depende de alterar Site URL/Redirect URLs no painel Supabase da organização proprietária; essa configuração não é mutável pelo conector disponível nesta sessão.
+
+### E2E autenticado de dois tenants — 02/11/2026
+
+Reauditoria com fixtures sintéticas temporárias comprovou no navegador público: tenant A **1/1 PASS** e tenant B **1/1 PASS**, cada um vendo apenas a organização própria e alcançando o portal correspondente. Usuários e organizações foram removidos imediatamente depois; a consulta final confirmou zero fixtures. O gate de isolamento por jornada autenticada deixa de ser falta de evidência; permanecem SMTP/worker, backup/PITR, proteção de senha comprometida no plano Free e auditoria independente final.
+### Achado corrigido: agenda híbrida não renderizada — 02/11/2026
+
+A causa foi uma leitura relacional aninhada de `meetings` com `class_groups(name)` que não retornava a reunião sob a combinação atual de RLS. A correção separa as consultas e restringe ambas por `organization_id`; não houve abertura de policy. O deployment `dpl_XRYtMD5CwtFYksRp5gqpen7sV1zD` está READY e o Playwright autenticado do tenant B passou **1/1**. O gate integral continua aberto por SMTP/worker real, backup/PITR e auditoria final.
+
+Rechecagem operacional do Resend no mesmo ciclo: e-mail de recuperação do CapacitaGov marcado `delivered`; HTML/texto sem `localhost` e com origem pública canônica. Isso não aprova o worker de notificações do outbox, que permanece pendente de execução real com segredo interno.
+
+Revisão independente posterior encontrou exposição de agenda entre alunos do mesmo tenant. Corrigido filtrando `meetings` por turmas presentes nas matrículas ativas do aluno; não houve alteração de policy nem uso de service role. O deployment `dpl_3JYLU4KXJhcS8D7UBVK1QNc3GTdz` está READY. A jornada completa até certificado/relatório ainda não foi declarada.
+
+O preview atual permanece protegido por SSO da Vercel; não foi tratado como homologação autenticada até uma sessão de preview ser fornecida.
+
+Dependências: a auditoria atual não encontrou high/critical; os 16 moderate transitivos de `minimatch` ficam restritos ao toolchain ESLint/TypeScript. A correção automática forçada seria breaking e permanece pendente de atualização compatível do ecossistema.
+
+
+## Auditoria remota atual — 02/11/2026
+
+Código: parecer independente favorável no HEAD `49cb304`; CI web/pgTAP verde e bypasses MFA de publicação fechados. Infraestrutura: Supabase ativo e migrations de hardening aplicadas; advisors mantêm avisos de SECURITY DEFINER intencionalmente expostas a RPC e índices não usados. Vercel mantém preview READY/SSO, sem promoção de produção; Resend confirmou envio real, mas não o worker agendado do outbox. Resultado integral: **BLOCKED por evidência operacional faltante**, não por falha P0/P1 de código.
+
+
+### Worker de notificações — reavaliação 02/11/2026
+
+A lacuna de agendamento foi corrigida no código e na configuração Vercel; o gate de runtime permanece BLOCKED até existir deployment com Cron ativo e evidência de item `notification_outbox` processado.
+
+
+### Evidência adicional — Auth/RLS multi-tenant — 02/11/2026
+
+Dois usuários sintéticos temporários autenticaram no Supabase real (HTTP 200) e, sob JWT individual, cada um consultou somente a própria organização via PostgREST. A limpeza foi executada na mesma sessão e confirmou zero fixtures restantes. Isso reduz o risco de isolamento de dados no nível Auth/RLS, mas não substitui a jornada SSR com cookie no deployment atual. O parecer integral permanece BLOCKED por deployment do HEAD/Cron, worker Resend processando outbox, backup/PITR e auditoria final independente.
+
+
+### Rechecagem de publicação e Cron — 02/11/2026
+
+O limite de Cron do plano Hobby rejeitou a cadência de cinco minutos. A configuração foi reduzida para uma execução diária às 03:00 UTC, sem upgrade ou cobrança automática. A nova tentativa de deployment ainda foi bloqueada pela cota diária de deployments (`402`, retry em 24h). Resultado operacional continua BLOCKED até publicação do HEAD e evidência do worker processando outbox.
+
+
+### Rechecagem pós-cota Vercel — 02/11/2026
+
+O deployment `dpl_AjnNewg9eHeASkwXzqYM9iGrtgQU` ficou READY com o HEAD documental e a configuração de Cron diário. As rotas `/` e `/login` responderam 200 via fetch autenticado; o endpoint interno de notificações respondeu 401 sem segredo, demonstrando que a proteção server-only está ativa no runtime publicado. Ainda não há evidência de execução autorizada do worker contra `notification_outbox`; produção não foi promovida nesta etapa.
+
+
+### Revisão independente pós-publicação — 02/11/2026
+
+Revisor independente não encontrou novo P0/P1 no código ou autorização. Confirmou que `0 3 * * *` é compatível com Hobby e que Cron só executa em produção; cada execução processa no máximo 50 notificações. O alias principal foi reassigned para o deployment novo e `/`/`/login` responderam 200. O parecer integral continua condicionado a comprovar worker/outbox, entrega Resend e restauração de backup.
+
+
+### Worker/outbox — evidência negativa controlada — 02/11/2026
+
+A função de claim está implantada e executável, mas a fila remota estava vazia. Como não foi criado um destinatário ou item fictício em produção, não há evidência de envio/retry real do worker. O gate permanece aberto por ausência de evidência operacional, não por falha observada na função.
+
+
+### Rechecagem dos advisors e alias — 02/11/2026
+
+Supabase permanece sem alerta de RLS ausente; advisors continuam exibindo apenas `SECURITY DEFINER` intencionais, sete índices INFO não utilizados e `auth_leaked_password_protection` desativado. A configuração de senha comprometida depende do painel Auth, não exposto pelo conector desta sessão. O alias Vercel foi confirmado apontando para `dpl_HJABkspWYbQwfqEb4hZnFucnHwgw`; a pendência operacional restante é worker/outbox real, backup/restauração e essa configuração de segurança do Auth.
+
+
+### Teste autorizado do worker — estado pendente — 02/11/2026
+
+Foi criada uma única notificação de homologação autorizada e idempotente para a caixa do proprietário. A fila confirmou o item pendente. Como a Vercel voltou a bloquear novos deployments por cota diária e não há ferramenta disponível para disparar o Cron manualmente com o segredo sem expô-lo, a entrega permanece aguardando a próxima execução agendada; não marcar como sucesso antecipadamente.
+
+
+### Correção UX/Auth: cadastro direto — 03/11/2026
+
+A experiência de primeiro acesso foi corrigida para não depender exclusivamente de recuperação de senha: cadastro público, confirmação de e-mail e login estão conectados. O desenho mantém o isolamento: cadastro não cria organização, membership ou superadmin. O estado vazio do seletor explica o próximo passo ao cliente. Requer validação E2E após deployment; não aprovar como concluído antes disso.
+
+
+## Reauditoria CI e branch remoto — 25/11/2026
+
+- O branch remoto `feat/capacitagov-rebuild` estava com `apps/web/package-lock.json` incompatível com o npm do runner Linux; `npm ci` falhava com `@emnapi/core` e `@emnapi/runtime` ausentes. O lockfile foi regenerado com npm 10 e publicado no commit `4092361`.
+- A suíte pgTAP também revelou expectativas obsoletas após hardening: policies passaram a usar `audit_events_select_scoped` e `organizations_select_scoped`; o teste de progresso foi ajustado para confirmar leitura antes de concluir.
+- Head `698ac46a`: web validation run `45690994697`, web run `45690994731` e SQL/pgTAP run `45690994679` concluíram **success**. SQL: 30 arquivos, 223 assertions, PASS.
+- Acesso administrativo MCP ao Supabase `zykfvzvydvifuzepujvv` continua negado nesta sessão; não foi feita mutação remota. A auditoria integral permanece aberta para validar worker/Resend, backup/restore e revisão independente final.
+
+
+## Fechamento de CI e revisão independente — 25/11/2026
+
+- HEAD `32584be19fe18bb9eadac6b2e619430c9ac1b6fa`: workflows web `45695293191`, validação web `45695293288` e SQL/pgTAP `45695293185` concluíram **success**.
+- Preview Vercel `dpl_7B9jy58CYBwtt6397CLaKf1p52jQ` está READY para o mesmo SHA; produção permanece no deployment `dpl_EJYoh52xcxx9V1odGpywCKfNpk2h`/SHA `438e823c`.
+- Revisão independente atualizada: PR #3 limpo/mergeable, mas liberação integral permanece BLOCKED pelos testes autenticados de dois tenants (incluindo MFA, RLS/Storage e certificado/relatório), clique de convite/retry do outbox e backup/restore/rollback com RTO/RPO.
+- A tentativa de inspeção somente leitura do Supabase nesta sessão retornou `Unknown tool` na integração MCP; não foi feita mutação nem considerado esse gate como aprovado.

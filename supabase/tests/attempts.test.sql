@@ -14,9 +14,10 @@ insert into public.course_versions(id, course_id, version_no, title, learning_mo
 insert into public.course_grants(organization_id, course_version_id, granted_by) values ('00000000-0000-0000-0000-000000000091', '00000000-0000-0000-0000-000000000091', '00000000-0000-0000-0000-000000000091');
 insert into public.offerings(id, organization_id, course_version_id, title, enrollment_policy, status) values ('00000000-0000-0000-0000-000000000091', '00000000-0000-0000-0000-000000000091', '00000000-0000-0000-0000-000000000091', 'Attempt Offer', 'self_enroll', 'published');
 select public.enroll_member('00000000-0000-0000-0000-000000000091', '00000000-0000-0000-0000-000000000091') as enrollment_id \gset
-insert into public.assessments(id, course_version_id, title, passing_score, max_attempts, status) values ('00000000-0000-0000-0000-000000000091', '00000000-0000-0000-0000-000000000091', 'Quiz', 70, 1, 'published');
+insert into public.assessments(id, course_version_id, title, passing_score, max_attempts, status) values ('00000000-0000-0000-0000-000000000091', '00000000-0000-0000-0000-000000000091', 'Quiz', 70, 1, 'draft');
 insert into public.assessment_questions(id, assessment_id, position, prompt, points) values ('00000000-0000-0000-0000-000000000091', '00000000-0000-0000-0000-000000000091', 0, 'Q?', 1);
 insert into public.question_options(id, question_id, position, label, is_correct) values ('00000000-0000-0000-0000-000000000091', '00000000-0000-0000-0000-000000000091', 0, 'Correct', true), ('00000000-0000-0000-0000-000000000092', '00000000-0000-0000-0000-000000000091', 1, 'Wrong', false);
+update public.assessments set status = 'published' where id = '00000000-0000-0000-0000-000000000091';
 select set_config('request.jwt.claim.sub', '00000000-0000-0000-0000-000000000091', true);
 select public.start_attempt(:'enrollment_id', '00000000-0000-0000-0000-000000000091') as attempt_id \gset
 select lives_ok(format($$select public.save_attempt_answer('%s', '00000000-0000-0000-0000-000000000091', '00000000-0000-0000-0000-000000000091')$$, :'attempt_id'), 'valid answer is saved');

@@ -6,3 +6,4 @@ test('recovery endpoint is present and validates input without sending email', a
   await expect(response.json()).resolves.toEqual({ error: 'VALIDATION' });
 });
 
+

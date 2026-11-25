@@ -30,13 +30,13 @@ describe('notification worker route', () => {
     const fetchMock = vi.spyOn(globalThis, 'fetch').mockResolvedValue(new Response('', { status: 200 }));
     createAdmin.mockReturnValue({ auth: { admin: { getUserById: vi.fn().mockResolvedValue({ data: { user: { email: 'recipient@example.com' } }, error: null }) } } });
     deliver.mockImplementation(async (_client: unknown, send: (item: unknown) => Promise<void>) => {
-      await send({ id: 'n1', idempotency_key: 'outbox-key', recipient_user_id: 'u1', template_key: 'welcome', payload: { name: 'A' }, attempts: 0 });
+      await send({ id: 'n1', idempotency_key: 'n1', recipient_user_id: 'u1', template_key: 'welcome', payload: { name: 'A' }, attempts: 0 });
       return { attempted: 1, sent: 1, failed: 0 };
     });
     try {
       const response = await POST(new NextRequest('https://example.com/api/internal/notifications', { method: 'POST', headers: { 'x-notification-job-secret': 'worker-secret' } }));
       expect(response.status).toBe(200);
-      expect(fetchMock).toHaveBeenCalledWith('https://provider.example/emails', expect.objectContaining({ headers: expect.objectContaining({ 'idempotency-key': 'outbox-key' }) }));
+      expect(fetchMock).toHaveBeenCalledWith('https://provider.example/emails', expect.objectContaining({ headers: expect.objectContaining({ 'idempotency-key': 'n1' }) }));
     } finally {
       fetchMock.mockRestore();
       deliver.mockReset();
@@ -49,4 +49,5 @@ describe('notification worker route', () => {
     }
   });
 });
+
 

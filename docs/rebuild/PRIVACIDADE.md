@@ -1,6 +1,6 @@
 # Privacidade e LGPD — CapacitaGov
 
-Estado: desenho implementado localmente; validação jurídica e operação remota pendentes.
+Estado: controles técnicos implementados e revisados; validação jurídica, definição formal de retenção e operação remota de direitos do titular continuam pendentes antes da liberação integral.
 
 ## Inventário mínimo
 
@@ -20,4 +20,6 @@ Pedidos de acesso, correção, exclusão e exportação exigem fluxo institucion
 - definir controlador, operadores, base legal, prazos e canal de atendimento;
 - validar Storage privado, URLs assinadas, exportação CSV e isolamento entre dois tenants em ambiente remoto;
 - revisar provedor de e-mail, transferências internacionais e contrato;
-- executar revisão jurídica e teste de solicitação do titular.
+- executar revisão jurídica e teste de solicitação do titular;
+- habilitar proteção contra senhas comprometidas no Auth ou registrar aceitação formal do risco;
+- ensaiar backup/PITR e restauração antes da promoção.

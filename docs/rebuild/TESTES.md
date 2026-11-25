@@ -244,8 +244,164 @@ Teste controlado em conta autorizada: POST público 202, Resend **delivered**, c
 
 Com `E2E_BASE_URL=https://capacita-o-x5hg.vercel.app`, a execução conjunta de preview, recuperação e navegação obteve **2 PASS / 3 SKIP**; os skips são cenários condicionados a sessão/fixture, não falhas. O E2E de recuperação público permaneceu PASS.
 
+### E2E autenticado de dois tenants — 02/11/2026
+
+Com fixtures sintéticas temporárias no Supabase autorizado e configuração Playwright isolada (`--workers=1`, Chromium sem GPU), foram executados separadamente contra `https://capacita-o-x5hg.vercel.app`: tenant A **1/1 PASS** e tenant B **1/1 PASS**. Cada conta exibiu somente sua própria organização na seleção e acessou sua rota `/o/{organizationId}`. As fixtures foram removidas e a consulta final confirmou zero usuários/organizações sintéticos. A execução conjunta em um único processo apresentou encerramento do contexto do Chromium; os casos isolados são a evidência autoritativa.
+
 ### Rechecagem de origem do e-mail — 02/11/2026
+
+- Deployment documental `dpl_B54MBugw9bYmA9dQYKRU1e8rVPga`: **READY**; `/` 200 e `/api/v1/auth/recover` 405 esperado para GET, com rota encontrada.
+- Supabase remoto: policy `notification_outbox_service_role` confirmada em `pg_policies`, com role exclusiva `service_role`; advisor de segurança não reporta mais `rls_enabled_no_policy`.
+- `notifications.test.sql` ampliado para **9 asserções**, incluindo a policy exclusiva do outbox; execução local completa depende do PostgreSQL/pgTAP disponível no ambiente.
 
 - `POST https://capacita-o-x5hg.vercel.app/api/v1/auth/recover` para a conta autorizada: **202**.
 - Resend registrou o novo e-mail transacional; inspeção programática confirmou `capacita-o-x5hg.vercel.app` presente e `localhost` ausente, sem registrar o token.
 - Vercel `NEXT_PUBLIC_APP_URL`: valor público canônico confirmado em production/preview/development.
+### Rechecagem híbrida publicada — 02/11/2026
+
+- Produção `dpl_XRYtMD5CwtFYksRp5gqpen7sV1zD` (READY), commit `c831e34253849ca38c3218e76d876692da733ff1`.
+- Playwright remoto isolado: login real do tenant B → `/aluno/turmas` → encontro `Encontro presencial` e turma `Turma Híbrida 2026`: **1/1 PASS**.
+- Regressão local: `npm run typecheck` PASS, `npm run lint` PASS, `npm test` **30 arquivos/77 testes PASS**, `npm run build` PASS.
+- Limpeza pós-teste confirmada no Supabase: `orgs=0`, `users=0`, `enrollments=0` para as fixtures sintéticas.
+
+### Revisão de autorização da agenda — 02/11/2026
+
+- Achado: a versão anterior da tela consultava todos os encontros `scheduled` do tenant.
+- Correção: reuniões agora são filtradas pelas turmas das matrículas ativas do usuário (`membership_id`) antes da leitura de nomes.
+- Verificação local: typecheck, lint, `npm test` **30/30 arquivos, 77/77 testes** e build PASS.
+- Produção: `dpl_3JYLU4KXJhcS8D7UBVK1QNc3GTdz` READY.
+- Preview protegido do branch: raiz retorna 302 para SSO sem sessão e 200 após seguimento do fluxo público; `/login` retorna 200.
+- `npm audit --audit-level=high`: nenhum high/critical; há 16 moderate transitivos em `minimatch` no toolchain de lint, documentados como risco de desenvolvimento.
+
+### Entrega Resend — 02/11/2026
+
+- Lista de e-mails: redefinição de senha recente do CapacitaGov com status **delivered**.
+- Corpo HTML/texto inspecionado: link canônico `https://capacita-o-x5hg.vercel.app/redefinir-senha?...`; nenhuma ocorrência de `localhost`.
+
+
+### Verificação remota atual — 02/11/2026
+
+- Supabase `zykfvzvydvifuzepujvv`: `ACTIVE_HEALTHY`, Postgres 17.11.
+- Hardening migrations 0900–0910 aplicadas remotamente; triggers de AAL2/imutabilidade e definições de `publish_offering`/`publish_course_version` conferidas via SQL.
+- Vercel preview `dpl_E8Qy248cAzsHJxDbq2Rrq7oxe2ig`: `/` e `/login` HTTP 200; `/api/v1/context` HTTP 401 sem sessão.
+- Resend: POST `/emails` HTTP 200 observado em 02/11/2026.
+- Ainda sem evidência desta rodada para sessão autenticada de duas organizações, worker agendado do outbox, restauração/PITR e novo preview do HEAD posterior por limite de deployments.
+
+
+### Worker agendado — 02/11/2026
+
+- Rota interna aceita autenticação Vercel Cron via `CRON_SECRET` e mantém header legado.
+- `apps/web/vercel.json` define execução a cada 5 minutos.
+- Env sensível `CRON_SECRET` criado no projeto Vercel.
+- CI web/pgTAP: success no commit `b6331f1e3b03a758a02bbd8cae809acba5bea6de`.
+- Observação em runtime ainda pendente porque o deployment com esse commit está bloqueado pela cota diária.
+
+
+## Homologação real de Auth/RLS — 02/11/2026
+
+- Usuário sintético A: login Auth REST HTTP 200; GET autenticado de organizações retornou somente e2e-capacita-a-20261102.
+- Usuário sintético B: login Auth REST HTTP 200; GET autenticado de organizações retornou somente e2e-capacita-b-20261102.
+- Resultado: isolamento multi-tenant confirmado no PostgREST com JWT real. As fixtures foram removidas imediatamente e a consulta posterior não deixou resíduos.
+- Limite da evidência: /api/v1/context não aceita bearer puro porque a sessão SSR é cookie-based; a jornada browser/cookie continua pendente de execução em deployment atualizado.
+
+
+## Vercel Cron — 02/11/2026
+
+- Configuração versionada: `/api/internal/notifications` em `0 3 * * *` (cadência diária compatível com Vercel Hobby).
+- Tentativa de deployment do branch atualizado: bloqueada por `402 api-deployments-free-per-day`, retry em 24h.
+- A configuração `*/5 * * * *` foi rejeitada pelo limite de Cron do plano Hobby e não permanece no branch.
+
+
+## Preview Vercel atualizado — 02/11/2026
+
+- Deployment `dpl_AjnNewg9eHeASkwXzqYM9iGrtgQU`: READY.
+- `/`: HTTP 200; título CapacitaGov e conteúdo Next verificados.
+- `/login`: HTTP 200; formulário de e-mail/senha e recuperação presentes.
+- `/api/internal/notifications`: HTTP 401 sem segredo, comportamento esperado.
+- Preview: https://capacita-o-x5hg-1lsuj4yyq-dinheirodegraca013-specs-projects.vercel.app
+
+
+## Produção após reassignment — 02/11/2026
+
+- Alias principal reassigned para `dpl_HJABkspWYbQwfqEb4hZnFucnHwgw` (commit `49339be`).
+- `/`: HTTP 200, conteúdo Next/CapacitaGov e hero verificados.
+- `/login`: HTTP 200, formulário de autenticação e recuperação presentes.
+- `/api/internal/notifications`: fetch externo ficou bloqueado pela autenticação SSO da Vercel; não usar esse 401 como resposta da aplicação. No preview do mesmo código, a rota sem segredo respondeu 401.
+
+
+## Worker/outbox — 02/11/2026
+
+- Schema remoto conferido: outbox possui idempotência, status, tentativas, retry e timestamps de processamento.
+- `claim_pending_notifications(50)` executou no banco autorizado e retornou `[]`.
+- Nenhum dado sintético foi inserido; a entrega Resend permanece pendente de uma notificação real autorizada.
+
+
+## Teste autorizado do worker — 02/11/2026
+
+- Item idempotente criado no `notification_outbox` para a conta autorizada `guicabanas13@gmail.com`.
+- Payload contém apenas mensagem de homologação; nenhum segredo ou token.
+- Estado inicial confirmado: `pending`, `attempts=0`.
+- Cron permanece diário em produção; a execução ainda não foi observada.
+
+
+## Fluxo de cadastro — 03/11/2026
+
+- `/cadastro`: e-mail, senha e confirmação; validação de 12 caracteres e igualdade.
+- Confirmação usa callback público canônico e não inclui segredos no cliente.
+- `/cadastro-confirmado`: orienta confirmação e retorno ao login.
+- `/selecionar-organizacao`: estado vazio orienta convite/atribuição e não concede acesso por cadastro.
+- Deployment público do patch ainda pendente de cota Vercel.
+
+
+## Evidência pós-publicação — 03/11/2026
+
+- O alias `capacita-o-x5hg.vercel.app` foi reassociado ao deployment READY `dpl_C2WKQiXbhje2kU7bNRofKDHNbp2c`, construído pelo projeto `capacita-o-x5hg` com framework Next.js e root `apps/web`.
+- Smoke HTTP pós-publicação passou em `/`, `/login`, `/admin`, `/admin/auditoria`, `/admin/organizacoes`, `/recuperar-senha` e `/redefinir-senha`. O build lista as rotas de aluno, gestão, professor, MFA e validação pública de certificado.
+- A comparação GitHub entre o commit implantado e o head atual encontrou somente alterações em `docs/rebuild/ESTADO.md`; portanto, o código do deployment publicado cobre o head funcional atual.
+- A revisão independente confirmou policies globais com isolamento tenant/AAL2 e redirecionamento de `/admin/auditoria` sem sessão. CI do head atual e E2E autenticado de duas organizações continuam pendentes.
+
+
+## Revisão independente pós-alias — 03/11/2026
+
+A revisão confirmou, sem alterações, que em produção `/admin`, `/admin/auditoria` e rotas de gestão sem sessão retornam 307 para login; `/api/v1/context` retorna 401; e o worker interno sem segredo retorna 401 `UNAUTHORIZED`. Nenhum P0/P1 novo foi identificado. Não foi exercitada sessão AAL1 nesta rodada.
+
+
+## Auditoria do fluxo de recuperação — 03/11/2026
+
+A revisão de código confirmou que o formulário `/recuperar-senha` usa `window.location.origin` no momento da solicitação e envia `/auth/callback?next=/redefinir-senha`; não depende de `NEXT_PUBLIC_APP_URL=http://localhost:3000` do exemplo. `resolveAppOrigin` também rejeita localhost em produção no endpoint server-side. O callback aceita somente `recovery/invite/magiclink` e `safeRedirectPath` impede destinos externos. O fluxo ainda precisa de uma conta/caixa de homologação para validar o e-mail recebido de ponta a ponta.
+
+
+## Auditoria complementar de convites — 03/11/2026
+
+O fluxo de convite usa `resolveInvitationOrigin`: em produção, um `NEXT_PUBLIC_APP_URL` local é descartado e o host real da requisição é usado. Os links apontam para `/ativar-conta`, incluem token/hash/OTP conforme o tipo retornado pelo Auth, têm fallback de copiar endereço no e-mail e marcam a invitation como `failed` quando provedor/credenciais não estão configurados. A ativação valida a sessão, email/OTP e consome o token; E2E com caixa real continua pendente.
+
+
+## Entrega real Resend — 03/11/2026
+
+A integração Resend reportou domínio `gestio.dev.br` verificado e envio habilitado. Mensagens recentes de recuperação de senha e convite foram `delivered`; a inspeção do conteúdo confirmou que os links usam `https://capacita-o-x5hg.vercel.app/redefinir-senha` e `https://capacita-o-x5hg.vercel.app/ativar-conta`, respectivamente. Tokens e OTPs não foram persistidos nem reproduzidos neste documento.
+
+
+## Observabilidade pós-publicação — 03/11/2026
+
+A consulta de clusters de runtime da Vercel para o projeto `capacita-o-x5hg` nas últimas 24 horas não encontrou erros de runtime. Isso não substitui E2E autenticado, mas não há regressão operacional agregada nas rotas publicadas.
+
+
+## Triagem de logs Supabase — 03/11/2026
+
+Na janela de 24 horas, os eventos de `auth_logs` encontrados foram compatíveis com testes/uso: credenciais inválidas, OTP/token expirado, refresh token ausente, limite de envio de e-mail e uma tentativa duplicada de cadastro. O formulário de cadastro converte erros de Auth em mensagem genérica, sem enumeração. Não foram encontrados sinais de bypass RLS, falha do worker ou erro de runtime Vercel; a métrica Vercel permaneceu sem clusters nas últimas 24h.
+
+
+## Reauditoria CI e branch remoto — 25/11/2026
+
+- O branch remoto `feat/capacitagov-rebuild` estava com `apps/web/package-lock.json` incompatível com o npm do runner Linux; `npm ci` falhava com `@emnapi/core` e `@emnapi/runtime` ausentes. O lockfile foi regenerado com npm 10 e publicado no commit `4092361`.
+- A suíte pgTAP também revelou expectativas obsoletas após hardening: policies passaram a usar `audit_events_select_scoped` e `organizations_select_scoped`; o teste de progresso foi ajustado para confirmar leitura antes de concluir.
+- Head `698ac46a`: web validation run `45690994697`, web run `45690994731` e SQL/pgTAP run `45690994679` concluíram **success**. SQL: 30 arquivos, 223 assertions, PASS.
+- Acesso administrativo MCP ao Supabase `zykfvzvydvifuzepujvv` continua negado nesta sessão; não foi feita mutação remota. A auditoria integral permanece aberta para validar worker/Resend, backup/restore e revisão independente final.
+
+
+## Fechamento de CI e revisão independente — 25/11/2026
+
+- HEAD `32584be19fe18bb9eadac6b2e619430c9ac1b6fa`: workflows web `45695293191`, validação web `45695293288` e SQL/pgTAP `45695293185` concluíram **success**.
+- Preview Vercel `dpl_7B9jy58CYBwtt6397CLaKf1p52jQ` está READY para o mesmo SHA; produção permanece no deployment `dpl_EJYoh52xcxx9V1odGpywCKfNpk2h`/SHA `438e823c`.
+- Revisão independente atualizada: PR #3 limpo/mergeable, mas liberação integral permanece BLOCKED pelos testes autenticados de dois tenants (incluindo MFA, RLS/Storage e certificado/relatório), clique de convite/retry do outbox e backup/restore/rollback com RTO/RPO.
+- A tentativa de inspeção somente leitura do Supabase nesta sessão retornou `Unknown tool` na integração MCP; não foi feita mutação nem considerado esse gate como aprovado.

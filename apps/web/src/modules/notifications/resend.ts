@@ -50,4 +50,3 @@ export function buildRecoveryEmail(input: { from: string; to: string; actionLink
     html: `<p>Recebemos um pedido para redefinir sua senha no CapacitaGov.</p><p><a href="${link}" target="_blank" rel="noopener noreferrer" style="display:inline-block;padding:12px 18px;border-radius:8px;background:#0f766e;color:#fff;text-decoration:none;font-weight:600">Redefinir minha senha</a></p><p>Se o botão não abrir, copie este endereço:</p><p><a href="${link}" target="_blank" rel="noopener noreferrer">${link}</a></p>`,
   };
 }
-

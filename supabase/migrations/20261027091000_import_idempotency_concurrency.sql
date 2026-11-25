@@ -61,3 +61,4 @@ $$;
 revoke all on function public.commit_people_import(uuid, jsonb, integer, text) from public, anon;
 grant execute on function public.commit_people_import(uuid, jsonb, integer, text) to authenticated;
 
+

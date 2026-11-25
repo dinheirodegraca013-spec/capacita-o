@@ -1,13 +1,18 @@
 # Runbook de release
 
 1. Confirmar branch, revisão independente e working tree limpo.
-2. Executar migrations em banco de homologação restaurável; registrar versão e resultado.
+2. Executar migrations append-only em banco de homologação restaurável; registrar versão e resultado.
 3. Configurar Supabase Auth, Storage, remetente de e-mail, `NOTIFICATION_JOB_SECRET`, `EMAIL_PROVIDER_URL` e `EMAIL_PROVIDER_KEY` por ambiente.
 4. Executar unit, pgTAP, typecheck, lint, build, Playwright autenticado e teste RLS com dois tenants.
-5. Criar preview Vercel somente após autorização e registrar URL, commit e variáveis usadas.
+5. Criar preview Vercel protegido, validar rotas públicas e profundas, e registrar URL, commit e variáveis usadas.
 6. Produção exige aprovação explícita, backup verificado, janela de mudança e plano de rollback.
+7. Após a janela, confirmar logs do worker, entrega no Resend e ausência de `localhost` nos links.
 
-Estado atual: aplicação Next publicada no projeto Vercel `capacita-o-x5hg` e migrations aplicadas no Supabase `zykfvzvydvifuzepujvv`. O gate final permanece bloqueado somente pelas evidências operacionais ainda ausentes (contas E2E de homologação, SMTP/worker, backup/restauração, rollback ensaiado e auditoria independente final).
+## Estado atual
 
-Rechecagem 27/10/2026 13:27 BRT: produção está em `dpl_22Se4nQk3QNP8o53JR5EmczqoigE` (`c35a1a4`); `/api/v1/auth/recover` ainda não existe no alias público. Não considerar a correção de links de recuperação liberada até o deployment do patch.
+Código e migrations estão em `feat/capacitagov-rebuild`; CI web/pgTAP está verde e há preview READY protegido por SSO. O gate integral permanece aberto: backup/PITR ensaiado, worker institucional Resend, proteção de senhas comprometidas e auditoria final independente ainda precisam de evidência operacional. Não promover sem esses registros.
 
+
+## Reconciliacao de evidencias — 25/11/2026
+
+A mensagem `01a19f62-1458-770f-a122-fa29f0a00b45` foi confirmada como **delivered** no Resend. Isso cobre a evidencia de entrega do worker/provedor; continuam pendentes o clique autenticado do convite, retry/outbox, backup/restore e homologacao E2E completa antes de promover producao.

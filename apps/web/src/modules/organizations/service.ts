@@ -3,21 +3,17 @@ import type { Actor, Organization } from '@/modules/identity/model';
 export type OrganizationInput = Pick<Organization, 'name' | 'kind' | 'timezone'> & { slug?: string };
 export type OrganizationClient = { from(table: 'organizations' | 'org_units'): { update(values: Record<string, unknown>): { eq(column: string, value: string): { select(): { single(): Promise<{ data: Record<string, unknown> | null; error: { message: string } | null }> } } }; insert(values: Record<string, unknown>): { select(): { single(): Promise<{ data: Record<string, unknown> | null; error: { message: string } | null }> } } } };
 
-const ORGANIZATION_KINDS: Organization['kind'][] = ['company', 'municipality', 'public_agency', 'nonprofit', 'other'];
-
-export function buildOrganizationSlug(name: string) {
-  const normalized = name.normalize('NFKD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
-  return normalized.replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 120);
-}
-
 export function normalizeOrganizationInput(input: OrganizationInput): OrganizationInput {
   const name = input.name.trim();
   if (!name || name.length > 180) throw new Error('Invalid organization name');
-  if (!ORGANIZATION_KINDS.includes(input.kind)) throw new Error('Invalid organization kind');
   if (!input.timezone.trim()) throw new Error('Invalid organization timezone');
-  const slug = input.slug?.trim().toLowerCase();
-  if (slug !== undefined && !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)) throw new Error('Invalid organization slug');
-  return { name, kind: input.kind, timezone: input.timezone.trim(), ...(slug ? { slug } : {}) };
+  return { name, kind: input.kind, timezone: input.timezone.trim(), ...(input.slug ? { slug: input.slug.trim().toLowerCase() } : {}) };
+}
+
+export function buildOrganizationSlug(name: string): string {
+  const slug = name.normalize('NFKD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 80);
+  if (!slug) throw new Error('Invalid organization slug');
+  return slug;
 }
 
 export async function updateOrganization(actor: Actor, input: OrganizationInput, client: OrganizationClient) {

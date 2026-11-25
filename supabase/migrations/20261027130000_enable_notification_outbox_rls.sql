@@ -3,3 +3,4 @@
 alter table public.notification_outbox enable row level security;
 revoke all on public.notification_outbox from public, anon, authenticated;
 
+

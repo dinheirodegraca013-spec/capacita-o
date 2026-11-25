@@ -33,3 +33,4 @@ end; $$;
 
 grant execute on function public.get_organization_report(uuid, timestamptz, timestamptz) to authenticated;
 
+

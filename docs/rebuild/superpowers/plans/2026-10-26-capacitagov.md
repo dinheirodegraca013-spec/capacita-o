@@ -496,7 +496,12 @@ Status único: PENDING → RUNNING → REVIEW → DONE; BLOCKED somente para dep
 **Aceite verificável:** Banco real local, sem mock de RLS; nenhuma jornada usa mockDb; duas sessões simultâneas isoladas; todas as regressões P0 passadas; evidências de navegador e resultados registrados.
 
 - [x] Fronteiras públicas e Storage sem sessão foram exercitadas; E2E local ficou **4 pass / 5 skipped** sem Supabase/conta de homologação. Teste SQL de isolamento permanece preparado.
+- [x] Rechecagem autenticada temporária contra produção: tenant A **1/1 PASS** e tenant B **1/1 PASS** no navegador, com seleção e acesso somente à própria organização; fixtures removidas após o teste.
 - [ ] Executar as duas jornadas autenticadas completas e anexar evidência; revisar antes de marcar DONE.
+
+- [x] Regressão adicional 02/11: consulta de reuniões separada da relação `class_groups`; produção `dpl_XRYtMD5CwtFYksRp5gqpen7sV1zD` READY; jornada híbrida autenticada do tenant B **1/1 PASS**.
+
+- [x] Revisão independente 02/11: agenda do aluno passou a restringir reuniões às matrículas ativas do próprio vínculo; produção `dpl_3JYLU4KXJhcS8D7UBVK1QNc3GTdz` READY; typecheck/lint/77 testes/build PASS.
 
 ### T29 — Ambiente remoto e preview Vercel
 
@@ -541,5 +546,4 @@ P2 do desenho é backlog posterior e não faz parte da liberação inicial. Não
 ## Autorrevisão
 
 R01→T02–T07; R02→T09/T12/T13; R03→T09/T11/T13/T16/T20; R04→T04/T08/T10/T14/T15/T19/T23; R05→T15/T17–T19/T22; R06→T20/T21; R07→T22/T23; R08→T07/T24–T27/T30; R09→T02/T03/T09/T10/T12/T13/T18/T21/T22/T25/T28; R10→T01/T28–T30. Cada risco do Review Focus aponta para teste específico. Conteúdo real, remetente e política institucional de retenção são dependências operacionais explícitas, não entregas fictícias.
-
 
