@@ -949,3 +949,8 @@ A auditoria de dependências encontrou seis advisories moderados no Next.js `16.
 ## Reconciliação do PR e CI final — 25/11/2026
 
 O PR #3 foi reconciliado com main sem apagar os arquivos exclusivos da base e está novamente mergeable=true. Foram restaurados os clientes Supabase e configurado o alias @ do Vitest; a asserção do worker foi alinhada ao idempotency key determinístico. No head 05cf613, os workflows web (45694927839), validação web (45694927878) e SQL/pgTAP (45694927936) concluíram success. O PR continua aberto como draft; produção não foi promovida.
+
+
+## Inventario de ambiente Vercel — 26/11/2026
+
+A leitura não descriptografada do projeto `prj_hz3fPzavp4sNa4Mo0Rnkrm3ko4b6` confirmou a presença, nos três ambientes, de `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `EMAIL_PROVIDER_URL`, `EMAIL_PROVIDER_KEY`, `EMAIL_FROM`, `NOTIFICATION_JOB_SECRET`, `CRON_SECRET` e `NEXT_PUBLIC_APP_URL`. Nenhum valor secreto foi lido. Isso remove a pendência de configuração ausente, mas não substitui E2E autenticado, teste de retry ou backup/restore.
