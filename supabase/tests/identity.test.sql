@@ -7,7 +7,7 @@ select has_table('public'::name, 'memberships'::name);
 select has_table('public'::name, 'membership_roles'::name);
 select has_table('public'::name, 'platform_admins'::name);
 select ok(exists (select 1 from pg_policies where schemaname = 'public' and tablename = 'memberships' and policyname = 'memberships_select_own_or_same_org'), 'memberships select policy exists');
-select ok(exists (select 1 from pg_policies where schemaname = 'public' and tablename = 'organizations' and policyname = 'organizations_select_member'), 'organizations select policy exists');
+select ok(exists (select 1 from pg_policies where schemaname = 'public' and tablename = 'organizations' and policyname = 'organizations_select_scoped'), 'organizations select policy exists');
 select has_function('public'::name, 'prevent_membership_org_change'::name);
 
 insert into auth.users(id) values
