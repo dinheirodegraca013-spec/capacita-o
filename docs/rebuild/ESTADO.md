@@ -937,3 +937,7 @@ Sem sessão no alias de produção, `/api/v1/context`, `/api/v1/offerings` e `/a
 ## Preview Vercel revalidado — 25/11/2026
 
 O deployment `dpl_C6LmR95toiyrxi8rGvh2BKkyDjfx` ficou **READY** para o commit `f5a13fd`. O domínio de preview protegido responde 302 para SSO em `/`, `/login`, `/recuperar-senha` e `/api/v1/context`; isso confirma proteção de preview, mas não substitui uma sessão autenticada de homologação. CI do mesmo HEAD: web, validação web e SQL concluídos com sucesso.
+
+## Evidência Resend do worker — 25/11/2026
+
+A conta Resend lista a mensagem `01a19f62-1458-770f-a122-fa29f0a00b45`, assunto `CapacitaGov — worker-homologacao`, remetente `noreply@gestio.dev.br`, status **delivered**. O conteúdo foi recuperado sem token ou segredo. Isso comprova entrega operacional do worker/provedor; não substitui o clique de convite em uma jornada autenticada nem o teste de retry do outbox.
