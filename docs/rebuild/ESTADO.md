@@ -941,3 +941,7 @@ O deployment `dpl_C6LmR95toiyrxi8rGvh2BKkyDjfx` ficou **READY** para o commit `f
 ## Evidência Resend do worker — 25/11/2026
 
 A conta Resend lista a mensagem `01a19f62-1458-770f-a122-fa29f0a00b45`, assunto `CapacitaGov — worker-homologacao`, remetente `noreply@gestio.dev.br`, status **delivered**. O conteúdo foi recuperado sem token ou segredo. Isso comprova entrega operacional do worker/provedor; não substitui o clique de convite em uma jornada autenticada nem o teste de retry do outbox.
+
+## Hardening Next.js — 25/11/2026
+
+A auditoria de dependências encontrou seis advisories moderados no Next.js `16.4.3`, com correção disponível em `16.4.6`. O branch foi atualizado para Next/eslint-config-next `16.4.6`, com lockfile regenerado por npm 10. Verificação local: typecheck PASS, lint PASS (somente warning de `<img>`), 27 arquivos/63 testes PASS e `npm audit` com 0 vulnerabilidades. No head `c2d79fe`, CI web, validação web e SQL/pgTAP concluíram success.
