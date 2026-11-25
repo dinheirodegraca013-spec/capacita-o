@@ -945,3 +945,7 @@ A conta Resend lista a mensagem `01a19f62-1458-770f-a122-fa29f0a00b45`, assunto 
 ## Hardening Next.js — 25/11/2026
 
 A auditoria de dependências encontrou seis advisories moderados no Next.js `16.4.3`, com correção disponível em `16.4.6`. O branch foi atualizado para Next/eslint-config-next `16.4.6`, com lockfile regenerado por npm 10. Verificação local: typecheck PASS, lint PASS (somente warning de `<img>`), 27 arquivos/63 testes PASS e `npm audit` com 0 vulnerabilidades. No head `c2d79fe`, CI web, validação web e SQL/pgTAP concluíram success.
+
+## Reconciliação do PR e CI final — 25/11/2026
+
+O PR #3 foi reconciliado com main sem apagar os arquivos exclusivos da base e está novamente mergeable=true. Foram restaurados os clientes Supabase e configurado o alias @ do Vitest; a asserção do worker foi alinhada ao idempotency key determinístico. No head 05cf613, os workflows web (45694927839), validação web (45694927878) e SQL/pgTAP (45694927936) concluíram success. O PR continua aberto como draft; produção não foi promovida.
