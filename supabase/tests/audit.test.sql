@@ -5,7 +5,7 @@ select has_table('public'::name, 'audit_events'::name);
 select has_column('public'::name, 'audit_events'::name, 'organization_id'::name, 'audit organization column');
 select has_column('public'::name, 'audit_events'::name, 'outcome'::name, 'audit outcome column');
 select has_column('public'::name, 'audit_events'::name, 'metadata'::name, 'audit metadata column');
-select ok(exists (select 1 from pg_policies where schemaname = 'public' and tablename = 'audit_events' and policyname = 'audit_events_select_member'), 'audit select policy exists');
+select ok(exists (select 1 from pg_policies where schemaname = 'public' and tablename = 'audit_events' and policyname = 'audit_events_select_scoped'), 'audit select policy exists');
 
 insert into auth.users(id) values ('00000000-0000-0000-0000-000000000011');
 insert into public.organizations(id, name, slug, kind) values ('10000000-0000-0000-0000-000000000011', 'Audit Org', 'audit-org', 'company');
