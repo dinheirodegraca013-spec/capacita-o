@@ -920,3 +920,11 @@ Consulta somente leitura no projeto autorizado confirmou PostgreSQL 17.11, as du
 ## Tentativa controlada de publicação — 03/11/2026
 
 Nova tentativa única de deployment do head do branch autorizado retornou novamente `402 payment_required / api-deployments-free-per-day`, com `retryAfter=86400`. Não houve criação de deployment, alteração de alias ou mudança em produção. O bloqueio é externo à aplicação; novas tentativas ficam suspensas até a janela de cota ou autorização explícita para plano com cobrança.
+
+
+## Reauditoria CI e branch remoto — 25/11/2026
+
+- O branch remoto `feat/capacitagov-rebuild` estava com `apps/web/package-lock.json` incompatível com o npm do runner Linux; `npm ci` falhava com `@emnapi/core` e `@emnapi/runtime` ausentes. O lockfile foi regenerado com npm 10 e publicado no commit `4092361`.
+- A suíte pgTAP também revelou expectativas obsoletas após hardening: policies passaram a usar `audit_events_select_scoped` e `organizations_select_scoped`; o teste de progresso foi ajustado para confirmar leitura antes de concluir.
+- Head `698ac46a`: web validation run `45690994697`, web run `45690994731` e SQL/pgTAP run `45690994679` concluíram **success**. SQL: 30 arquivos, 223 assertions, PASS.
+- Acesso administrativo MCP ao Supabase `zykfvzvydvifuzepujvv` continua negado nesta sessão; não foi feita mutação remota. A auditoria integral permanece aberta para validar worker/Resend, backup/restore e revisão independente final.
