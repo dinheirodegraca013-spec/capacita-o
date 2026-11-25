@@ -389,3 +389,11 @@ A consulta de clusters de runtime da Vercel para o projeto `capacita-o-x5hg` nas
 ## Triagem de logs Supabase — 03/11/2026
 
 Na janela de 24 horas, os eventos de `auth_logs` encontrados foram compatíveis com testes/uso: credenciais inválidas, OTP/token expirado, refresh token ausente, limite de envio de e-mail e uma tentativa duplicada de cadastro. O formulário de cadastro converte erros de Auth em mensagem genérica, sem enumeração. Não foram encontrados sinais de bypass RLS, falha do worker ou erro de runtime Vercel; a métrica Vercel permaneceu sem clusters nas últimas 24h.
+
+
+## Reauditoria CI e branch remoto — 25/11/2026
+
+- O branch remoto `feat/capacitagov-rebuild` estava com `apps/web/package-lock.json` incompatível com o npm do runner Linux; `npm ci` falhava com `@emnapi/core` e `@emnapi/runtime` ausentes. O lockfile foi regenerado com npm 10 e publicado no commit `4092361`.
+- A suíte pgTAP também revelou expectativas obsoletas após hardening: policies passaram a usar `audit_events_select_scoped` e `organizations_select_scoped`; o teste de progresso foi ajustado para confirmar leitura antes de concluir.
+- Head `698ac46a`: web validation run `45690994697`, web run `45690994731` e SQL/pgTAP run `45690994679` concluíram **success**. SQL: 30 arquivos, 223 assertions, PASS.
+- Acesso administrativo MCP ao Supabase `zykfvzvydvifuzepujvv` continua negado nesta sessão; não foi feita mutação remota. A auditoria integral permanece aberta para validar worker/Resend, backup/restore e revisão independente final.
