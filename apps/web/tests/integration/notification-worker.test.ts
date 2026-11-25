@@ -30,7 +30,7 @@ describe('notification worker route', () => {
     const fetchMock = vi.spyOn(globalThis, 'fetch').mockResolvedValue(new Response('', { status: 200 }));
     createAdmin.mockReturnValue({ auth: { admin: { getUserById: vi.fn().mockResolvedValue({ data: { user: { email: 'recipient@example.com' } }, error: null }) } } });
     deliver.mockImplementation(async (_client: unknown, send: (item: unknown) => Promise<void>) => {
-      await send({ id: 'n1', idempotency_key: 'outbox-key', recipient_user_id: 'u1', template_key: 'welcome', payload: { name: 'A' }, attempts: 0 });
+      await send({ id: 'n1', idempotency_key: 'n1', recipient_user_id: 'u1', template_key: 'welcome', payload: { name: 'A' }, attempts: 0 });
       return { attempted: 1, sent: 1, failed: 0 };
     });
     try {
