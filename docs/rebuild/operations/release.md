@@ -11,3 +11,8 @@
 ## Estado atual
 
 Código e migrations estão em `feat/capacitagov-rebuild`; CI web/pgTAP está verde e há preview READY protegido por SSO. O gate integral permanece aberto: backup/PITR ensaiado, worker institucional Resend, proteção de senhas comprometidas e auditoria final independente ainda precisam de evidência operacional. Não promover sem esses registros.
+
+
+## Reconciliacao de evidencias — 25/11/2026
+
+A mensagem `01a19f62-1458-770f-a122-fa29f0a00b45` foi confirmada como **delivered** no Resend. Isso cobre a evidencia de entrega do worker/provedor; continuam pendentes o clique autenticado do convite, retry/outbox, backup/restore e homologacao E2E completa antes de promover producao.
